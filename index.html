@@ -1,0 +1,1596 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>KAPITL — OZ, dein Investment-Banker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Bebas+Neue&display=swap" rel="stylesheet">
+<link rel="manifest" href="/manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="KAPITL">
+<meta name="theme-color" content="#2563EB">
+<link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192.png">
+<script src="https://js.stripe.com/v3/"></script>
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html { scroll-behavior:smooth; -webkit-font-smoothing:antialiased; }
+
+:root {
+  --bg:     #F8FAFC;
+  --surface:#FFFFFF;
+  --card:   #F1F5F9;
+  --border: rgba(15,23,42,0.1);
+  --gold:   #2563EB;
+  --gold2:  #3B82F6;
+  --green:  #10B981;
+  --red:    #EF4444;
+  --text:   #0F172A;
+  --sub:    #64748B;
+  --muted:  #CBD5E1;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bot: env(safe-area-inset-bottom, 0px);
+}
+
+body { 
+  font-family:'Inter',-apple-system,sans-serif; 
+  background:var(--bg); 
+  color:var(--text); 
+  overflow-x:hidden;
+  min-height:100vh;
+}
+
+.screen { display:none; }
+.screen.active { display:flex; flex-direction:column; height:100dvh; }
+
+@keyframes up    { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+@keyframes spin  { to{transform:rotate(360deg)} }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+@keyframes slideUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+/* ════════════════════════════════════════
+   LANDING PAGE
+════════════════════════════════════════ */
+#landing {
+  display:none;
+  flex-direction:column;
+  min-height:100dvh;
+  background:var(--bg);
+}
+#landing.active { display:flex; }
+
+/* Landing Nav */
+.l-nav {
+  position:sticky; top:0; z-index:100;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 20px; height:60px;
+  background:rgba(248,250,252,.95); backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.l-logo {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:24px; letter-spacing:.14em; color:var(--gold);
+}
+.l-nav-btn {
+  background:var(--gold); color:#FFFFFF;
+  border:none; padding:10px 20px;
+  font-family:'IBM Plex Mono',monospace; font-size:12px;
+  font-weight:700; letter-spacing:.08em; cursor:pointer;
+}
+
+/* Hero */
+.hero {
+  padding:60px 24px 40px;
+  text-align:center;
+  animation:up .6s ease both;
+}
+.hero-label {
+  font-family:'IBM Plex Mono',monospace; font-size:11px;
+  color:var(--gold); letter-spacing:.2em; text-transform:uppercase;
+  margin-bottom:20px;
+}
+.hero-title {
+  font-size:clamp(36px,8vw,64px);
+  font-weight:800; line-height:1.1;
+  color:var(--text); margin-bottom:16px;
+}
+.hero-title span { color:var(--gold); }
+.hero-sub {
+  font-size:17px; color:var(--sub);
+  line-height:1.6; max-width:420px; margin:0 auto 36px;
+}
+.hero-cta {
+  background:var(--gold); color:#FFFFFF;
+  border:none; padding:18px 40px; width:100%;
+  max-width:340px;
+  font-family:'IBM Plex Mono',monospace; font-size:14px;
+  font-weight:700; letter-spacing:.1em; cursor:pointer;
+  margin-bottom:12px; display:block; margin-left:auto; margin-right:auto;
+}
+.hero-sub-cta {
+  font-size:13px; color:var(--sub);
+  font-family:'IBM Plex Mono',monospace;
+}
+
+/* OZ Preview Chat */
+.oz-preview {
+  margin:0 20px 40px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-top:2px solid var(--gold);
+  animation:up .6s .1s ease both;
+}
+.oz-preview-header {
+  display:flex; align-items:center; gap:12px;
+  padding:16px 20px;
+  border-bottom:1px solid var(--border);
+}
+.oz-avatar {
+  width:40px; height:40px;
+  background:var(--gold); color:#FFFFFF;
+  font-family:'Bebas Neue',sans-serif; font-size:18px;
+  display:flex; align-items:center; justify-content:center;
+  letter-spacing:.1em; flex-shrink:0;
+}
+.oz-name { font-weight:700; font-size:15px; }
+.oz-status {
+  font-size:12px; color:var(--green);
+  font-family:'IBM Plex Mono',monospace;
+  display:flex; align-items:center; gap:6px;
+}
+.oz-dot { width:6px; height:6px; background:var(--green); border-radius:50%; animation:pulse 2s infinite; }
+.oz-preview-msg {
+  padding:20px;
+  font-size:15px; color:var(--sub); line-height:1.7;
+}
+.oz-preview-msg strong { color:var(--text); }
+
+/* Stats Strip */
+.stats {
+  display:grid; grid-template-columns:repeat(3,1fr);
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  margin-bottom:40px;
+}
+.stat {
+  padding:24px 16px; text-align:center;
+  border-right:1px solid var(--border);
+}
+.stat:last-child { border-right:none; }
+.stat-num {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:32px; letter-spacing:.06em; color:var(--gold);
+  display:block; margin-bottom:4px;
+}
+.stat-label { font-size:11px; color:var(--sub); }
+
+/* Features */
+.features { padding:0 20px 40px; }
+.features-title {
+  font-size:24px; font-weight:800;
+  margin-bottom:24px; text-align:center;
+}
+.feature {
+  background:#FFFFFF;
+  border:1px solid var(--border);
+  padding:24px; margin-bottom:12px; box-shadow:0 1px 3px rgba(0,0,0,0.08);
+}
+.feature-icon { font-size:28px; margin-bottom:12px; }
+.feature-title { font-size:17px; font-weight:700; margin-bottom:8px; }
+.feature-desc { font-size:14px; color:var(--sub); line-height:1.6; }
+
+/* Pricing */
+.pricing { padding:0 20px 60px; }
+.pricing-title { font-size:24px; font-weight:800; margin-bottom:8px; text-align:center; }
+.pricing-sub { font-size:14px; color:var(--sub); text-align:center; margin-bottom:28px; }
+
+.plan {
+  border:1px solid var(--border);
+  padding:28px 24px; margin-bottom:12px;
+  position:relative;
+}
+.plan.featured { border-color:var(--gold); }
+.plan-badge {
+  position:absolute; top:-12px; left:50%; transform:translateX(-50%);
+  background:var(--gold); color:#FFFFFF;
+  font-family:'IBM Plex Mono',monospace; font-size:10px;
+  font-weight:700; letter-spacing:.1em; padding:4px 14px;
+}
+.plan-name { font-family:'Bebas Neue',sans-serif; font-size:20px; letter-spacing:.1em; color:var(--sub); margin-bottom:4px; }
+.plan-price { font-size:36px; font-weight:800; color:var(--text); margin-bottom:16px; }
+.plan-price span { font-size:16px; font-weight:400; color:var(--sub); }
+.plan-features { list-style:none; margin-bottom:24px; }
+.plan-features li { 
+  font-size:14px; color:var(--sub); padding:8px 0;
+  border-bottom:1px solid var(--border);
+  display:flex; align-items:center; gap:10px;
+}
+.plan-features li:last-child { border-bottom:none; }
+.plan-features li::before { content:'✓'; color:var(--green); font-weight:700; flex-shrink:0; }
+.plan-btn {
+  width:100%; padding:16px;
+  font-family:'IBM Plex Mono',monospace; font-size:13px;
+  font-weight:700; letter-spacing:.08em; cursor:pointer;
+  border:none;
+}
+.plan-btn.primary { background:var(--gold); color:#FFFFFF; }
+.plan-btn.secondary { background:transparent; color:var(--text); border:1px solid var(--muted); }
+
+/* Footer */
+.l-footer {
+  padding:40px 24px;
+  border-top:1px solid var(--border);
+  text-align:center;
+}
+.l-footer-logo {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:28px; letter-spacing:.14em; color:var(--gold);
+  margin-bottom:8px;
+}
+.l-footer-text { font-size:12px; color:var(--muted); line-height:1.7; margin-bottom:20px; }
+.l-footer-links { display:flex; gap:16px; justify-content:center; flex-wrap:wrap; }
+.l-footer-links a { font-size:12px; color:var(--sub); text-decoration:none; font-family:'IBM Plex Mono',monospace; }
+.disclaimer {
+  background:#EFF6FF; border-top:1px solid var(--border);
+  padding:20px 24px; font-size:11px; color:var(--sub);
+  line-height:1.6; text-align:center;
+}
+
+
+/* ════════════════════════════════════════
+   APP — 3 TABS
+════════════════════════════════════════ */
+#app {
+  background:var(--bg);
+}
+
+/* App Top Bar */
+.app-bar {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 20px;
+  height:56px;
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  flex-shrink:0;
+  padding-top:var(--safe-top);
+}
+.app-logo {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:22px; letter-spacing:.14em; color:var(--gold);
+}
+.app-plan {
+  font-family:'IBM Plex Mono',monospace; font-size:10px;
+  color:var(--gold); border:1px solid rgba(201,168,76,.3);
+  padding:4px 10px; letter-spacing:.08em;
+}
+.app-upgrade-btn {
+  font-family:'IBM Plex Mono',monospace; font-size:10px;
+  background:var(--gold); color:#FFFFFF; border:none;
+  padding:6px 12px; font-weight:700; letter-spacing:.08em; cursor:pointer;
+}
+
+/* Tab Content */
+.tab-content { flex:1; overflow-y:auto; overflow-x:hidden; }
+.tab-panel { display:none; height:100%; }
+.tab-panel.active { display:flex; flex-direction:column; }
+
+/* Bottom Navigation — 3 Tabs, LARGE */
+.bottom-nav {
+  display:flex;
+  background:var(--surface);
+  border-top:1px solid var(--border);
+  flex-shrink:0;
+  padding-bottom:var(--safe-bot);
+}
+.bnav-item {
+  flex:1; display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  gap:6px; padding:14px 8px;
+  border:none; background:transparent; cursor:pointer;
+  border-top:2px solid transparent;
+  color:var(--muted);
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10px; letter-spacing:.06em;
+  text-transform:uppercase;
+  transition:color .2s, border-color .2s;
+}
+.bnav-item.active { color:var(--gold); border-top-color:var(--gold); }
+.bnav-icon { font-size:22px; line-height:1; }
+
+
+/* ════════════════════════════════════════
+   TAB 1 — OZ CHAT
+════════════════════════════════════════ */
+#tab-oz {
+  display:flex; flex-direction:column; height:100%;
+}
+
+.oz-chat-header {
+  padding:20px 20px 16px;
+  border-bottom:1px solid var(--border);
+  flex-shrink:0;
+}
+.oz-chat-title {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:28px; letter-spacing:.1em; color:var(--text);
+  margin-bottom:4px;
+}
+.oz-chat-sub { font-size:13px; color:var(--sub); }
+
+/* Mode Selector */
+.oz-modes {
+  display:flex; gap:8px; padding:12px 20px;
+  border-bottom:1px solid var(--border);
+  overflow-x:auto; flex-shrink:0;
+  -webkit-overflow-scrolling:touch;
+}
+.oz-mode-btn {
+  flex-shrink:0;
+  padding:8px 16px;
+  background:transparent;
+  border:1px solid var(--muted);
+  color:var(--sub);
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11px; letter-spacing:.06em;
+  cursor:pointer; white-space:nowrap;
+  transition:all .2s;
+}
+.oz-mode-btn.active {
+  background:var(--gold); color:#FFFFFF;
+  border-color:var(--gold); font-weight:700;
+}
+
+/* Messages */
+.oz-messages {
+  flex:1; overflow-y:auto; padding:20px;
+  display:flex; flex-direction:column; gap:16px;
+}
+.msg { display:flex; gap:12px; align-items:flex-start; animation:up .3s ease both; }
+.msg.user { flex-direction:row-reverse; }
+
+.msg-avatar {
+  width:36px; height:36px; border-radius:50%; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  font-size:14px; font-weight:700;
+}
+.msg.ai .msg-avatar { background:var(--gold); color:#FFFFFF; font-family:'Bebas Neue',sans-serif; letter-spacing:.05em; }
+.msg.user .msg-avatar { background:var(--muted); color:var(--sub); }
+
+.msg-bubble {
+  max-width:80%; padding:14px 18px;
+  font-size:15px; line-height:1.65;
+}
+.msg.ai .msg-bubble {
+  background:var(--surface); border:1px solid var(--border);
+  color:var(--text);
+}
+.msg.user .msg-bubble {
+  background:var(--gold); color:#FFFFFF;
+  font-weight:500;
+}
+
+/* Typing indicator */
+.typing-dots { display:flex; gap:4px; align-items:center; padding:4px 0; }
+.typing-dots span {
+  width:7px; height:7px; background:var(--gold);
+  border-radius:50%; animation:pulse .8s infinite;
+}
+.typing-dots span:nth-child(2) { animation-delay:.15s; }
+.typing-dots span:nth-child(3) { animation-delay:.3s; }
+
+/* Quick Prompts */
+.oz-quickprompts {
+  padding:12px 20px;
+  display:flex; gap:8px; overflow-x:auto;
+  flex-shrink:0; border-top:1px solid var(--border);
+  -webkit-overflow-scrolling:touch;
+}
+.qp-btn {
+  flex-shrink:0; padding:10px 16px;
+  background:var(--card); border:1px solid var(--border);
+  color:var(--sub); font-size:13px; cursor:pointer;
+  white-space:nowrap;
+}
+
+/* Input */
+.oz-input-area {
+  padding:12px 20px 16px;
+  border-top:1px solid var(--border);
+  flex-shrink:0;
+  background:var(--surface);
+}
+.oz-input-row {
+  display:flex; gap:10px; align-items:flex-end;
+}
+.oz-input {
+  flex:1; background:var(--card);
+  border:1px solid var(--muted);
+  color:var(--text); padding:14px 16px;
+  font-size:15px; font-family:'Inter',sans-serif;
+  resize:none; min-height:50px; max-height:120px;
+  outline:none; line-height:1.5;
+}
+.oz-input:focus { border-color:var(--gold); }
+.oz-input::placeholder { color:var(--muted); }
+.oz-send {
+  width:50px; height:50px; flex-shrink:0;
+  background:var(--gold); border:none; cursor:pointer;
+  font-size:20px; display:flex; align-items:center; justify-content:center;
+}
+.oz-send:disabled { opacity:.4; cursor:not-allowed; }
+
+/* Free limit bar */
+.oz-limit {
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:10px; font-family:'IBM Plex Mono',monospace; font-size:11px;
+}
+.oz-limit-label { color:var(--sub); }
+.oz-limit-dots { display:flex; gap:4px; }
+.oz-limit-dot { width:8px; height:8px; border-radius:50%; background:var(--muted); }
+.oz-limit-dot.used { background:var(--gold); }
+
+
+/* ════════════════════════════════════════
+   TAB 2 — MORNING BRIEFING
+════════════════════════════════════════ */
+#tab-briefing {
+  overflow-y:auto;
+}
+
+.brief-header {
+  padding:24px 20px 20px;
+  border-bottom:1px solid var(--border);
+}
+.brief-date {
+  font-family:'IBM Plex Mono',monospace; font-size:11px;
+  color:var(--gold); letter-spacing:.15em; text-transform:uppercase;
+  margin-bottom:8px;
+}
+.brief-title {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:32px; letter-spacing:.06em; color:var(--text);
+  margin-bottom:6px;
+}
+.brief-sub { font-size:14px; color:var(--sub); }
+
+/* Market Ticker */
+.ticker {
+  display:flex; gap:0; overflow-x:auto;
+  border-bottom:1px solid var(--border);
+  -webkit-overflow-scrolling:touch;
+}
+.ticker-item {
+  flex-shrink:0; padding:14px 20px;
+  border-right:1px solid var(--border);
+  min-width:100px;
+}
+.ticker-name { font-size:11px; color:var(--sub); margin-bottom:4px; font-family:'IBM Plex Mono',monospace; }
+.ticker-price { font-size:17px; font-weight:700; color:var(--text); margin-bottom:2px; font-family:'IBM Plex Mono',monospace; }
+.ticker-change { font-size:12px; font-family:'IBM Plex Mono',monospace; }
+.up { color:var(--green); }
+.down { color:var(--red); }
+
+/* Brief Cards */
+.brief-cards { padding:20px; display:flex; flex-direction:column; gap:16px; }
+.brief-card {
+  background:#FFFFFF; border:1px solid var(--border);
+  padding:20px; box-shadow:0 1px 3px rgba(0,0,0,0.06);
+}
+.brief-card-label {
+  font-family:'IBM Plex Mono',monospace; font-size:10px;
+  color:var(--gold); letter-spacing:.15em; text-transform:uppercase;
+  margin-bottom:10px;
+}
+.brief-card-title { font-size:17px; font-weight:700; margin-bottom:8px; }
+.brief-card-text { font-size:14px; color:var(--sub); line-height:1.7; }
+.brief-card-footer {
+  margin-top:14px; padding-top:14px;
+  border-top:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between;
+}
+.brief-card-oz {
+  font-size:13px; color:var(--gold);
+  font-family:'IBM Plex Mono',monospace; cursor:pointer;
+  background:none; border:none;
+}
+
+/* Ask OZ Button */
+.ask-oz-btn {
+  margin:0 20px 20px;
+  background:var(--gold); border:1px solid var(--gold);
+  color:#FFFFFF; padding:16px 20px;
+  font-family:'IBM Plex Mono',monospace; font-size:13px;
+  font-weight:700; letter-spacing:.08em; cursor:pointer;
+  width:calc(100% - 40px); text-align:center;
+}
+
+
+/* ════════════════════════════════════════
+   TAB 3 — TRADING
+════════════════════════════════════════ */
+#tab-trading {
+  overflow-y:auto;
+}
+
+.trading-header {
+  padding:24px 20px 20px;
+  border-bottom:1px solid var(--border);
+}
+.trading-title {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:32px; letter-spacing:.06em; color:var(--text);
+  margin-bottom:6px;
+}
+.trading-sub { font-size:14px; color:var(--sub); }
+
+/* Asset Selector */
+.asset-grid {
+  display:grid; grid-template-columns:repeat(3,1fr);
+  gap:1px; background:var(--border);
+  border-bottom:1px solid var(--border);
+}
+.asset-btn {
+  background:var(--surface); padding:16px 8px;
+  text-align:center; border:none; cursor:pointer;
+  transition:background .2s;
+}
+.asset-btn.active { background:var(--card); }
+.asset-sym {
+  font-family:'IBM Plex Mono',monospace; font-size:13px;
+  font-weight:600; color:var(--text); display:block; margin-bottom:2px;
+}
+.asset-chg { font-size:11px; font-family:'IBM Plex Mono',monospace; }
+
+/* Analysis Panel */
+.analysis-panel { padding:20px; }
+.analysis-label {
+  font-family:'IBM Plex Mono',monospace; font-size:10px;
+  color:var(--gold); letter-spacing:.15em; margin-bottom:16px;
+}
+
+/* Signal Cards */
+.signal-cards { display:flex; flex-direction:column; gap:12px; margin-bottom:20px; }
+.signal-card {
+  background:var(--surface); border:1px solid var(--border);
+  padding:18px; display:flex; align-items:center; gap:16px;
+}
+.signal-icon { font-size:28px; flex-shrink:0; }
+.signal-body { flex:1; }
+.signal-title { font-size:15px; font-weight:700; margin-bottom:4px; }
+.signal-desc { font-size:13px; color:var(--sub); line-height:1.5; }
+.signal-badge {
+  font-family:'IBM Plex Mono',monospace; font-size:11px;
+  padding:5px 10px; font-weight:700; flex-shrink:0;
+}
+.badge-buy { background:rgba(34,197,94,.15); color:var(--green); border:1px solid rgba(34,197,94,.3); }
+.badge-sell { background:rgba(239,68,68,.15); color:var(--red); border:1px solid rgba(239,68,68,.3); }
+.badge-hold { background:rgba(201,168,76,.15); color:var(--gold); border:1px solid rgba(201,168,76,.3); }
+
+/* OZ Analysis Button */
+.oz-analyze-btn {
+  width:100%; padding:18px;
+  background:var(--gold); color:#FFFFFF; border:none;
+  font-family:'IBM Plex Mono',monospace; font-size:13px;
+  font-weight:700; letter-spacing:.1em; cursor:pointer;
+  margin-bottom:20px;
+}
+
+/* Watchlist */
+.watchlist { padding:0 20px 100px; }
+.watchlist-title {
+  font-size:16px; font-weight:700; margin-bottom:12px;
+  padding-top:20px; border-top:1px solid var(--border);
+}
+.watchlist-item {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:16px 0; border-bottom:1px solid var(--border);
+}
+.wl-sym { font-family:'IBM Plex Mono',monospace; font-size:15px; font-weight:600; }
+.wl-name { font-size:12px; color:var(--sub); margin-top:2px; }
+.wl-right { text-align:right; }
+.wl-price { font-family:'IBM Plex Mono',monospace; font-size:16px; font-weight:600; }
+.wl-chg { font-size:12px; font-family:'IBM Plex Mono',monospace; margin-top:2px; }
+
+
+/* ════════════════════════════════════════
+   PAYWALL
+════════════════════════════════════════ */
+#paywall {
+  background:var(--bg);
+  align-items:center; justify-content:center;
+  padding:40px 24px;
+  text-align:center;
+}
+.pw-icon { font-size:48px; margin-bottom:20px; }
+.pw-title {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:36px; letter-spacing:.08em; color:var(--text);
+  margin-bottom:8px;
+}
+.pw-sub { font-size:15px; color:var(--sub); margin-bottom:36px; line-height:1.6; }
+.pw-plans { display:flex; flex-direction:column; gap:12px; width:100%; max-width:360px; }
+.pw-plan {
+  background:var(--surface); border:1px solid var(--border);
+  padding:20px; text-align:left; cursor:pointer;
+}
+.pw-plan.gold { border-color:var(--gold); }
+.pw-plan-name { font-size:13px; color:var(--sub); font-family:'IBM Plex Mono',monospace; margin-bottom:4px; }
+.pw-plan-price { font-size:28px; font-weight:800; color:var(--text); margin-bottom:8px; }
+.pw-plan-price span { font-size:14px; font-weight:400; color:var(--sub); }
+.pw-plan-btn {
+  width:100%; padding:14px;
+  font-family:'IBM Plex Mono',monospace; font-size:12px;
+  font-weight:700; letter-spacing:.08em; border:none; cursor:pointer;
+  margin-top:12px;
+}
+.pw-plan-btn.gold-btn { background:var(--gold); color:#FFFFFF; }
+.pw-plan-btn.outline-btn { background:transparent; border:1px solid var(--muted); color:var(--text); }
+.pw-back {
+  margin-top:20px; font-size:13px; color:var(--sub);
+  background:none; border:none; cursor:pointer;
+  font-family:'IBM Plex Mono',monospace;
+}
+
+/* ════════════════════════════════════════
+   STRIPE MODALS
+════════════════════════════════════════ */
+.modal-overlay {
+  display:none; position:fixed; inset:0;
+  background:rgba(8,9,13,.95); z-index:99999;
+  align-items:center; justify-content:center; padding:20px;
+}
+.modal-box {
+  background:var(--surface); width:100%; max-width:400px;
+  padding:40px 32px; text-align:center;
+}
+.modal-icon { font-size:48px; margin-bottom:16px; }
+.modal-title {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:28px; letter-spacing:.08em; margin-bottom:8px;
+}
+.modal-sub { font-size:14px; color:var(--sub); margin-bottom:28px; line-height:1.6; font-family:'IBM Plex Mono',monospace; }
+.modal-btn {
+  width:100%; padding:16px; border:none; cursor:pointer;
+  font-family:'IBM Plex Mono',monospace; font-size:13px;
+  font-weight:700; letter-spacing:.08em; margin-bottom:10px;
+}
+.modal-btn.primary { background:var(--gold); color:#FFFFFF; }
+.modal-btn.secondary { background:var(--muted); color:var(--text); }
+
+/* Waitlist input */
+.waitlist-input {
+  width:100%; background:var(--card);
+  border:1px solid var(--muted); color:var(--text);
+  padding:14px 16px; font-size:15px;
+  font-family:'IBM Plex Mono',monospace;
+  margin-bottom:10px; outline:none;
+}
+.waitlist-input:focus { border-color:var(--gold); }
+
+/* Loading spinner */
+#stripeLoading {
+  display:none; position:fixed; inset:0;
+  background:rgba(8,9,13,.8); z-index:99998;
+  align-items:center; justify-content:center;
+}
+.spinner {
+  width:44px; height:44px;
+  border:3px solid var(--muted);
+  border-top-color:var(--gold);
+  border-radius:50%; animation:spin 1s linear infinite;
+}
+
+/* Legal modals */
+.legal-modal {
+  display:none; position:fixed; inset:0;
+  background:rgba(8,9,13,.95); z-index:99990;
+  overflow-y:auto; padding:20px;
+}
+.legal-modal.open { display:block; }
+.legal-content {
+  background:var(--surface); max-width:600px;
+  margin:0 auto; padding:32px 24px;
+}
+.legal-close {
+  background:none; border:1px solid var(--muted);
+  color:var(--sub); padding:10px 20px; cursor:pointer;
+  font-family:'IBM Plex Mono',monospace; font-size:12px;
+  margin-bottom:24px; display:block;
+}
+.legal-content h2 { font-size:22px; font-weight:800; margin-bottom:20px; }
+.legal-content h3 { font-size:16px; font-weight:700; margin:20px 0 8px; }
+.legal-content p, .legal-content li { font-size:14px; color:var(--sub); line-height:1.7; margin-bottom:8px; }
+.legal-content ul { padding-left:20px; }
+</style>
+</head>
+<body>
+
+<!-- ════════ STRIPE MODALS ════════ -->
+<div id="stripeSuccess" class="modal-overlay">
+  <div class="modal-box" style="border-top:3px solid var(--green)">
+    <div class="modal-icon">✓</div>
+    <div class="modal-title" style="color:var(--green)">WILLKOMMEN!</div>
+    <div class="modal-sub" id="successPlanName">Dein Plan ist jetzt aktiv.</div>
+    <button class="modal-btn primary" onclick="closeStripeSuccess()">OZ STARTEN →</button>
+  </div>
+</div>
+
+<div id="stripeError" class="modal-overlay">
+  <div class="modal-box" style="border-top:3px solid var(--red)">
+    <div class="modal-icon">✗</div>
+    <div class="modal-title" style="color:var(--red)">FEHLER</div>
+    <div class="modal-sub">Zahlung fehlgeschlagen. Bitte versuche es erneut.</div>
+    <button class="modal-btn secondary" onclick="document.getElementById('stripeError').style.display='none'">SCHLIESSEN</button>
+  </div>
+</div>
+
+<div id="stripeLoading">
+  <div style="text-align:center">
+    <div class="spinner" style="margin:0 auto 16px"></div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--sub)">VERBINDE...</div>
+  </div>
+</div>
+
+<!-- ════════ LEGAL MODALS ════════ -->
+<div id="legalImpressum" class="legal-modal">
+  <div class="legal-content">
+    <button class="legal-close" onclick="closeLegal('legalImpressum')">← ZURÜCK</button>
+    <h2>Impressum</h2>
+    <h3>Angaben gemäß § 5 TMG</h3>
+    <p>[Dein Name]<br>KAPITL<br>[Deine Adresse]<br>[PLZ Stadt]</p>
+    <h3>Kontakt</h3>
+    <p>E-Mail: hallo@kapitl.de<br>Telefon: [Deine Telefonnummer]</p>
+    <h3>Umsatzsteuer-ID</h3>
+    <p>USt-IdNr. gemäß § 27a UStG: [Deine USt-IdNr.]</p>
+    <h3>Haftungshinweis</h3>
+    <p>KAPITL und OZ stellen keine Anlageberatung dar. Alle Inhalte dienen ausschließlich der Information und Bildung. Investitionen sind mit Risiken verbunden.</p>
+  </div>
+</div>
+
+<div id="legalDatenschutz" class="legal-modal">
+  <div class="legal-content">
+    <button class="legal-close" onclick="closeLegal('legalDatenschutz')">← ZURÜCK</button>
+    <h2>Datenschutzerklärung</h2>
+    <h3>Verantwortlicher</h3>
+    <p>[Dein Name], hallo@kapitl.de</p>
+    <h3>Daten die wir erheben</h3>
+    <ul>
+      <li>E-Mail-Adresse (bei Registrierung)</li>
+      <li>Zahlungsdaten (verarbeitet durch Stripe)</li>
+      <li>Chat-Inhalte (verarbeitet durch Anthropic API)</li>
+    </ul>
+    <h3>Zweck</h3>
+    <p>Bereitstellung des KAPITL-Dienstes und Kommunikation mit Nutzern.</p>
+    <h3>Drittanbieter</h3>
+    <p>Stripe (Zahlungsabwicklung), Anthropic (KI-Verarbeitung). Beide sind DSGVO-konform.</p>
+    <h3>Deine Rechte</h3>
+    <p>Auskunft, Berichtigung, Löschung deiner Daten jederzeit per E-Mail an hallo@kapitl.de.</p>
+  </div>
+</div>
+
+<div id="legalAGB" class="legal-modal">
+  <div class="legal-content">
+    <button class="legal-close" onclick="closeLegal('legalAGB')">← ZURÜCK</button>
+    <h2>Allgemeine Geschäftsbedingungen</h2>
+    <h3>§1 Leistungsbeschreibung</h3>
+    <p>KAPITL bietet einen KI-gestützten Finanzbildungsdienst. OZ ist kein zugelassener Finanzberater.</p>
+    <h3>§2 Haftungsausschluss</h3>
+    <p>Alle Informationen dienen der Bildung. Keine Haftung für Investitionsentscheidungen. Kapitalverlust möglich.</p>
+    <h3>§3 Abonnement</h3>
+    <p>Monatlich kündbar. Beta-Preise werden lebenslang gesperrt. Zahlung über Stripe.</p>
+    <h3>§4 Kündigung</h3>
+    <p>Jederzeit zum Monatsende über hallo@kapitl.de oder im Stripe-Portal.</p>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     LANDING PAGE
+════════════════════════════════════════ -->
+<div class="screen active" id="landing">
+
+  <nav class="l-nav">
+    <div class="l-logo">KAPITL</div>
+    <button class="l-nav-btn" onclick="startCheckout('pro')">KOSTENLOS STARTEN</button>
+  </nav>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-label">KI-Privatbanker · 24/7</div>
+    <h1 class="hero-title">
+      Der Privatbanker,<br>
+      den du dir nie<br>
+      <span>leisten konntest.</span>
+    </h1>
+    <p class="hero-sub">
+      OZ vereint Privatbanker, Trading-Coach, Makro-Analyst und Steuerberater — in einer App. Für €9.99 statt €20.000/Jahr.
+    </p>
+    <button class="hero-cta" onclick="showApp()">KOSTENLOS TESTEN →</button>
+    <div class="hero-sub-cta">Keine Kreditkarte · 5 Nachrichten gratis</div>
+  </div>
+
+  <!-- OZ Preview -->
+  <div class="oz-preview">
+    <div class="oz-preview-header">
+      <div class="oz-avatar">OZ</div>
+      <div>
+        <div class="oz-name">OZ — KI Investment-Banker</div>
+        <div class="oz-status"><span class="oz-dot"></span>Online · antwortet sofort</div>
+      </div>
+    </div>
+    <div class="oz-preview-msg">
+      Guten Morgen. <strong>DAX ist heute 1.2% im Plus</strong> — getrieben von starken Inflationsdaten aus den USA. Soll ich dir erklären was das für dein Portfolio bedeutet, oder willst du direkt die <strong>Top 3 Handelsideen</strong> für heute?
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat">
+      <span class="stat-num">€0</span>
+      <div class="stat-label">Einstieg</div>
+    </div>
+    <div class="stat">
+      <span class="stat-num">150+</span>
+      <div class="stat-label">Quellen täglich</div>
+    </div>
+    <div class="stat">
+      <span class="stat-num">24/7</span>
+      <div class="stat-label">Verfügbar</div>
+    </div>
+  </div>
+
+
+  <!-- Mission -->
+  <div style="padding:48px 24px;border-bottom:1px solid var(--border);text-align:center">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--gold);letter-spacing:.2em;text-transform:uppercase;margin-bottom:20px">UNSERE MISSION</div>
+    <div style="font-size:clamp(26px,6vw,42px);font-weight:800;line-height:1.2;color:var(--text);margin-bottom:20px">
+      Das Wissen der besten<br>Investoren der Welt.<br><span style="color:var(--gold)">Jetzt für jeden.</span>
+    </div>
+    <p style="font-size:16px;color:var(--sub);line-height:1.8;max-width:480px;margin:0 auto 32px">
+      Ein Privatbanker kostet <strong style="color:var(--text)">€20.000 pro Jahr</strong>. Ein guter Steuerberater <strong style="color:var(--text)">€5.000</strong>. Ein Trading-Coach <strong style="color:var(--text)">€3.000</strong>. Finanzwissen war immer eine Frage des Geldes — bis jetzt.
+    </p>
+    <div style="display:flex;flex-direction:column;gap:16px;max-width:400px;margin:0 auto">
+      <div style="display:flex;align-items:flex-start;gap:16px;text-align:left">
+        <div style="font-size:24px;flex-shrink:0">🏦</div>
+        <div>
+          <div style="font-weight:700;font-size:15px;margin-bottom:4px">Früher: Nur für Reiche</div>
+          <div style="font-size:14px;color:var(--sub)">Privatbanking, exklusive Fonds, persönliche Berater — alles ab €500.000 Mindesteinlage.</div>
+        </div>
+      </div>
+      <div style="border-left:2px solid var(--gold);margin-left:12px"></div>
+      <div style="display:flex;align-items:flex-start;gap:16px;text-align:left">
+        <div style="font-size:24px;flex-shrink:0">⚡</div>
+        <div>
+          <div style="font-weight:700;font-size:15px;margin-bottom:4px;color:var(--gold)">Heute: KAPITL für alle</div>
+          <div style="font-size:14px;color:var(--sub)">Dasselbe Wissen, dieselbe Qualität, dieselbe Kompetenz — für €4.99 im Monat.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Features -->
+  <div class="features">
+    <h2 class="features-title">Was OZ kann</h2>
+    <div class="feature">
+      <div class="feature-icon">🧠</div>
+      <div class="feature-title">KI-Privatbanker</div>
+      <div class="feature-desc">Stell OZ jede Finanzfrage — Aktien, ETFs, Krypto, Steuern, Altersvorsorge. Antworten in Sekunden.</div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">☀️</div>
+      <div class="feature-title">Morning Briefing</div>
+      <div class="feature-desc">Täglich um 8 Uhr: Was die Märkte bewegt, was institutionelle Investoren tun, was das für dich bedeutet.</div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">📊</div>
+      <div class="feature-title">Trading Analyse</div>
+      <div class="feature-desc">Echtzeit-Signale für DAX, S&P 500, Bitcoin, Gold, EUR/USD — mit klarer Handlungsempfehlung.</div>
+    </div>
+  </div>
+
+  <!-- Pricing -->
+  <div class="pricing">
+    <h2 class="pricing-title">Einfache Preise</h2>
+    <p class="pricing-sub">Kündige jederzeit. Beta-Preis wird lebenslang gesperrt.</p>
+
+    <div class="plan featured">
+      <div class="plan-badge">BELIEBT</div>
+      <div class="plan-name">BETA</div>
+      <div class="plan-price">€4.99 <span>/Monat · für immer</span></div>
+      <ul class="plan-features">
+        <li>OZ Chat — unbegrenzt</li>
+        <li>Morning Briefing täglich</li>
+        <li>Trading Analyse</li>
+        <li>Beta-Preis lebenslang gesperrt</li>
+      </ul>
+      <button class="plan-btn primary" onclick="startCheckout('beta')">BETA-PLATZ SICHERN →</button>
+    </div>
+
+    <div class="plan">
+      <div class="plan-name">PRO</div>
+      <div class="plan-price">€9.99 <span>/Monat</span></div>
+      <ul class="plan-features">
+        <li>OZ Chat — unbegrenzt</li>
+        <li>Morning Briefing täglich</li>
+        <li>Trading Analyse</li>
+      </ul>
+      <button class="plan-btn secondary" onclick="startCheckout('pro')">PRO STARTEN</button>
+    </div>
+
+    <div class="plan">
+      <div class="plan-name">FREE</div>
+      <div class="plan-price">€0 <span>/Monat</span></div>
+      <ul class="plan-features">
+        <li>5 OZ-Nachrichten täglich</li>
+        <li>Morning Briefing (eingeschränkt)</li>
+      </ul>
+      <button class="plan-btn secondary" onclick="showApp()">KOSTENLOS TESTEN</button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="disclaimer">
+    ⚠️ KAPITL und OZ stellen keine Anlageberatung dar. Alle Inhalte dienen der Finanzbildung. Investitionen sind mit Risiken verbunden — Totalverlust möglich.
+  </div>
+  <div class="l-footer">
+    <div class="l-footer-logo">KAPITL</div>
+    <div class="l-footer-text">Das Wissen der besten Investoren der Welt.<br>Jetzt für jeden.</div>
+    <div class="l-footer-links">
+      <a href="#" onclick="openLegal('legalImpressum')">Impressum</a>
+      <a href="#" onclick="openLegal('legalDatenschutz')">Datenschutz</a>
+      <a href="#" onclick="openLegal('legalAGB')">AGB</a>
+      <a href="mailto:hallo@kapitl.de">Kontakt</a>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     APP — 3 TABS
+════════════════════════════════════════ -->
+<div class="screen" id="app">
+
+  <!-- Top Bar -->
+  <div class="app-bar">
+    <div class="app-logo">KAPITL</div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <span class="app-plan" id="appPlanBadge">FREE</span>
+      <button class="app-upgrade-btn" onclick="showPaywall()" id="appUpgradeBtn">UPGRADE</button>
+    </div>
+  </div>
+
+  <!-- Tab Content -->
+  <div class="tab-content">
+
+    <!-- ── TAB 1: OZ CHAT ── -->
+    <div class="tab-panel active" id="tab-oz">
+
+      <div class="oz-chat-header">
+        <div class="oz-chat-title">OZ</div>
+        <div class="oz-chat-sub">Dein persönlicher KI-Investment-Banker</div>
+      </div>
+
+      <!-- Mode Selector -->
+      <div class="oz-modes">
+        <button class="oz-mode-btn active" onclick="setMode('finance',this)">💼 Finanzen</button>
+        <button class="oz-mode-btn" onclick="setMode('trading',this)">📊 Trading</button>
+        <button class="oz-mode-btn" onclick="setMode('macro',this)">🌍 Makro</button>
+        <button class="oz-mode-btn" onclick="setMode('tax',this)">🧾 Steuern</button>
+        <button class="oz-mode-btn" onclick="setMode('beginner',this)">🎓 Einsteiger</button>
+      </div>
+
+      <!-- Messages -->
+      <div class="oz-messages" id="ozMessages">
+        <div class="msg ai">
+          <div class="msg-avatar">OZ</div>
+          <div class="msg-bubble">
+            Hallo! Ich bin OZ — dein persönlicher KI-Investment-Banker. 👋<br><br>
+            Ich beantworte alle deine Finanzfragen — von ETF-Auswahl über Trading-Strategien bis hin zu Steueroptimierung. Was beschäftigt dich heute?
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Prompts -->
+      <div class="oz-quickprompts">
+        <button class="qp-btn" onclick="quickPrompt('Was ist ein ETF und wie investiere ich?')">ETF erklären</button>
+        <button class="qp-btn" onclick="quickPrompt('Wie sieht der DAX heute aus?')">DAX heute</button>
+        <button class="qp-btn" onclick="quickPrompt('Wie spare ich Steuern auf Kapitalerträge?')">Steuern sparen</button>
+        <button class="qp-btn" onclick="quickPrompt('Ist jetzt ein guter Zeitpunkt für Bitcoin?')">Bitcoin kaufen?</button>
+        <button class="qp-btn" onclick="quickPrompt('Erkläre mir Inflation und wie ich mich schütze')">Inflation</button>
+      </div>
+
+      <!-- Input -->
+      <div class="oz-input-area">
+        <div class="oz-limit">
+          <span class="oz-limit-label" id="limitLabel">5 kostenlose Nachrichten</span>
+          <div class="oz-limit-dots" id="limitDots">
+            <div class="oz-limit-dot"></div>
+            <div class="oz-limit-dot"></div>
+            <div class="oz-limit-dot"></div>
+            <div class="oz-limit-dot"></div>
+            <div class="oz-limit-dot"></div>
+          </div>
+        </div>
+        <div class="oz-input-row">
+          <textarea class="oz-input" id="ozInput" placeholder="Frag OZ alles über Finanzen..." rows="1"
+            onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendOz()}"
+            oninput="autoResize(this)"></textarea>
+          <button class="oz-send" id="ozSendBtn" onclick="sendOz()">➤</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB 2: MORNING BRIEFING ── -->
+    <div class="tab-panel" id="tab-briefing">
+
+      <div class="brief-header">
+        <div class="brief-date" id="briefDate">LOADING...</div>
+        <div class="brief-title">Morning Briefing</div>
+        <div class="brief-sub">Was die Märkte heute bewegt</div>
+      </div>
+
+      <!-- Ticker -->
+      <div class="ticker" id="marketTicker">
+        <div class="ticker-item">
+          <div class="ticker-name">DAX</div>
+          <div class="ticker-price">18.247</div>
+          <div class="ticker-change up">+1.2%</div>
+        </div>
+        <div class="ticker-item">
+          <div class="ticker-name">S&P 500</div>
+          <div class="ticker-price">5.131</div>
+          <div class="ticker-change up">+0.4%</div>
+        </div>
+        <div class="ticker-item">
+          <div class="ticker-name">BTC</div>
+          <div class="ticker-price">67.420</div>
+          <div class="ticker-change up">+2.1%</div>
+        </div>
+        <div class="ticker-item">
+          <div class="ticker-name">GOLD</div>
+          <div class="ticker-price">2.312</div>
+          <div class="ticker-change down">-0.3%</div>
+        </div>
+        <div class="ticker-item">
+          <div class="ticker-name">EUR/USD</div>
+          <div class="ticker-price">1.0847</div>
+          <div class="ticker-change up">+0.1%</div>
+        </div>
+      </div>
+
+      <!-- Brief Cards -->
+      <div class="brief-cards">
+        <div class="brief-card">
+          <div class="brief-card-label">🔥 Top Story</div>
+          <div class="brief-card-title">Fed signalisiert späteren Zinssenkung</div>
+          <div class="brief-card-text">Die Federal Reserve deutet an, dass Zinssenkungen erst im zweiten Halbjahr 2025 kommen könnten. Das treibt den US-Dollar — und belastet Schwellenmärkte.</div>
+          <div class="brief-card-footer">
+            <span style="font-size:12px;color:var(--sub)">Auswirkung: Mittel</span>
+            <button class="brief-card-oz" onclick="quickPromptAndSwitch('Was bedeutet die Fed-Entscheidung für mein Portfolio?')">OZ fragen →</button>
+          </div>
+        </div>
+
+        <div class="brief-card">
+          <div class="brief-card-label">📈 Markt-Signal</div>
+          <div class="brief-card-title">DAX auf Rekordkurs — was steckt dahinter?</div>
+          <div class="brief-card-text">Starke Quartalszahlen von SAP und Deutsche Telekom pushen den Index. Technisch überkauft — Vorsicht bei neuen Long-Positionen.</div>
+          <div class="brief-card-footer">
+            <span style="font-size:12px;color:var(--sub)">Signal: Vorsicht</span>
+            <button class="brief-card-oz" onclick="quickPromptAndSwitch('Soll ich jetzt DAX-ETFs kaufen?')">OZ fragen →</button>
+          </div>
+        </div>
+
+        <div class="brief-card">
+          <div class="brief-card-label">💡 OZ Tipp des Tages</div>
+          <div class="brief-card-title">Steueroptimierung: Verluste noch dieses Jahr realisieren</div>
+          <div class="brief-card-text">Wer Buchverluste hat kann diese steuerlich nutzen um Gewinne auszugleichen. Letzte Chance vor Jahresende — und OZ erklärt wie es funktioniert.</div>
+          <div class="brief-card-footer">
+            <span style="font-size:12px;color:var(--sub)">Steuer-Tipp</span>
+            <button class="brief-card-oz" onclick="quickPromptAndSwitch('Wie realisiere ich Verluste steueroptimiert?')">OZ fragen →</button>
+          </div>
+        </div>
+      </div>
+
+      <button class="ask-oz-btn" onclick="switchTab('oz')">
+        OZ NACH MEHR FRAGEN →
+      </button>
+    </div>
+
+    <!-- ── TAB 3: TRADING ── -->
+    <div class="tab-panel" id="tab-trading">
+
+      <div class="trading-header">
+        <div class="trading-title">Trading Analyse</div>
+        <div class="trading-sub">OZ-Signale für heute</div>
+      </div>
+
+      <!-- Asset Selector -->
+      <div class="asset-grid" id="assetGrid">
+        <button class="asset-btn active" onclick="selectAsset('DAX',this)">
+          <span class="asset-sym">DAX</span>
+          <span class="asset-chg up">+1.2%</span>
+        </button>
+        <button class="asset-btn" onclick="selectAsset('S&P 500',this)">
+          <span class="asset-sym">S&P 500</span>
+          <span class="asset-chg up">+0.4%</span>
+        </button>
+        <button class="asset-btn" onclick="selectAsset('Bitcoin',this)">
+          <span class="asset-sym">BTC</span>
+          <span class="asset-chg up">+2.1%</span>
+        </button>
+        <button class="asset-btn" onclick="selectAsset('Gold',this)">
+          <span class="asset-sym">GOLD</span>
+          <span class="asset-chg down">-0.3%</span>
+        </button>
+        <button class="asset-btn" onclick="selectAsset('EUR/USD',this)">
+          <span class="asset-sym">EUR/USD</span>
+          <span class="asset-chg up">+0.1%</span>
+        </button>
+        <button class="asset-btn" onclick="selectAsset('Öl',this)">
+          <span class="asset-sym">ÖL</span>
+          <span class="asset-chg down">-0.8%</span>
+        </button>
+      </div>
+
+      <!-- Analysis -->
+      <div class="analysis-panel">
+        <div class="analysis-label" id="analysisAssetLabel">OZ ANALYSE · DAX</div>
+
+        <div class="signal-cards">
+          <div class="signal-card">
+            <div class="signal-icon">📈</div>
+            <div class="signal-body">
+              <div class="signal-title">Trend</div>
+              <div class="signal-desc" id="signalTrend">Aufwärtstrend intakt. Höheres Hoch und höheres Tief bestätigt.</div>
+            </div>
+            <div class="signal-badge badge-buy" id="signalTrendBadge">BULLISH</div>
+          </div>
+          <div class="signal-card">
+            <div class="signal-icon">⚡</div>
+            <div class="signal-body">
+              <div class="signal-title">Momentum</div>
+              <div class="signal-desc" id="signalMomentum">RSI bei 68 — stark aber noch nicht überkauft. Volumen bestätigt.</div>
+            </div>
+            <div class="signal-badge badge-hold" id="signalMomentumBadge">NEUTRAL</div>
+          </div>
+          <div class="signal-card">
+            <div class="signal-icon">🎯</div>
+            <div class="signal-body">
+              <div class="signal-title">OZ Empfehlung</div>
+              <div class="signal-desc" id="signalRec">Halten und Gewinne laufen lassen. Stop-Loss bei 17.900.</div>
+            </div>
+            <div class="signal-badge badge-buy" id="signalRecBadge">HALTEN</div>
+          </div>
+        </div>
+
+        <button class="oz-analyze-btn" id="ozAnalyzeBtn" onclick="analyzeWithOz()">
+          OZ LIVE-ANALYSE STARTEN →
+        </button>
+
+        <!-- Watchlist -->
+        <div class="watchlist">
+          <div class="watchlist-title">Deine Watchlist</div>
+          <div class="watchlist-item">
+            <div>
+              <div class="wl-sym">MSFT</div>
+              <div class="wl-name">Microsoft Corp.</div>
+            </div>
+            <div class="wl-right">
+              <div class="wl-price">$415.20</div>
+              <div class="wl-chg up">+0.8%</div>
+            </div>
+          </div>
+          <div class="watchlist-item">
+            <div>
+              <div class="wl-sym">NVDA</div>
+              <div class="wl-name">NVIDIA Corp.</div>
+            </div>
+            <div class="wl-right">
+              <div class="wl-price">$875.40</div>
+              <div class="wl-chg up">+2.3%</div>
+            </div>
+          </div>
+          <div class="watchlist-item">
+            <div>
+              <div class="wl-sym">AAPL</div>
+              <div class="wl-name">Apple Inc.</div>
+            </div>
+            <div class="wl-right">
+              <div class="wl-price">$189.80</div>
+              <div class="wl-chg down">-0.4%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end tab-content -->
+
+  <!-- Bottom Navigation — 3 Tabs -->
+  <nav class="bottom-nav">
+    <button class="bnav-item active" id="bnav-oz" onclick="switchTab('oz')">
+      <span class="bnav-icon">🤖</span>
+      <span>OZ</span>
+    </button>
+    <button class="bnav-item" id="bnav-briefing" onclick="switchTab('briefing')">
+      <span class="bnav-icon">☀️</span>
+      <span>Briefing</span>
+    </button>
+    <button class="bnav-item" id="bnav-trading" onclick="switchTab('trading')">
+      <span class="bnav-icon">📊</span>
+      <span>Trading</span>
+    </button>
+  </nav>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     PAYWALL
+════════════════════════════════════════ -->
+<div class="screen" id="paywall">
+  <div class="pw-icon">🔒</div>
+  <div class="pw-title">UPGRADE</div>
+  <div class="pw-sub">Du hast deine 5 kostenlosen Nachrichten verwendet.<br>Upgrade für unbegrenzten OZ-Zugang.</div>
+  <div class="pw-plans">
+    <div class="pw-plan gold">
+      <div class="pw-plan-name">BETA · BELIEBT</div>
+      <div class="pw-plan-price">€4.99 <span>/Monat · für immer</span></div>
+      <button class="pw-plan-btn gold-btn" onclick="startCheckout('beta')">BETA-PLATZ SICHERN →</button>
+    </div>
+    <div class="pw-plan">
+      <div class="pw-plan-name">PRO</div>
+      <div class="pw-plan-price">€9.99 <span>/Monat</span></div>
+      <button class="pw-plan-btn outline-btn" onclick="startCheckout('pro')">PRO STARTEN</button>
+    </div>
+  </div>
+  <button class="pw-back" onclick="switchScreen('app')">← Zurück</button>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════ -->
+<script>
+// ── STATE ──
+let msgCount = 0;
+const MAX_FREE = 5;
+let currentMode = 'finance';
+let currentAsset = 'DAX';
+let isPro = false;
+const ozHistory = [];
+
+// ── SCREEN SWITCHING ──
+function switchScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function showApp() {
+  switchScreen('app');
+  updatePlanUI();
+}
+
+function showPaywall() {
+  switchScreen('paywall');
+}
+
+// ── TAB SWITCHING ──
+function switchTab(tab) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.bnav-item').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  document.getElementById('bnav-' + tab).classList.add('active');
+}
+
+// ── PLAN UI ──
+function updatePlanUI() {
+  const plan = localStorage.getItem('kapitl-plan') || 'free';
+  isPro = plan !== 'free';
+  const badge = document.getElementById('appPlanBadge');
+  const upgradeBtn = document.getElementById('appUpgradeBtn');
+  if (badge) badge.textContent = plan.toUpperCase();
+  if (upgradeBtn) upgradeBtn.style.display = isPro ? 'none' : 'block';
+  if (isPro) {
+    msgCount = 0;
+    updateLimitUI();
+  }
+}
+
+function updateLimitUI() {
+  const dots = document.querySelectorAll('.oz-limit-dot');
+  const label = document.getElementById('limitLabel');
+  const remaining = Math.max(0, MAX_FREE - msgCount);
+  
+  if (isPro) {
+    if (label) label.textContent = 'Unbegrenzte Nachrichten ✓';
+    dots.forEach(d => { d.classList.add('used'); d.style.background = 'var(--gold)'; });
+    return;
+  }
+  
+  dots.forEach((d, i) => {
+    d.classList.toggle('used', i < msgCount);
+  });
+  if (label) label.textContent = `${remaining} kostenlose Nachrichten`;
+}
+
+// ── MODE ──
+function setMode(mode, btn) {
+  currentMode = mode;
+  document.querySelectorAll('.oz-mode-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ── AUTO RESIZE TEXTAREA ──
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+// ── QUICK PROMPTS ──
+function quickPrompt(text) {
+  document.getElementById('ozInput').value = text;
+  sendOz();
+}
+
+function quickPromptAndSwitch(text) {
+  switchTab('oz');
+  setTimeout(() => quickPrompt(text), 100);
+}
+
+// ── SEND MESSAGE ──
+async function sendOz() {
+  const input = document.getElementById('ozInput');
+  const text = input.value.trim();
+  if (!text) return;
+
+  // Check limit
+  if (!isPro && msgCount >= MAX_FREE) {
+    showPaywall();
+    return;
+  }
+
+  // UI
+  input.value = '';
+  input.style.height = 'auto';
+  document.getElementById('ozSendBtn').disabled = true;
+
+  // Add user message
+  appendMsg('user', text);
+  msgCount++;
+  updateLimitUI();
+
+  // Add to history
+  ozHistory.push({ role: 'user', content: text });
+
+  // Typing indicator
+  const typingId = showTyping();
+
+  // System prompt by mode
+  const systemPrompts = {
+    finance: 'Du bist OZ — ein erfahrener KI-Privatbanker und Finanzexperte. Du gibst klare, praktische Finanzratschläge auf Deutsch. Du bist direkt, kompetent und freundlich. Wichtig: Du gibst Bildung und Wissen, keine individuelle Anlageberatung. Halte Antworten prägnant — max 150 Wörter. Verwende gelegentlich relevante Emojis.',
+    trading: 'Du bist OZ — ein erfahrener Trading-Coach und technischer Analyst. Du analysierst Charts, erkennst Muster und gibst klare Handlungsempfehlungen. Antworte auf Deutsch, prägnant und klar. Immer mit Risikohinweis. Max 150 Wörter.',
+    macro: 'Du bist OZ — ein Makroökonom und Marktanalyst. Du erklärst globale wirtschaftliche Zusammenhänge und ihre Auswirkungen auf Investments. Antworte auf Deutsch, klar und verständlich. Max 150 Wörter.',
+    tax: 'Du bist OZ — ein Steuerexperte für Kapitalanlagen in Deutschland. Du kennst alle legalen Steueroptimierungsmöglichkeiten für Investoren. Antworte auf Deutsch. Wichtig: Du gibst allgemeine Bildung, keinen individuellen Steuerrat. Max 150 Wörter.',
+    beginner: 'Du bist OZ — ein geduldiger Finanzlehrer der komplexe Themen einfach erklärt. Du verwendest einfache Sprache, Analogien und praktische Beispiele. Antworte auf Deutsch, freundlich und motivierend. Max 150 Wörter.',
+  };
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: systemPrompts[currentMode] || systemPrompts.finance,
+        messages: ozHistory,
+      })
+    });
+
+    const data = await res.json();
+    removeTyping(typingId);
+
+    const reply = data.content?.[0]?.text || 'Entschuldigung, ich konnte keine Antwort generieren. Bitte versuche es erneut.';
+    appendMsg('ai', reply);
+    ozHistory.push({ role: 'assistant', content: reply });
+
+    // Check limit after response
+    if (!isPro && msgCount >= MAX_FREE) {
+      setTimeout(() => {
+        appendMsg('ai', '🔒 Du hast deine 5 kostenlosen Nachrichten verwendet. Upgrade auf Pro für unbegrenzten Zugang.');
+        setTimeout(showPaywall, 1500);
+      }, 500);
+    }
+
+  } catch (err) {
+    removeTyping(typingId);
+    appendMsg('ai', '⚠️ Verbindungsfehler. Bitte überprüfe deine Internetverbindung und versuche es erneut.');
+  }
+
+  document.getElementById('ozSendBtn').disabled = false;
+  document.getElementById('ozInput').focus();
+}
+
+function appendMsg(role, text) {
+  const msgs = document.getElementById('ozMessages');
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+  div.innerHTML = `
+    <div class="msg-avatar">${role === 'ai' ? 'OZ' : '👤'}</div>
+    <div class="msg-bubble">${text.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')}</div>
+  `;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  return div;
+}
+
+function showTyping() {
+  const msgs = document.getElementById('ozMessages');
+  const div = document.createElement('div');
+  const id = 'typing-' + Date.now();
+  div.id = id;
+  div.className = 'msg ai';
+  div.innerHTML = `<div class="msg-avatar">OZ</div><div class="msg-bubble"><div class="typing-dots"><span></span><span></span><span></span></div></div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  return id;
+}
+
+function removeTyping(id) {
+  document.getElementById(id)?.remove();
+}
+
+// ── TRADING ──
+function selectAsset(asset, btn) {
+  currentAsset = asset;
+  document.querySelectorAll('.asset-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('analysisAssetLabel').textContent = `OZ ANALYSE · ${asset.toUpperCase()}`;
+  document.getElementById('ozAnalyzeBtn').textContent = `${asset.toUpperCase()} ANALYSE STARTEN →`;
+}
+
+function analyzeWithOz() {
+  quickPromptAndSwitch(`Analysiere ${currentAsset} für mich. Trend, Momentum, und deine konkrete Empfehlung für heute.`);
+}
+
+// ── BRIEFING DATE ──
+function setBriefDate() {
+  const el = document.getElementById('briefDate');
+  if (!el) return;
+  const days = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
+  const months = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+  const now = new Date();
+  el.textContent = `${days[now.getDay()]}, ${now.getDate()}. ${months[now.getMonth()]} ${now.getFullYear()}`;
+}
+
+// ── LEGAL ──
+function openLegal(id) {
+  document.getElementById(id).classList.add('open');
+}
+function closeLegal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+// ── STRIPE ──
+const STRIPE_CONFIG = {
+  publishableKey: 'pk_live_HIER_DEINEN_KEY_EINTRAGEN',
+  prices: {
+    beta:  'price_BETA_ID',
+    pro:   'price_PRO_ID',
+    elite: 'price_ELITE_ID',
+  },
+  successUrl: 'https://kapitl.de/?success=true',
+  cancelUrl:  'https://kapitl.de/?canceled=true',
+};
+
+let _stripe;
+function getStripe() {
+  if (!_stripe && window.Stripe) _stripe = Stripe(STRIPE_CONFIG.publishableKey);
+  return _stripe;
+}
+
+async function startCheckout(plan) {
+  const priceId = STRIPE_CONFIG.prices[plan];
+  if (!priceId || priceId.includes('ID') || priceId.includes('HIER')) {
+    showWaitlist(plan);
+    return;
+  }
+  document.getElementById('stripeLoading').style.display = 'flex';
+  try {
+    const s = getStripe();
+    const { error } = await s.redirectToCheckout({
+      lineItems: [{ price: priceId, quantity: 1 }],
+      mode: 'subscription',
+      successUrl: STRIPE_CONFIG.successUrl,
+      cancelUrl: STRIPE_CONFIG.cancelUrl,
+      locale: 'de',
+      allowPromotionCodes: true,
+    });
+    if (error) throw error;
+  } catch (err) {
+    document.getElementById('stripeLoading').style.display = 'none';
+    document.getElementById('stripeError').style.display = 'flex';
+  }
+}
+
+function showWaitlist(plan) {
+  const info = { beta:'€4.99/Monat', pro:'€9.99/Monat', elite:'€49/Monat' };
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.style.display = 'flex';
+  overlay.innerHTML = `
+    <div class="modal-box" style="border-top:3px solid var(--gold)">
+      <div class="modal-icon">🔐</div>
+      <div class="modal-title">${plan.toUpperCase()}</div>
+      <div class="modal-sub">${info[plan] || '€9.99/Monat'}<br>Zahlung wird gerade eingerichtet.<br>Trag dich ein — du bist einer der Ersten.</div>
+      <input class="waitlist-input" id="wlEmail" type="email" placeholder="deine@email.de">
+      <button class="modal-btn primary" onclick="submitWaitlist('${plan}',this)">PLATZ SICHERN →</button>
+      <button class="modal-btn secondary" onclick="this.closest('.modal-overlay').remove()">SCHLIESSEN</button>
+    </div>`;
+  document.body.appendChild(overlay);
+  setTimeout(() => document.getElementById('wlEmail')?.focus(), 100);
+}
+
+function submitWaitlist(plan, btn) {
+  const email = document.getElementById('wlEmail')?.value?.trim();
+  if (!email || !email.includes('@')) {
+    document.getElementById('wlEmail').style.borderColor = 'var(--red)';
+    return;
+  }
+  const wl = JSON.parse(localStorage.getItem('kapitl-waitlist') || '[]');
+  wl.push({ email, plan, date: new Date().toISOString() });
+  localStorage.setItem('kapitl-waitlist', JSON.stringify(wl));
+  btn.closest('.modal-overlay')?.remove();
+  document.getElementById('successPlanName').textContent = `${plan.toUpperCase()} Platz reserviert! Du wirst als Erstes benachrichtigt.`;
+  document.getElementById('stripeSuccess').style.display = 'flex';
+}
+
+function closeStripeSuccess() {
+  document.getElementById('stripeSuccess').style.display = 'none';
+  localStorage.setItem('kapitl-plan', 'pro');
+  msgCount = 0;
+  isPro = true;
+  updateLimitUI();
+  showApp();
+}
+
+// ── INIT ──
+window.addEventListener('load', () => {
+  setBriefDate();
+  updatePlanUI();
+
+  // Handle Stripe return
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('success') === 'true') {
+    localStorage.setItem('kapitl-plan', 'pro');
+    document.getElementById('successPlanName').textContent = 'Dein Plan ist aktiv. OZ wartet auf dich.';
+    document.getElementById('stripeSuccess').style.display = 'flex';
+    window.history.replaceState({}, '', '/');
+  }
+  if (params.get('canceled') === 'true') {
+    document.getElementById('stripeError').style.display = 'flex';
+    window.history.replaceState({}, '', '/');
+  }
+
+  // PWA Service Worker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  }
+
+  // iOS install hint
+  if (/iphone|ipad|ipod/i.test(navigator.userAgent) && !navigator.standalone && !localStorage.getItem('ios-hint')) {
+    setTimeout(() => {
+      localStorage.setItem('ios-hint','1');
+      const h = document.createElement('div');
+      h.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--gold);padding:16px 20px;z-index:9999;max-width:90vw;text-align:center;animation:slideUp .3s ease';
+      h.innerHTML = `<div style="font-size:13px;color:var(--text);margin-bottom:6px">📲 KAPITL als App installieren</div><div style="font-size:11px;color:var(--sub);font-family:'IBM Plex Mono',monospace">Tippe <b style="color:var(--gold)">Teilen ⎋</b> → <b style="color:var(--gold)">Zum Homescreen</b></div><button onclick="this.parentElement.remove()" style="margin-top:10px;background:none;border:1px solid var(--muted);color:var(--sub);padding:5px 14px;cursor:pointer;font-size:11px;font-family:'IBM Plex Mono',monospace">OK</button>`;
+      document.body.appendChild(h);
+      setTimeout(() => h.remove(), 9000);
+    }, 20000);
+  }
+});
+</script>
+
+</body>
+</html>
