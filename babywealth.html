@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07111f">
+<title>BABYWEALTH — Dein Investmentbanker für dein Kind</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,800;0,900;1,700&family=DM+Mono:wght@300;400;500&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #07111f;
+  --bg2:     #0b1929;
+  --panel:   #0f2035;
+  --card:    #122440;
+  --wire:    rgba(255,255,255,.07);
+  --wire2:   rgba(255,255,255,.12);
+  --gold:    #f5a623;
+  --gold2:   #ffc54d;
+  --cream:   #fef9f0;
+  --sage:    #6ec99a;
+  --blush:   #f07fa0;
+  --sky:     #60b8e8;
+  --lav:     #a88fe8;
+  --sun:     #ffd166;
+  --text:    #ddeeff;
+  --muted:   #5b7a9a;
+  --dim:     #1a3050;
+  --pf: 'Playfair Display', Georgia, serif;
+  --mono: 'DM Mono', monospace;
+  --ui: 'Outfit', sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--ui);-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;}
+
+/* ── SCREENS ── */
+.screen{display:none;flex-direction:column;height:100dvh;overflow:hidden;position:relative;}
+.screen.active{display:flex;}
+
+/* ── SCROLL ── */
+.scroll{overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;flex:1;}
+.scroll::-webkit-scrollbar{width:2px;}
+.scroll::-webkit-scrollbar-thumb{background:rgba(245,166,35,.2);border-radius:1px;}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+@keyframes float2{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-7px) rotate(3deg)}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(245,166,35,.5)}60%{box-shadow:0 0 0 14px rgba(245,166,35,0)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes slideUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes heartbeat{0%,100%{transform:scale(1)}14%{transform:scale(1.18)}28%{transform:scale(1)}}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+@keyframes twinkle{0%,100%{opacity:.2;transform:scale(.8)}50%{opacity:1;transform:scale(1.2)}}
+@keyframes countBounce{0%{transform:scale(.5);opacity:0}70%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
+
+/* ── TYPOGRAPHY ── */
+.serif{font-family:var(--pf);}
+.mono{font-family:var(--mono);}
+
+/* ── CARDS ── */
+.card{
+  background:linear-gradient(145deg,rgba(18,36,64,.95),rgba(13,27,50,.9));
+  border:1px solid var(--wire);
+  border-radius:22px;
+  backdrop-filter:blur(8px);
+}
+.card-glow{
+  background:linear-gradient(145deg,rgba(245,166,35,.07),rgba(18,36,64,.9));
+  border:1px solid rgba(245,166,35,.22);
+  border-radius:22px;
+}
+.card-sage{background:linear-gradient(145deg,rgba(110,201,154,.07),rgba(18,36,64,.9));border:1px solid rgba(110,201,154,.2);border-radius:22px;}
+.card-blush{background:linear-gradient(145deg,rgba(240,127,160,.07),rgba(18,36,64,.9));border:1px solid rgba(240,127,160,.2);border-radius:22px;}
+.card-sky{background:linear-gradient(145deg,rgba(96,184,232,.07),rgba(18,36,64,.9));border:1px solid rgba(96,184,232,.2);border-radius:22px;}
+
+/* ── BUTTONS ── */
+.btn{padding:14px 28px;border:none;border-radius:16px;font-family:var(--ui);font-size:15px;font-weight:700;cursor:pointer;transition:all .18s;letter-spacing:.01em;}
+.btn-gold{background:linear-gradient(135deg,var(--gold),#d4870a);color:#07111f;box-shadow:0 6px 20px rgba(245,166,35,.35);}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(245,166,35,.5);}
+.btn-gold:active{transform:scale(.97);}
+.btn-outline{background:transparent;border:1.5px solid rgba(245,166,35,.4);color:var(--gold);}
+.btn-outline:hover{background:rgba(245,166,35,.08);border-color:var(--gold);}
+.btn-ghost{background:rgba(255,255,255,.04);border:1px solid var(--wire);color:var(--muted);font-size:12px;padding:9px 18px;border-radius:12px;}
+.btn-ghost:hover{border-color:rgba(245,166,35,.3);color:var(--gold);}
+
+/* ── BADGES ── */
+.badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:9px;font-weight:700;letter-spacing:.05em;}
+.bg{background:rgba(245,166,35,.1);color:var(--gold);border:1px solid rgba(245,166,35,.22);}
+.bs{background:rgba(110,201,154,.1);color:var(--sage);border:1px solid rgba(110,201,154,.22);}
+.bb{background:rgba(240,127,160,.1);color:var(--blush);border:1px solid rgba(240,127,160,.22);}
+.bk{background:rgba(96,184,232,.1);color:var(--sky);border:1px solid rgba(96,184,232,.22);}
+.bl{background:rgba(168,143,232,.1);color:var(--lav);border:1px solid rgba(168,143,232,.22);}
+
+/* ── PROGRESS ── */
+.prog{height:5px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:3px;transition:width .7s ease;}
+
+/* ── CHAT ── */
+.msg{display:flex;gap:10px;align-items:flex-start;animation:fadeUp .32s ease both;}
+.msg.user{flex-direction:row-reverse;}
+.av{width:34px;height:34px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+.av.eli{background:linear-gradient(135deg,var(--gold),#c97b08);font-size:15px;font-weight:800;color:#07111f;font-family:var(--pf);}
+.av.u{background:var(--card);border:1px solid var(--wire);}
+.bmeta{font-size:9px;color:var(--muted);margin-bottom:4px;font-weight:600;letter-spacing:.04em;}
+.msg.user .bmeta{text-align:right;}
+.bub{padding:12px 15px;font-size:13.5px;line-height:1.68;max-width:88%;border-radius:18px;}
+.msg:not(.user) .bub{background:var(--card);border:1px solid var(--wire);color:#b8d4f0;border-radius:18px 18px 18px 5px;}
+.msg.user .bub{background:linear-gradient(135deg,var(--gold),#d4870a);color:#07111f;font-weight:600;border-radius:18px 18px 5px 18px;}
+.bub strong{color:var(--gold2);}
+.bub em{color:var(--sage);font-style:normal;font-weight:600;}
+.dot{display:inline-block;width:7px;height:7px;background:var(--muted);border-radius:50%;margin:0 2px;}
+.dot:nth-child(1){animation:blink 1s .0s infinite;}
+.dot:nth-child(2){animation:blink 1s .25s infinite;}
+.dot:nth-child(3){animation:blink 1s .5s infinite;}
+
+/* ── OPTION BUTTONS ── */
+.opt{width:100%;padding:13px 16px;background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.07);border-radius:15px;cursor:pointer;text-align:left;font-family:var(--ui);font-size:14px;font-weight:500;color:var(--text);transition:all .18s;display:flex;align-items:center;gap:11px;}
+.opt:hover{border-color:var(--gold);background:rgba(245,166,35,.07);color:var(--gold2);transform:translateX(4px);}
+
+/* ── INPUT ── */
+.inp{width:100%;padding:15px 16px;background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.09);border-radius:15px;font-size:22px;font-weight:700;color:var(--text);outline:none;font-family:var(--pf);transition:border-color .2s,background .2s;}
+.inp:focus{border-color:var(--gold);background:rgba(245,166,35,.04);}
+.inp::placeholder{color:var(--muted);font-size:16px;font-weight:400;font-family:var(--ui);}
+
+/* ── NAV ── */
+.nav{flex-shrink:0;background:rgba(7,17,31,.97);backdrop-filter:blur(24px);border-top:1px solid var(--wire);display:grid;grid-template-columns:repeat(5,1fr);padding:8px 0 calc(10px + env(safe-area-inset-bottom));}
+.nb{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 4px;background:none;border:none;cursor:pointer;color:var(--muted);transition:color .2s;font-family:var(--ui);}
+.nb.on{color:var(--gold);}
+.ni{font-size:21px;}
+.nl{font-size:9px;font-weight:700;letter-spacing:.04em;}
+
+/* ── TAB CONTENT ── */
+#tabArea{flex:1;position:relative;overflow:hidden;min-height:0;}
+.tc{display:none;position:absolute;inset:0;flex-direction:column;}
+.tc.on{display:flex;}
+.tc.scroll{overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;}
+.tc.scroll::-webkit-scrollbar{width:2px;}
+
+/* ── MILESTONE ── */
+.ms-row{display:flex;align-items:flex-start;gap:14px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.045);}
+.ms-row:last-child{border-bottom:none;}
+.ms-ico{width:42px;height:42px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0;}
+
+/* ── KNOWLEDGE CARD ── */
+.kcard{padding:18px;margin-bottom:10px;}
+.kcard:last-child{margin-bottom:0;}
+
+/* ── STARS ── */
+.star{position:fixed;pointer-events:none;animation:twinkle var(--dur,3s) var(--del,0s) ease-in-out infinite;}
+</style>
+</head>
+<body>
+
+<!-- DECORATIVE STARS -->
+<div class="star" style="top:8%;left:12%;font-size:10px;--dur:3s;--del:0s;opacity:.4">✦</div>
+<div class="star" style="top:22%;right:8%;font-size:7px;--dur:4s;--del:.8s;opacity:.35">★</div>
+<div class="star" style="top:55%;left:5%;font-size:8px;--dur:5s;--del:1.5s;opacity:.25">✦</div>
+<div class="star" style="top:70%;right:15%;font-size:6px;--dur:3.5s;--del:.3s;opacity:.3">✦</div>
+<div class="star" style="top:40%;right:3%;font-size:9px;--dur:4.5s;--del:2s;opacity:.2">★</div>
+
+<!-- ═══════════════════════════════════
+     SCREEN: LANDING
+═══════════════════════════════════ -->
+<div class="screen active" id="sLanding" style="overflow-y:auto;background:radial-gradient(ellipse 120% 60% at 50% -10%,rgba(245,166,35,.12) 0%,transparent 60%),linear-gradient(180deg,#07111f 0%,#0b1929 100%)">
+
+  <div style="max-width:420px;margin:0 auto;width:100%;padding:48px 24px 60px;display:flex;flex-direction:column;align-items:center">
+
+    <!-- Logo -->
+    <div style="text-align:center;margin-bottom:36px;animation:fadeUp .5s ease both">
+      <div style="position:relative;display:inline-block;margin-bottom:18px">
+        <div style="width:72px;height:72px;background:linear-gradient(135deg,var(--gold),#c97b08);border-radius:22px;display:flex;align-items:center;justify-content:center;font-size:36px;box-shadow:0 8px 32px rgba(245,166,35,.4);animation:heartbeat 3.5s ease-in-out infinite;margin:0 auto">💛</div>
+        <div style="position:absolute;top:-6px;right:-6px;width:20px;height:20px;background:var(--sage);border-radius:50%;border:2px solid var(--bg);display:flex;align-items:center;justify-content:center;font-size:10px">✓</div>
+      </div>
+      <div style="font-family:var(--pf);font-size:28px;font-weight:900;letter-spacing:-.01em;line-height:1">BABY<span style="color:var(--gold)">WEALTH</span></div>
+      <div style="font-size:10px;color:var(--muted);font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-top:5px">Dein Investmentbanker für dein Kind</div>
+    </div>
+
+    <!-- Headline -->
+    <div style="text-align:center;margin-bottom:28px;animation:fadeUp .5s .1s ease both">
+      <h1 style="font-family:var(--pf);font-size:clamp(28px,6.5vw,44px);font-weight:900;line-height:1.12;letter-spacing:-.02em;margin-bottom:14px">
+        Das Beste das du<br>deinem Kind<br><em style="font-style:italic;color:var(--gold)">schenken</em> kannst.
+      </h1>
+      <p style="font-size:14px;color:var(--muted);line-height:1.75;max-width:290px;margin:0 auto">
+        Goldman Sachs verlangt €500.000 für persönliche Beratung.<br>Wir geben deinem Kind dasselbe — für <strong style="color:var(--gold)">€0</strong>.
+      </p>
+    </div>
+
+    <!-- CTA -->
+    <div style="width:100%;animation:fadeUp .5s .18s ease both;margin-bottom:24px">
+      <button onclick="goOnboarding()" class="btn btn-gold" style="width:100%;padding:18px;font-size:16px;animation:pulse 2.8s ease-in-out infinite;border-radius:18px">
+        Plan für mein Kind erstellen →
+      </button>
+      <div style="text-align:center;font-size:11px;color:var(--muted);margin-top:9px">Kostenlos · 3 Minuten · Kein Account nötig</div>
+    </div>
+
+    <!-- Stats row -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;width:100%;margin-bottom:28px;animation:fadeUp .5s .25s ease both">
+      <div class="card" style="padding:14px;text-align:center">
+        <div style="font-family:var(--pf);font-size:22px;font-weight:900;color:var(--gold)">€38K</div>
+        <div style="font-size:9px;color:var(--muted);margin-top:3px;line-height:1.5">mit 18<br>ab €127/Mo</div>
+      </div>
+      <div class="card" style="padding:14px;text-align:center">
+        <div style="font-family:var(--pf);font-size:22px;font-weight:900;color:var(--sage)">7%</div>
+        <div style="font-size:9px;color:var(--muted);margin-top:3px;line-height:1.5">ETF<br>Ø Rendite</div>
+      </div>
+      <div class="card" style="padding:14px;text-align:center">
+        <div style="font-family:var(--pf);font-size:22px;font-weight:900;color:var(--blush)">€4,23</div>
+        <div style="font-size:9px;color:var(--muted);margin-top:3px;line-height:1.5">pro Tag<br>reicht aus</div>
+      </div>
+    </div>
+
+    <!-- Promise list -->
+    <div style="width:100%;display:flex;flex-direction:column;gap:9px;animation:fadeUp .5s .32s ease both">
+      <div class="card" style="padding:14px 16px;display:flex;align-items:center;gap:14px">
+        <div style="font-size:26px;flex-shrink:0;animation:float 5s ease-in-out infinite">🎓</div>
+        <div><div style="font-weight:700;font-size:13px">Studium ohne Schulden</div><div style="font-size:11px;color:var(--muted);margin-top:2px">Kein BAföG. Kein Kredit. Nur Freiheit.</div></div>
+        <div class="badge bs" style="margin-left:auto;flex-shrink:0">✓</div>
+      </div>
+      <div class="card" style="padding:14px 16px;display:flex;align-items:center;gap:14px">
+        <div style="font-size:26px;flex-shrink:0;animation:float 5s .7s ease-in-out infinite">🚗</div>
+        <div><div style="font-weight:700;font-size:13px">Führerschein mit 17</div><div style="font-size:11px;color:var(--muted);margin-top:2px">€3.500 bereit wenn der Tag kommt.</div></div>
+        <div class="badge bs" style="margin-left:auto;flex-shrink:0">✓</div>
+      </div>
+      <div class="card" style="padding:14px 16px;display:flex;align-items:center;gap:14px">
+        <div style="font-size:26px;flex-shrink:0;animation:float 5s 1.4s ease-in-out infinite">🏠</div>
+        <div><div style="font-weight:700;font-size:13px">Eigene Wohnung mit 25</div><div style="font-size:11px;color:var(--muted);margin-top:2px">Kaution & Start ins eigene Leben.</div></div>
+        <div class="badge bs" style="margin-left:auto;flex-shrink:0">✓</div>
+      </div>
+      <div class="card" style="padding:14px 16px;display:flex;align-items:center;gap:14px">
+        <div style="font-size:26px;flex-shrink:0;animation:float2 6s ease-in-out infinite">💌</div>
+        <div><div style="font-weight:700;font-size:13px">Der Brief zum 18. Geburtstag</div><div style="font-size:11px;color:var(--muted);margin-top:2px">180 Monate Liebe — in Zahlen.</div></div>
+        <div class="badge bg" style="margin-left:auto;flex-shrink:0">✨</div>
+      </div>
+    </div>
+
+    <!-- Eli quote -->
+    <div style="margin-top:28px;padding:20px;background:rgba(245,166,35,.04);border:1px solid rgba(245,166,35,.15);border-radius:18px;text-align:center;animation:fadeUp .5s .4s ease both;width:100%">
+      <div style="font-size:22px;margin-bottom:8px;animation:heartbeat 3s ease-in-out infinite">💛</div>
+      <div style="font-family:var(--pf);font-size:14px;font-style:italic;color:#b8d4f0;line-height:1.8">
+        "Jeder Elternteil will dasselbe.<br>Nicht Reichtum. Nicht Luxus.<br><strong style="color:var(--gold);font-style:normal">Chancen für das Kind.</strong>"
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:10px;font-weight:600;letter-spacing:.05em">— ELI · Dein persönlicher Finanzberater</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     SCREEN: INTERVIEW
+═══════════════════════════════════ -->
+<div class="screen" id="sInterview" style="background:radial-gradient(ellipse 100% 40% at 50% 0%,rgba(245,166,35,.08),transparent 50%),linear-gradient(180deg,#07111f,#0b1929)">
+
+  <!-- Interview header -->
+  <div style="flex-shrink:0;padding:14px 18px 10px;border-bottom:1px solid var(--wire)">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:36px;height:36px;background:linear-gradient(135deg,var(--gold),#c97b08);border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:18px;animation:heartbeat 3s ease-in-out infinite">💛</div>
+        <div>
+          <div style="font-family:var(--pf);font-size:14px;font-weight:700">BabyWealth · Eli</div>
+          <div style="display:flex;align-items:center;gap:5px;margin-top:1px">
+            <div style="width:5px;height:5px;background:var(--sage);border-radius:50%;animation:blink 2s infinite"></div>
+            <span style="font-size:9px;color:var(--muted);font-weight:600;letter-spacing:.04em">Dein Investmentbanker · Online</span>
+          </div>
+        </div>
+      </div>
+      <div id="ivPct" style="font-family:var(--pf);font-size:20px;font-weight:900;color:var(--gold)">0%</div>
+    </div>
+    <div class="prog"><div id="ivBar" class="prog-fill" style="width:0%"></div></div>
+  </div>
+
+  <div id="ivChat" class="scroll" style="padding:16px;display:flex;flex-direction:column;gap:14px;"></div>
+  <div id="ivAns" style="padding:12px 16px 28px;flex-shrink:0;background:linear-gradient(to top,#07111f 75%,transparent);"></div>
+</div>
+
+<!-- ═══════════════════════════════════
+     SCREEN: WOW
+═══════════════════════════════════ -->
+<div class="screen" id="sWow" style="background:radial-gradient(ellipse 100% 50% at 50% 50%,rgba(245,166,35,.15),transparent 70%),linear-gradient(180deg,#07111f,#0b1929);align-items:center;justify-content:center;text-align:center;padding:40px 28px;">
+
+  <div id="wStar" style="font-size:56px;margin-bottom:18px;opacity:0;transition:opacity .7s;animation:float 4s ease-in-out infinite">✨</div>
+  <div id="wLabel" style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px;opacity:0;transition:opacity .6s .5s">Elis Plan für</div>
+  <div id="wName" style="font-family:var(--pf);font-size:34px;font-weight:900;color:var(--gold);margin-bottom:6px;opacity:0;transition:opacity .6s .8s">–</div>
+  <div id="wSub" style="font-size:13px;color:var(--muted);margin-bottom:32px;opacity:0;transition:opacity .6s 1.1s">ist fertig berechnet.</div>
+
+  <div id="wAmWrap" style="margin-bottom:10px;opacity:0;transition:opacity .8s 1.4s">
+    <div style="font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">Mit 18 Jahren hat</div>
+    <div id="wName2" style="font-family:var(--pf);font-size:20px;font-weight:700;color:var(--gold2)"></div>
+    <div style="font-size:13px;color:var(--muted);margin:6px 0">insgesamt</div>
+    <div id="wAmt" style="font-family:var(--pf);font-size:clamp(52px,13vw,80px);font-weight:900;color:var(--gold2);line-height:1;letter-spacing:-.02em;animation:countBounce .6s ease both">–</div>
+  </div>
+
+  <div id="wDaily" style="font-size:13px;color:var(--muted);margin-bottom:32px;line-height:1.7;opacity:0;transition:opacity .6s 2s"></div>
+  <div id="wEmoji" style="font-size:38px;margin-bottom:26px;opacity:0;transition:opacity .6s 2.3s">🥂</div>
+  <button id="wBtn" onclick="goApp()" class="btn btn-gold" style="width:100%;max-width:310px;padding:17px;font-size:15px;opacity:0;transition:opacity .6s 2.6s">Meinen Plan ansehen →</button>
+</div>
+
+<!-- ═══════════════════════════════════
+     SCREEN: APP
+═══════════════════════════════════ -->
+<div class="screen" id="sApp" style="background:radial-gradient(ellipse 100% 30% at 50% 0%,rgba(245,166,35,.06),transparent 40%),linear-gradient(180deg,#07111f,#0b1929)">
+
+  <div id="tabArea">
+
+    <!-- ──────────────────────────────
+         TAB: HOME
+    ────────────────────────────────── -->
+    <div class="tc on scroll" id="tHome">
+
+      <!-- Header -->
+      <div style="padding:18px 18px 8px;flex-shrink:0">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div>
+            <div id="hGreet" style="font-family:var(--pf);font-size:22px;font-weight:800">Guten Tag 👋</div>
+            <div id="hSub" style="font-size:12px;color:var(--muted);margin-top:2px"></div>
+          </div>
+          <div id="hEmoji" style="font-size:40px;animation:heartbeat 4s ease-in-out infinite;cursor:pointer" onclick="goTab('plan')">👶</div>
+        </div>
+      </div>
+
+      <!-- Multi-child selector -->
+      <div id="kidSelWrap" style="padding:0 18px 8px;display:none;flex-shrink:0">
+        <div id="kidSel" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:2px"></div>
+      </div>
+
+      <!-- MAIN WEALTH CARD -->
+      <div style="margin:0 14px 12px;flex-shrink:0">
+        <div class="card-glow" style="padding:20px;position:relative;overflow:hidden">
+          <div style="position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:radial-gradient(circle,rgba(245,166,35,.1),transparent 70%);pointer-events:none"></div>
+
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
+            <div>
+              <div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:7px">Angespartes Vermögen</div>
+              <div id="hTotal" style="font-family:var(--pf);font-size:38px;font-weight:900;color:var(--gold2);line-height:1">€0</div>
+              <div id="hKidLine" style="font-size:11px;color:var(--muted);margin-top:5px">für –</div>
+            </div>
+            <div id="hAvatar" style="font-size:48px;animation:float 5s ease-in-out infinite">👶</div>
+          </div>
+
+          <div style="margin-bottom:12px">
+            <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+              <span style="font-size:10px;color:var(--muted);font-weight:600">Zum Ziel mit 18</span>
+              <span id="hPct" style="font-size:11px;font-weight:900;color:var(--gold)">0%</span>
+            </div>
+            <div class="prog" style="height:7px;border-radius:4px">
+              <div id="hBar" class="prog-fill" style="width:0%;border-radius:4px"></div>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+            <div style="background:rgba(0,0,0,.2);border-radius:12px;padding:10px">
+              <div style="font-size:8px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Mit 18</div>
+              <div id="hAt18" style="font-family:var(--pf);font-size:14px;font-weight:800;color:var(--gold2)">–</div>
+            </div>
+            <div style="background:rgba(0,0,0,.2);border-radius:12px;padding:10px">
+              <div style="font-size:8px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Pro Tag</div>
+              <div id="hDay" style="font-family:var(--pf);font-size:14px;font-weight:800">–</div>
+            </div>
+            <div style="background:rgba(0,0,0,.2);border-radius:12px;padding:10px">
+              <div style="font-size:8px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Jahre</div>
+              <div id="hYrs" style="font-family:var(--pf);font-size:14px;font-weight:800;color:var(--sky)">–</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick actions -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:0 14px 12px;flex-shrink:0">
+        <button onclick="goTab('plan')" style="padding:15px;background:rgba(110,201,154,.07);border:1.5px solid rgba(110,201,154,.18);border-radius:18px;cursor:pointer;text-align:left;transition:all .18s;" onmouseover="this.style.background='rgba(110,201,154,.13)'" onmouseout="this.style.background='rgba(110,201,154,.07)'">
+          <div style="font-size:24px;margin-bottom:7px">📊</div>
+          <div style="font-size:12px;font-weight:700;color:var(--sage)">Sparplan</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:2px">Meilensteine & Ziele</div>
+        </button>
+        <button onclick="goTab('brief')" style="padding:15px;background:rgba(240,127,160,.07);border:1.5px solid rgba(240,127,160,.18);border-radius:18px;cursor:pointer;text-align:left;transition:all .18s;" onmouseover="this.style.background='rgba(240,127,160,.13)'" onmouseout="this.style.background='rgba(240,127,160,.07)'">
+          <div style="font-size:24px;margin-bottom:7px">💌</div>
+          <div style="font-size:12px;font-weight:700;color:var(--blush)">Der Brief</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:2px">Zum 18. Geburtstag</div>
+        </button>
+        <button onclick="goTab('wissen')" style="padding:15px;background:rgba(96,184,232,.07);border:1.5px solid rgba(96,184,232,.18);border-radius:18px;cursor:pointer;text-align:left;transition:all .18s;" onmouseover="this.style.background='rgba(96,184,232,.13)'" onmouseout="this.style.background='rgba(96,184,232,.07)'">
+          <div style="font-size:24px;margin-bottom:7px">🧠</div>
+          <div style="font-size:12px;font-weight:700;color:var(--sky)">Insider-Wissen</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:2px">ETF · Steuern · Tipps</div>
+        </button>
+        <button onclick="addKid()" style="padding:15px;background:rgba(245,166,35,.06);border:1.5px solid rgba(245,166,35,.14);border-radius:18px;cursor:pointer;text-align:left;transition:all .18s;" onmouseover="this.style.background='rgba(245,166,35,.11)'" onmouseout="this.style.background='rgba(245,166,35,.06)'">
+          <div style="font-size:24px;margin-bottom:7px">➕</div>
+          <div style="font-size:12px;font-weight:700;color:var(--gold)">Kind hinzufügen</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:2px">Geschwister planen</div>
+        </button>
+      </div>
+
+      <!-- Eli Tipp -->
+      <div class="card" style="margin:0 14px 12px;padding:16px;border-left:3px solid var(--gold);flex-shrink:0">
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:10px">
+          <div style="width:28px;height:28px;background:linear-gradient(135deg,var(--gold),#c97b08);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0">💛</div>
+          <div>
+            <div style="font-size:10px;font-weight:700;color:var(--gold);letter-spacing:.07em;text-transform:uppercase">Elis Tipp heute</div>
+            <div id="tipDate" style="font-size:9px;color:var(--muted);margin-top:1px"></div>
+          </div>
+        </div>
+        <div id="tipText" style="font-size:13px;color:#9ab8d8;line-height:1.7;margin-bottom:11px"></div>
+        <button onclick="goTab('wissen')" class="btn btn-ghost">Mehr Insider-Wissen →</button>
+      </div>
+
+      <!-- Monthly reminder -->
+      <div style="margin:0 14px 28px;padding:14px 16px;background:rgba(110,201,154,.05);border:1px solid rgba(110,201,154,.14);border-radius:17px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
+        <div style="display:flex;align-items:center;gap:11px">
+          <div style="font-size:24px">📅</div>
+          <div>
+            <div style="font-size:12px;font-weight:700;margin-bottom:2px">Monatlicher Sparplan</div>
+            <div id="hMonthly" style="font-family:var(--pf);font-size:17px;font-weight:800;color:var(--sage)">€127/Mo</div>
+          </div>
+        </div>
+        <div class="badge bs">Aktiv ✓</div>
+      </div>
+
+    </div><!-- /tHome -->
+
+    <!-- ──────────────────────────────
+         TAB: SPARPLAN
+    ────────────────────────────────── -->
+    <div class="tc scroll" id="tPlan">
+
+      <div style="padding:20px 18px 12px;flex-shrink:0">
+        <div style="font-family:var(--pf);font-size:24px;font-weight:800;margin-bottom:3px">📊 Sparplan</div>
+        <div id="planSub" style="font-size:12px;color:var(--muted)">–</div>
+      </div>
+
+      <!-- Slider & Projektion -->
+      <div class="card-glow" style="margin:0 14px 12px;padding:18px;flex-shrink:0">
+        <div style="font-size:10px;font-weight:700;color:var(--gold);letter-spacing:.09em;text-transform:uppercase;margin-bottom:12px">💡 Sparrate anpassen</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:9px">
+          <span style="font-size:13px;color:var(--muted)">Monatlicher Betrag</span>
+          <span id="slVal" style="font-family:var(--pf);font-size:24px;font-weight:900;color:var(--gold2)">€127</span>
+        </div>
+        <input type="range" id="slider" min="25" max="600" step="25" value="127" style="width:100%;accent-color:var(--gold);margin-bottom:16px;cursor:pointer" oninput="onSlider(this.value)">
+
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+          <div style="background:rgba(0,0,0,.25);border-radius:13px;padding:11px;text-align:center">
+            <div style="font-size:9px;color:var(--muted);font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:5px">Mit 10</div>
+            <div id="p10" style="font-family:var(--pf);font-size:14px;font-weight:800">–</div>
+          </div>
+          <div style="background:rgba(0,0,0,.25);border-radius:13px;padding:11px;text-align:center">
+            <div style="font-size:9px;color:var(--muted);font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:5px">Mit 18</div>
+            <div id="p18" style="font-family:var(--pf);font-size:14px;font-weight:800;color:var(--gold2)">–</div>
+          </div>
+          <div style="background:rgba(0,0,0,.25);border-radius:13px;padding:11px;text-align:center">
+            <div style="font-size:9px;color:var(--muted);font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:5px">Mit 25</div>
+            <div id="p25" style="font-family:var(--pf);font-size:14px;font-weight:800;color:var(--sage)">–</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Milestone timeline -->
+      <div class="card" style="margin:0 14px 12px;padding:18px;flex-shrink:0">
+        <div style="font-size:10px;font-weight:700;color:var(--gold);letter-spacing:.09em;text-transform:uppercase;margin-bottom:14px">🗓 Meilensteine für <span id="msName">dein Kind</span></div>
+        <div id="msList"></div>
+      </div>
+
+      <!-- ETF Empfehlung -->
+      <div class="card-sage" style="margin:0 14px 24px;padding:18px;flex-shrink:0">
+        <div style="display:flex;align-items:center;gap:11px;margin-bottom:13px">
+          <div style="font-size:24px">🌍</div>
+          <div>
+            <div style="font-weight:700;font-size:14px">Elis ETF-Empfehlung</div>
+            <div style="font-size:11px;color:var(--muted)">Für Sparpläne bis 18+</div>
+          </div>
+          <div class="badge bs" style="margin-left:auto">Top Pick</div>
+        </div>
+        <div style="background:rgba(110,201,154,.07);border:1px solid rgba(110,201,154,.15);border-radius:13px;padding:14px;margin-bottom:12px">
+          <div style="font-weight:800;font-size:14px;margin-bottom:5px;color:var(--sage)">iShares Core MSCI World ETF</div>
+          <div style="font-size:11px;color:var(--muted);line-height:1.65">1.600+ Unternehmen · 23 Länder · Ø 8,5% p.a. · 0,2% Kosten/Jahr</div>
+        </div>
+        <div style="font-size:11.5px;color:#9ab8d8;line-height:1.7">Diversifikation über die ganze Welt. Über 18+ Jahre gleichen sich alle Schwankungen aus. Der Klassiker für Kinder-Sparpläne — kein Risiko für dein Kind.</div>
+      </div>
+    </div>
+
+    <!-- ──────────────────────────────
+         TAB: BRIEF
+    ────────────────────────────────── -->
+    <div class="tc scroll" id="tBrief">
+
+      <div style="padding:20px 18px 14px;flex-shrink:0">
+        <div style="font-family:var(--pf);font-size:24px;font-weight:800;margin-bottom:3px">💌 Der Brief</div>
+        <div style="font-size:12px;color:var(--muted)">Automatisch für den 18. Geburtstag generiert</div>
+      </div>
+
+      <!-- Letter card -->
+      <div style="margin:0 14px 12px;background:linear-gradient(145deg,rgba(245,166,35,.06),rgba(18,36,64,.9));border:1px solid rgba(245,166,35,.2);border-radius:22px;padding:26px;position:relative;overflow:hidden;flex-shrink:0">
+        <div style="position:absolute;top:16px;right:18px;font-size:32px;opacity:.18;animation:float 7s ease-in-out infinite">💌</div>
+        <div style="position:absolute;bottom:-20px;left:-20px;width:80px;height:80px;background:radial-gradient(circle,rgba(245,166,35,.08),transparent 70%);pointer-events:none"></div>
+        <div style="font-size:9px;font-weight:700;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:18px">Persönlicher Brief · Wird mit jedem Monat wertvoller</div>
+        <div id="letterText" style="font-family:var(--pf);font-size:14px;color:#c0d8f4;line-height:2.1;white-space:pre-line"></div>
+      </div>
+
+      <!-- Action buttons -->
+      <div style="padding:0 14px 12px;display:flex;flex-direction:column;gap:8px;flex-shrink:0">
+        <button onclick="doShare()" class="btn btn-gold" style="width:100%;padding:15px">📤 Brief teilen</button>
+        <button onclick="doPrint()" class="btn btn-outline" style="width:100%;padding:13px">💾 Als Erinnerung sichern</button>
+      </div>
+
+      <!-- Emotional context -->
+      <div class="card" style="margin:0 14px 28px;padding:20px;text-align:center;flex-shrink:0">
+        <div style="font-size:28px;margin-bottom:12px;animation:heartbeat 4s ease-in-out infinite">💛</div>
+        <div style="font-family:var(--pf);font-size:16px;font-weight:700;margin-bottom:10px;color:var(--gold2)">Warum dieser Brief?</div>
+        <div style="font-size:13px;color:#8aa8c8;line-height:1.8">Geld ist nicht was du deinem Kind gibst.<br>Liebe ist was du gibst.<br><br>Dieser Brief macht beides sichtbar — in einem Moment den dein Kind <strong style="color:var(--gold2)">niemals vergessen wird.</strong></div>
+      </div>
+    </div>
+
+    <!-- ──────────────────────────────
+         TAB: INSIDER-WISSEN
+    ────────────────────────────────── -->
+    <div class="tc scroll" id="tWissen">
+
+      <div style="padding:20px 18px 14px;flex-shrink:0">
+        <div style="font-family:var(--pf);font-size:24px;font-weight:800;margin-bottom:3px">🧠 Insider-Wissen</div>
+        <div style="font-size:12px;color:var(--muted)">Was kein Banker dir freiwillig sagt</div>
+      </div>
+
+      <div style="padding:0 14px 28px;display:flex;flex-direction:column;gap:0;flex-shrink:0">
+
+        <div class="card kcard" style="border-left:3px solid var(--gold)">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:11px">
+            <div style="font-size:24px">🔑</div>
+            <div style="flex:1"><div style="font-weight:700;font-size:14px">Der Zinseszins-Trick</div></div>
+            <div class="badge bg">Geheimtipp</div>
+          </div>
+          <div style="font-size:12.5px;color:#9ab8d8;line-height:1.75">€100/Monat über 18 Jahre bei 7% = <strong>€40.620</strong>. Du hast nur €21.600 eingezahlt. Die restlichen <strong>€19.020 erschuf der Zinseszins</strong> — ohne dass du einen Finger gerührt hast. Das ist das 8. Weltwunder.</div>
+        </div>
+
+        <div class="card kcard" style="border-left:3px solid var(--blush)">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:11px">
+            <div style="font-size:24px">📉</div>
+            <div style="flex:1"><div style="font-weight:700;font-size:14px">Das Sparbuch-Verbrechen</div></div>
+            <div class="badge bb">Achtung!</div>
+          </div>
+          <div style="font-size:12.5px;color:#9ab8d8;line-height:1.75">0,5% Sparbuch vs. 7% ETF bei €127/Mo über 18 Jahre: <strong style="color:var(--blush)">Sparbuch = €29.100</strong> vs. <strong style="color:var(--sage)">ETF = €58.400</strong>. Das Sparbuch <strong>stiehlt deinem Kind €29.300</strong>. Das ist kein kleiner Unterschied — das ist ein halbes Studium.</div>
+        </div>
+
+        <div class="card kcard" style="border-left:3px solid var(--sky)">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:11px">
+            <div style="font-size:24px">🏛️</div>
+            <div style="flex:1"><div style="font-weight:700;font-size:14px">Steuerfreibetrag für Kinder</div></div>
+            <div class="badge bk">Legal & Gratis</div>
+          </div>
+          <div style="font-size:12.5px;color:#9ab8d8;line-height:1.75">Kinder haben <strong>€1.000/Jahr Steuerfreibetrag</strong> auf Kapitalerträge (Freistellungsauftrag). ETF-Erträge bleiben bis dahin komplett steuerfrei. Freistellungsauftrag beim Broker stellen — sofort, heute, jetzt.</div>
+        </div>
+
+        <div class="card kcard" style="border-left:3px solid var(--lav)">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:11px">
+            <div style="font-size:24px">⏰</div>
+            <div style="flex:1"><div style="font-weight:700;font-size:14px">1 Jahr früher = €4.800 mehr</div></div>
+            <div class="badge bl">Krass</div>
+          </div>
+          <div style="font-size:12.5px;color:#9ab8d8;line-height:1.75">Jeder Monat den du früher startest multipliziert sich. Ein Jahr früher bei €127/Mo = <strong>ca. €4.800 mehr</strong> am Ende. Heute ist nicht nur besser als morgen — heute ist €400 wert.</div>
+        </div>
+
+        <div class="card kcard" style="border-left:3px solid var(--sage)">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:11px">
+            <div style="font-size:24px">🎁</div>
+            <div style="flex:1"><div style="font-weight:700;font-size:14px">Oma & Opa: Das Mega-Geschenk</div></div>
+            <div class="badge bs">Smart</div>
+          </div>
+          <div style="font-size:12.5px;color:#9ab8d8;line-height:1.75">Statt Spielzeug: Großeltern können bis zu <strong>€400.000 steuerfrei</strong> an Enkel schenken (Freibetrag alle 10 Jahre). Ein ETF-Schenkdepot ist das beste Geburtstagsgeschenk das existiert. Bitte Oma & Opa darum.</div>
+        </div>
+
+        <div class="card kcard" style="border-left:3px solid var(--gold)">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:11px">
+            <div style="font-size:24px">📱</div>
+            <div style="flex:1"><div style="font-weight:700;font-size:14px">Ab 18: Das Kind übernimmt</div></div>
+            <div class="badge bg">Wichtig</div>
+          </div>
+          <div style="font-size:12.5px;color:#9ab8d8;line-height:1.75">Depot auf den Namen des Kindes? Ab 18 gehört es ihm vollständig — <strong>ohne Steuern auf die Einzahlungen</strong>. Nur auf Gewinne über €1.000/Jahr fällt Abgeltungssteuer an. Clever strukturiert: fast steuerfrei.</div>
+        </div>
+
+        <div class="card kcard" style="border-left:3px solid var(--sun)">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:11px">
+            <div style="font-size:24px">🏗️</div>
+            <div style="flex:1"><div style="font-weight:700;font-size:14px">Wohnungsbauprämie für Kinder</div></div>
+            <div class="badge" style="background:rgba(255,209,102,.1);color:var(--sun);border:1px solid rgba(255,209,102,.22)">Bonus</div>
+          </div>
+          <div style="font-size:12.5px;color:#9ab8d8;line-height:1.75">Bausparvertrag für Kinder: bis zu <strong>€70/Jahr staatliche Prämie</strong> (10% auf €700 Einzahlung). Über 18 Jahre = €1.260 geschenktes Geld vom Staat. Kombiniere es mit dem ETF-Sparplan für maximale Wirkung.</div>
+        </div>
+
+        <div class="card kcard">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:11px">
+            <div style="font-size:24px">💡</div>
+            <div style="flex:1"><div style="font-weight:700;font-size:14px">Die 3-Topf-Strategie</div></div>
+            <div class="badge bg">Eli's Favorit</div>
+          </div>
+          <div style="font-size:12.5px;color:#9ab8d8;line-height:1.75"><strong>Topf 1</strong> — ETF-Sparplan (Hauptvermögen) · <strong>Topf 2</strong> — Tagesgeld (Führerschein, kurze Ziele) · <strong>Topf 3</strong> — Bausparvertrag (Wohnung). Drei Töpfe, drei Zeithorizonte, maximale Rendite bei minimaler Arbeit.</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ──────────────────────────────
+         TAB: PROFIL
+    ────────────────────────────────── -->
+    <div class="tc scroll" id="tProfil">
+
+      <div style="padding:20px 18px 14px;flex-shrink:0">
+        <div style="font-family:var(--pf);font-size:24px;font-weight:800;margin-bottom:3px">👤 Profil</div>
+        <div style="font-size:12px;color:var(--muted)">Deine Kinder & Einstellungen</div>
+      </div>
+
+      <div id="profilList" style="padding:0 14px;display:flex;flex-direction:column;gap:10px;flex-shrink:0"></div>
+
+      <div style="padding:12px 14px 12px;flex-shrink:0">
+        <button onclick="addKid()" class="btn btn-gold" style="width:100%;padding:15px;font-size:14px">➕ Weiteres Kind hinzufügen</button>
+      </div>
+
+      <div style="padding:0 14px 24px;flex-shrink:0">
+        <div class="card" style="padding:16px">
+          <div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px">App-Einstellungen</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <button onclick="alert('Kommt bald! 🔔')" class="btn btn-ghost" style="text-align:left;width:100%">🔔 Monatliche Erinnerungen aktivieren</button>
+            <button onclick="alert('Kommt bald! 📊')" class="btn btn-ghost" style="text-align:left;width:100%">📊 Jahresbericht exportieren</button>
+            <button onclick="doReset()" class="btn btn-ghost" style="text-align:left;width:100%;color:var(--blush)">🗑️ Alle Daten zurücksetzen</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div><!-- tabArea -->
+
+  <!-- BOTTOM NAV -->
+  <nav class="nav">
+    <button class="nb on" id="nb0" onclick="goTab('home',0)">
+      <div class="ni">🏠</div><div class="nl">Home</div>
+    </button>
+    <button class="nb" id="nb1" onclick="goTab('plan',1)">
+      <div class="ni">📊</div><div class="nl">Sparplan</div>
+    </button>
+    <button class="nb" id="nb2" onclick="goTab('brief',2)">
+      <div class="ni">💌</div><div class="nl">Brief</div>
+    </button>
+    <button class="nb" id="nb3" onclick="goTab('wissen',3)">
+      <div class="ni">🧠</div><div class="nl">Wissen</div>
+    </button>
+    <button class="nb" id="nb4" onclick="goTab('profil',4)">
+      <div class="ni">👤</div><div class="nl">Profil</div>
+    </button>
+  </nav>
+</div>
+
+<!-- ═══════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════ -->
+<script>
+'use strict';
+
+// ── STATE ──────────────────────────
+var KIDS = [];
+var ACT  = 0;
+
+// ── QUESTIONS ──────────────────────
+var QS = [
+  {
+    key: 'pName',
+    q: 'Hallo! Ich bin Eli \u2014 dein pers\u00f6nlicher Investmentbanker f\u00fcr dein Kind. \uD83D\uDC9B\n\nWie hei\u00dft du?',
+    type: 'text', ph: 'Dein Vorname'
+  },
+  {
+    key: 'cName',
+    qf: function(a){ return 'Sch\u00f6n dich kennenzulernen, ' + a.pName + '! \uD83C\uDF1F\n\nWie hei\u00dft dein Kind?'; },
+    type: 'text', ph: 'Name des Kindes'
+  },
+  {
+    key: 'cBirth',
+    qf: function(a){ return a.cName + ' \u2014 was f\u00fcr ein sch\u00f6ner Name! \uD83D\uDC9B\n\nWann wurde ' + a.cName + ' geboren?'; },
+    type: 'date'
+  },
+  {
+    key: 'cGender',
+    qf: function(a){ return 'Ist ' + a.cName + ' ein M\u00e4dchen, Junge, oder m\u00f6chtest du das lieber nicht angeben?'; },
+    type: 'opts',
+    opts: [
+      {v:'f', l:'\uD83D\uDC67 M\u00e4dchen'},
+      {v:'m', l:'\uD83D\uDC66 Junge'},
+      {v:'n', l:'\uD83E\uDDD2 Lieber nicht angeben'}
+    ]
+  },
+  {
+    key: 'dream',
+    qf: function(a){ return 'Was ist dein gr\u00f6\u00dfter Wunsch f\u00fcr ' + a.cName + '?'; },
+    type: 'opts',
+    opts: [
+      {v:'studium', l:'\uD83C\uDF93 Studium ohne Schulden'},
+      {v:'freiheit', l:'\uD83C\uDF0D Fr\u00fche finanzielle Freiheit'},
+      {v:'wohnung', l:'\uD83C\uDFE0 Eigene Wohnung mit 25'},
+      {v:'business', l:'\uD83D\uDE80 Eigenes Business gr\u00fcnden'}
+    ]
+  },
+  {
+    key: 'monthly',
+    qf: function(a){
+      var yrs = Math.max(1, 18 - cAge(a.cBirth));
+      return 'Was kannst du monatlich f\u00fcr ' + a.cName + ' zur Seite legen?\n\nMit 7% ETF-Rendite \u00fcber ' + yrs + ' Jahre macht jeder Euro einen gro\u00dfen Unterschied.';
+    },
+    type: 'amount', ph: '127', pre: '\u20ac'
+  }
+];
+
+var ivStep = 0;
+var ivAns  = {};
+
+// ── HELPERS ────────────────────────
+function cAge(b) {
+  if (!b) return 0;
+  var d = new Date(b), n = new Date();
+  var a = n.getFullYear() - d.getFullYear();
+  if (n.getMonth() < d.getMonth() || (n.getMonth() === d.getMonth() && n.getDate() < d.getDate())) a--;
+  return Math.max(0, a);
+}
+
+function fv(mo, yrs) {
+  if (yrs <= 0) return 0;
+  var r = 0.07/12, n = yrs*12;
+  return Math.round(mo * ((Math.pow(1+r, n)-1)/r));
+}
+
+function eu(n) {
+  return '\u20ac' + Math.round(n).toLocaleString('de-DE');
+}
+
+function emoji(g) {
+  return g==='f' ? '\uD83D\uDC67' : g==='m' ? '\uD83D\uDC66' : '\uD83E\uDDD2';
+}
+
+function showS(id) {
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+  var s = document.getElementById(id);
+  if (s) s.classList.add('active');
+}
+
+function save() {
+  localStorage.setItem('bw2-kids', JSON.stringify(KIDS));
+  localStorage.setItem('bw2-act', String(ACT));
+}
+
+function load() {
+  var k = localStorage.getItem('bw2-kids');
+  var a = localStorage.getItem('bw2-act');
+  if (k) { try { KIDS = JSON.parse(k); } catch(e){ KIDS=[]; } }
+  if (a !== null) ACT = parseInt(a)||0;
+}
+
+// ── ONBOARDING ─────────────────────
+function goOnboarding() {
+  ivStep = 0; ivAns = {};
+  document.getElementById('ivChat').innerHTML = '';
+  showS('sInterview');
+  setTimeout(function(){ askQ(0); }, 400);
+}
+
+function addEli(txt, delay, col) {
+  delay = delay||0;
+  var chat = document.getElementById('ivChat');
+  setTimeout(function(){
+    var wrap = document.createElement('div');
+    wrap.className = 'msg';
+    wrap.innerHTML = '<div class="av eli">\uD83D\uDC9B</div><div><div class="bmeta">Eli \u00b7 BabyWealth</div><div class="bub"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div></div>';
+    chat.appendChild(wrap);
+    chat.scrollTop = chat.scrollHeight;
+    setTimeout(function(){
+      var b = wrap.querySelector('.bub');
+      b.innerHTML = txt.replace(/\n/g,'<br>');
+      if (col) b.style.borderColor = col;
+      chat.scrollTop = chat.scrollHeight;
+    }, 680);
+  }, delay);
+}
+
+function addUser(txt) {
+  var chat = document.getElementById('ivChat');
+  var el = document.createElement('div');
+  el.className = 'msg user';
+  el.innerHTML = '<div class="av u">\uD83D\uDC64</div><div><div class="bmeta">Du</div><div class="bub">' + txt + '</div></div>';
+  chat.appendChild(el);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function askQ(i) {
+  var q = QS[i];
+  if (!q) { finishIV(); return; }
+
+  var pct = Math.round(i / QS.length * 100);
+  var bar = document.getElementById('ivBar');
+  var pctEl = document.getElementById('ivPct');
+  if (bar) bar.style.width = pct + '%';
+  if (pctEl) pctEl.textContent = pct + '%';
+
+  var txt = q.qf ? q.qf(ivAns) : q.q;
+  addEli(txt, 200);
+  setTimeout(function(){ renderAns(i); }, 1100);
+}
+
+function renderAns(i) {
+  var q = QS[i];
+  var area = document.getElementById('ivAns');
+  if (!area) return;
+
+  if (q.type === 'opts') {
+    var html = '<div style="display:flex;flex-direction:column;gap:8px">';
+    q.opts.forEach(function(o, idx){
+      html += '<button id="qo' + idx + '" class="opt" style="animation:slideUp .3s ' + (idx*0.07) + 's ease both">' + o.l + '</button>';
+    });
+    html += '</div>';
+    area.innerHTML = html;
+    q.opts.forEach(function(o, idx){
+      var btn = document.getElementById('qo' + idx);
+      if (btn) btn.addEventListener('click', function(){ pickOpt(i, q.key, o.v, o.l); });
+    });
+
+  } else if (q.type === 'date') {
+    var today = new Date().toISOString().split('T')[0];
+    area.innerHTML = '<div style="display:flex;flex-direction:column;gap:10px;animation:slideUp .3s ease both">'
+      + '<input id="dInput" type="date" max="' + today + '" class="inp" style="font-size:17px;font-family:var(--ui);font-weight:500">'
+      + '<button id="dBtn" class="btn btn-gold" style="padding:15px;width:100%">Weiter \u2192</button>'
+      + '</div>';
+    var btn = document.getElementById('dBtn');
+    var inp = document.getElementById('dInput');
+    if (inp) {
+      inp.addEventListener('focus', function(){ this.style.borderColor='var(--gold)'; });
+      inp.addEventListener('blur',  function(){ this.style.borderColor='rgba(255,255,255,.09)'; });
+    }
+    if (btn) btn.addEventListener('click', function(){ pickDate(i, q.key); });
+
+  } else {
+    var isAmt = q.type === 'amount';
+    area.innerHTML = '<div style="display:flex;flex-direction:column;gap:10px;animation:slideUp .3s ease both">'
+      + '<div style="position:relative">'
+      + (q.pre ? '<span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);font-family:var(--pf);font-size:26px;color:var(--muted);font-weight:700;pointer-events:none">' + q.pre + '</span>' : '')
+      + '<input id="tInput" type="' + (isAmt?'number':'text') + '" placeholder="' + (q.ph||'') + '" class="inp" style="font-size:' + (isAmt?'28px':'22px') + ';padding-left:' + (q.pre?'38px':'16px') + '">'
+      + '</div>'
+      + '<button id="tBtn" class="btn btn-gold" style="padding:15px;width:100%">Weiter \u2192</button>'
+      + '</div>';
+    var inp2 = document.getElementById('tInput');
+    var btn2 = document.getElementById('tBtn');
+    if (inp2) {
+      inp2.focus();
+      inp2.addEventListener('focus', function(){ this.style.borderColor='var(--gold)'; });
+      inp2.addEventListener('blur',  function(){ this.style.borderColor='rgba(255,255,255,.09)'; });
+      inp2.addEventListener('keydown', function(e){ if(e.key==='Enter') pickText(i, q.key); });
+    }
+    if (btn2) btn2.addEventListener('click', function(){ pickText(i, q.key); });
+  }
+}
+
+function pickOpt(i, key, val, lbl) {
+  ivAns[key] = val;
+  addUser(lbl);
+  document.getElementById('ivAns').innerHTML = '';
+  var react = {
+    'f': '\uD83D\uDC67 Ein M\u00e4dchen! Wundersch\u00f6n.',
+    'm': '\uD83D\uDC66 Ein Junge! Was f\u00fcr ein Gl\u00fcck.',
+    'n': '\uD83E\uDDD2 Nat\u00fcrlich.',
+    'studium': '<strong>Studium ohne Schulden</strong> \u2014 das ver\u00e4ndert ein ganzes Leben. \uD83C\uDF93',
+    'freiheit': '<strong>Finanzielle Freiheit fr\u00fch</strong> \u2014 das gr\u00f6\u00dfte Geschenk \u00fcberhaupt. \uD83C\uDF0D',
+    'wohnung': '<strong>Eigene Wohnung mit 25</strong> \u2014 Selbstst\u00e4ndigkeit von Anfang an. \uD83C\uDFE0',
+    'business': '<strong>Eigenes Business</strong> \u2014 der unternehmerische Geist beginnt jetzt. \uD83D\uDE80'
+  };
+  if (react[val]) addEli(react[val], 300, 'var(--gold)');
+  setTimeout(function(){ askQ(i+1); }, react[val] ? 1700 : 600);
+}
+
+function pickDate(i, key) {
+  var inp = document.getElementById('dInput');
+  if (!inp || !inp.value) { if(inp) inp.style.borderColor='var(--blush)'; return; }
+  ivAns[key] = inp.value;
+  var age = cAge(inp.value);
+  var d = new Date(inp.value);
+  var disp = d.toLocaleDateString('de-DE',{day:'numeric',month:'long',year:'numeric'});
+  addUser(disp);
+  document.getElementById('ivAns').innerHTML = '';
+  var name = ivAns.cName || 'dein Kind';
+  var msg = age === 0
+    ? 'Ein Baby! \uD83C\uDF7C ' + name + ' ist unter 1 Jahr alt. Perfekt \u2014 je fr\u00fcher du startest desto mehr w\u00e4chst das Verm\u00f6gen.'
+    : name + ' ist ' + age + ' Jahre alt. Noch <strong>' + Math.max(0,18-age) + ' Jahre</strong> bis zum 18. Geburtstag \u2014 jeder Monat z\u00e4hlt! \uD83D\uDCAA';
+  addEli(msg, 300, 'var(--gold)');
+  setTimeout(function(){ askQ(i+1); }, 1800);
+}
+
+function pickText(i, key) {
+  var inp = document.getElementById('tInput');
+  if (!inp || !inp.value.trim()) { if(inp) inp.style.borderColor='var(--blush)'; return; }
+  var val = inp.value.trim();
+  ivAns[key] = key==='monthly' ? parseFloat(val)||127 : val;
+  var q = QS[i];
+  addUser((q.pre||'') + val);
+  document.getElementById('ivAns').innerHTML = '';
+
+  if (key === 'pName') {
+    addEli('Sch\u00f6n dich kennenzulernen, <strong>' + val + '</strong>! \uD83C\uDF1F Ich freue mich, gemeinsam mit dir die Zukunft deines Kindes zu planen.', 300, 'var(--gold)');
+  } else if (key === 'cName') {
+    addEli('<strong>' + val + '</strong> \u2014 was f\u00fcr ein wundersch\u00f6ner Name. \uD83D\uDC9B', 300, 'var(--gold)');
+  } else if (key === 'monthly') {
+    var age = cAge(ivAns.cBirth);
+    var yrs = Math.max(1, 18-age);
+    var fvAmt = fv(parseFloat(val), yrs);
+    var daily = (parseFloat(val)/30).toFixed(2);
+    addEli(
+      'Mit <strong>' + eu(parseFloat(val)) + '/Monat</strong> hat ' + (ivAns.cName||'dein Kind') + ' mit 18 Jahren ungef\u00e4hr <strong>' + eu(fvAmt) + '</strong>.\n\nDas sind nur <strong>' + daily + ' Euro pro Tag</strong> \u2014 weniger als ein Kaffee.',
+      400, 'var(--sage)'
+    );
+  }
+  setTimeout(function(){ askQ(i+1); }, key==='monthly' ? 2400 : 1600);
+}
+
+function finishIV() {
+  var bar = document.getElementById('ivBar');
+  var pctEl = document.getElementById('ivPct');
+  if (bar) bar.style.width = '100%';
+  if (pctEl) pctEl.textContent = '100%';
+  document.getElementById('ivAns').innerHTML = '';
+  addEli('Perfekt! \uD83C\uDF89 Ich habe alles was ich brauche.\n\nIch berechne jetzt den optimalen Plan f\u00fcr <strong>' + (ivAns.cName||'dein Kind') + '</strong>\u2026', 200);
+
+  var kid = {
+    pName: ivAns.pName||'',
+    name: ivAns.cName||'Mein Kind',
+    birth: ivAns.cBirth||'',
+    gender: ivAns.cGender||'n',
+    dream: ivAns.dream||'freiheit',
+    monthly: ivAns.monthly||127,
+    started: new Date().toISOString(),
+    extra: 0
+  };
+  KIDS.push(kid);
+  ACT = KIDS.length - 1;
+  save();
+  setTimeout(function(){ showWow(kid); }, 2200);
+}
+
+// ── WOW SCREEN ─────────────────────
+function showWow(k) {
+  showS('sWow');
+  var age = cAge(k.birth);
+  var yrs = Math.max(1, 18-age);
+  var fvAmt = fv(k.monthly, yrs);
+  var daily = (k.monthly/30).toFixed(2);
+  var dreamMap = {
+    studium: 'Studium vollst\u00e4ndig finanziert. Kein BAf\u00f6G. Keine Schulden.',
+    freiheit: 'Finanzielle Freiheit mit 25. Der Kopfstart ins Leben.',
+    wohnung: 'Erste Wohnung. Erster Monat. Eigenes Leben.',
+    business: 'Das Startkapital f\u00fcr sein/ihr eigenes Business.'
+  };
+
+  function show(id, delay, fn) {
+    setTimeout(function(){
+      var el = document.getElementById(id);
+      if (!el) return;
+      if (fn) fn(el);
+      el.style.opacity = '1';
+    }, delay);
+  }
+
+  show('wStar', 100);
+  show('wLabel', 500);
+  show('wName', 800, function(el){ el.textContent = k.name; });
+  show('wSub', 1100);
+  show('wAmWrap', 1400, function(){
+    var n2 = document.getElementById('wName2');
+    var am = document.getElementById('wAmt');
+    if (n2) n2.textContent = k.name;
+    if (am) am.textContent = eu(fvAmt);
+  });
+  show('wDaily', 2000, function(el){
+    el.innerHTML = 'Das sind nur <strong style="color:var(--gold2)">\u20ac' + daily + ' pro Tag</strong><br><span style="color:var(--sage)">' + (dreamMap[k.dream]||'Ein Lebensstart ohne Schulden.') + '</span>';
+  });
+  show('wEmoji', 2300);
+  show('wBtn', 2600);
+}
+
+function goApp() {
+  showS('sApp');
+  renderAll();
+}
+
+// ── APP ────────────────────────────
+var TABS = ['home','plan','brief','wissen','profil'];
+
+function goTab(name, idx) {
+  TABS.forEach(function(t, i){
+    var tc = document.getElementById('t' + t.charAt(0).toUpperCase() + t.slice(1));
+    var nb = document.getElementById('nb' + i);
+    if (tc) { tc.classList.remove('on'); tc.style.display='none'; }
+    if (nb) nb.classList.remove('on');
+  });
+  var tc = document.getElementById('t' + name.charAt(0).toUpperCase() + name.slice(1));
+  if (tc) { tc.classList.add('on'); tc.style.display='flex'; }
+  if (idx !== undefined) {
+    var nb = document.getElementById('nb' + idx);
+    if (nb) nb.classList.add('on');
+  }
+  if (name==='home') renderHome();
+  if (name==='plan') renderPlan();
+  if (name==='brief') renderBrief();
+  if (name==='profil') renderProfil();
+}
+
+function renderAll() {
+  renderHome();
+  renderPlan();
+  renderBrief();
+}
+
+function renderHome() {
+  var k = KIDS[ACT];
+  if (!k) return;
+  var age = cAge(k.birth);
+  var yrs = Math.max(1, 18-age);
+  var fv18 = fv(k.monthly, yrs);
+  var elapsed = Math.max(0, (Date.now() - new Date(k.started).getTime()) / (1000*60*60*24*30.44));
+  var saved = k.extra + elapsed * k.monthly;
+  var pct = Math.min(100, Math.round(saved / fv18 * 100));
+  var hr = new Date().getHours();
+  var greet = hr<12 ? 'Guten Morgen' : hr<18 ? 'Guten Tag' : 'Guten Abend';
+
+  var g = function(id){ return document.getElementById(id); };
+  if(g('hGreet')) g('hGreet').textContent = greet + ', ' + (k.pName||'') + ' \uD83D\uDC4B';
+  if(g('hSub')) g('hSub').textContent = 'Dein Plan f\u00fcr ' + k.name + ' l\u00e4uft.';
+  if(g('hEmoji')) g('hEmoji').textContent = emoji(k.gender);
+  if(g('hTotal')) g('hTotal').textContent = eu(saved);
+  if(g('hKidLine')) g('hKidLine').textContent = 'f\u00fcr ' + k.name + ' \u00b7 ' + age + ' Jahre alt';
+  if(g('hAvatar')) g('hAvatar').textContent = emoji(k.gender);
+  if(g('hPct')) g('hPct').textContent = pct + '%';
+  if(g('hBar')) g('hBar').style.width = pct + '%';
+  if(g('hAt18')) g('hAt18').textContent = eu(fv18);
+  if(g('hDay')) g('hDay').textContent = '\u20ac' + (k.monthly/30).toFixed(2);
+  if(g('hYrs')) g('hYrs').textContent = yrs + 'J';
+  if(g('hMonthly')) g('hMonthly').textContent = eu(k.monthly) + '/Mo';
+
+  // Eli tips
+  var tips = [
+    'Der MSCI World ETF hat in den letzten 30 Jahren durchschnittlich 8,5% pro Jahr geliefert. Selbst nach den schlimmsten Krisen \u2014 wer durchhielt, gewann.',
+    k.name + ' hat noch ' + yrs + ' Jahre bis zum 18. Geburtstag. ' + (yrs*12) + ' Monate Zineszins arbeiten f\u00fcr euch. Jeder Monat den du jetzt investierst multipliziert sich.',
+    'Tipp: Erh\u00f6he den Sparplan bei jeder Gehaltserhöhung um die H\u00e4lfte. In 5 Jahren merkst du den Unterschied kaum \u2014 ' + k.name + ' schon.',
+    'Wusstest du? Gro\u00dfeltern k\u00f6nnen bis zu \u20ac400.000 steuerfrei an Enkel schenken. Ein ETF-Depot als Geburtstagsgeschenk ist das Klügste was sie tun k\u00f6nnen.',
+    'Freistellungsauftrag nicht vergessen! \u20ac1.000/Jahr Kapitalertr\u00e4ge f\u00fcr ' + k.name + ' bleiben steuerfrei. Einmal stellen, f\u00fcr immer profitieren.',
+    'Die 3-Topf-Strategie: ETF-Sparplan (Hauptverm\u00f6gen) + Tagesgeld (kurzfristig) + Bausparvertrag (Wohnung). Drei T\u00f6pfe, drei Zeithorizonte, maximale Rendite.'
+  ];
+  var ti = new Date().getDate() % tips.length;
+  if(g('tipText')) g('tipText').textContent = tips[ti];
+  if(g('tipDate')) g('tipDate').textContent = new Date().toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'});
+
+  // Multi-kid selector
+  if (KIDS.length > 1) {
+    var wrap = g('kidSelWrap');
+    var sel = g('kidSel');
+    if (wrap) wrap.style.display = 'block';
+    if (sel) {
+      sel.innerHTML = KIDS.map(function(ki, i){
+        var active = i === ACT;
+        return '<button onclick="switchKid(' + i + ')" style="display:flex;align-items:center;gap:6px;padding:7px 14px;background:' + (active?'linear-gradient(135deg,var(--gold),#c97b08)':'rgba(255,255,255,.05)') + ';border:1.5px solid ' + (active?'var(--gold)':'var(--wire)') + ';border-radius:20px;cursor:pointer;font-size:12px;font-weight:700;color:' + (active?'#07111f':'var(--muted)') + ';white-space:nowrap;font-family:var(--ui)">' + emoji(ki.gender) + ' ' + ki.name + '</button>';
+      }).join('');
+    }
+  }
+}
+
+function renderPlan() {
+  var k = KIDS[ACT];
+  if (!k) return;
+  var age = cAge(k.birth);
+  var mo = k.monthly || 127;
+
+  var g = function(id){ return document.getElementById(id); };
+  if(g('planSub')) g('planSub').textContent = 'Plan f\u00fcr ' + k.name + ' \u00b7 ' + age + ' Jahre alt';
+  if(g('msName')) g('msName').textContent = k.name;
+  if(g('slVal')) g('slVal').textContent = eu(mo);
+  if(g('slider')) g('slider').value = mo;
+
+  updateProj(mo, age);
+  renderMs(k, mo);
+}
+
+function updateProj(mo, age) {
+  var g = function(id){ return document.getElementById(id); };
+  var fv10 = fv(mo, Math.max(0,10-age));
+  var fv18 = fv(mo, Math.max(1,18-age));
+  var fv25 = fv(mo, Math.max(1,25-age));
+  if(g('p10')) g('p10').textContent = fv10 > 0 ? eu(fv10) : '\u2013';
+  if(g('p18')) g('p18').textContent = eu(fv18);
+  if(g('p25')) g('p25').textContent = eu(fv25);
+}
+
+function onSlider(val) {
+  val = parseFloat(val)||127;
+  var el = document.getElementById('slVal');
+  if (el) el.textContent = eu(val);
+  var k = KIDS[ACT];
+  if (!k) return;
+  k.monthly = val;
+  save();
+  updateProj(val, cAge(k.birth));
+  renderMs(k, val);
+  var hm = document.getElementById('hMonthly');
+  if (hm) hm.textContent = eu(val) + '/Mo';
+}
+
+function renderMs(k, mo) {
+  var container = document.getElementById('msList');
+  if (!container) return;
+  var age = cAge(k.birth);
+  var yr = new Date().getFullYear();
+
+  var ALL = [
+    {age:6,  ico:'\uD83D\uDCDA', lbl:'Einschulung',        cost:600,   col:'var(--sky)',  desc:'Ranzen, Material, erster Schultag'},
+    {age:10, ico:'\uD83D\uDCF1', lbl:'Erstes Smartphone',  cost:500,   col:'var(--lav)',  desc:'Der gro\u00dfe Wunsch'},
+    {age:13, ico:'\uD83C\uDFB8', lbl:'Hobby & Kurse',      cost:2000,  col:'var(--sage)', desc:'Musik, Sport, Talente f\u00f6rdern'},
+    {age:16, ico:'\uD83D\uDC5F', lbl:'Mode & Style',       cost:800,   col:'var(--blush)',desc:'Selbstausdruck kostet'},
+    {age:17, ico:'\uD83D\uDE97', lbl:'F\u00fchrerschein',  cost:3500,  col:'var(--gold)', desc:'Freiheit auf vier R\u00e4dern'},
+    {age:18, ico:'\uD83C\uDF93', lbl:'Abitur & Aufbruch',  cost:2500,  col:'var(--gold2)',desc:'Der gro\u00dfe Start'},
+    {age:19, ico:'\uD83C\uDFE0', lbl:'Erste Wohnung',      cost:5000,  col:'var(--sky)',  desc:'Kaution + Einrichtung'},
+    {age:20, ico:'\uD83D\uDCDA', lbl:'Studium/Ausbildung', cost:20000, col:'var(--sage)', desc:'3\u20135 Jahre Finanzierung'},
+    {age:25, ico:'\uD83D\uDE80', lbl:'Business/Leben',     cost:10000, col:'var(--gold)', desc:'Startkapital f\u00fcr alles'}
+  ].filter(function(m){ return m.age > age; });
+
+  var html = '';
+  ALL.forEach(function(m){
+    var yrs = m.age - age;
+    var sv = yrs > 0 ? fv(mo, yrs) : 0;
+    var cov = sv >= m.cost;
+    var pct = Math.min(100, Math.round(sv / m.cost * 100));
+    var year = yr + yrs;
+
+    html += '<div class="ms-row">'
+      + '<div class="ms-ico" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)">' + m.ico + '</div>'
+      + '<div style="flex:1;min-width:0">'
+        + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px">'
+          + '<div style="font-weight:700;font-size:13px">' + m.lbl + '</div>'
+          + '<div style="font-size:10px;color:var(--muted)">' + year + ' \u00b7 ' + m.age + 'J</div>'
+        + '</div>'
+        + '<div style="font-size:10px;color:var(--muted);margin-bottom:7px">' + m.desc + ' \u00b7 <strong style="color:var(--text)">' + eu(m.cost) + '</strong></div>'
+        + '<div class="prog" style="margin-bottom:4px"><div class="prog-fill" style="width:' + pct + '%;background:' + m.col + '"></div></div>'
+        + '<div style="display:flex;justify-content:space-between;align-items:center">'
+          + '<span style="font-size:9px;color:var(--muted)">Geplant: <span style="color:' + m.col + ';font-weight:700">' + eu(sv) + '</span></span>'
+          + '<span class="badge" style="background:' + (cov?'rgba(110,201,154,.1)':'rgba(245,166,35,.08)') + ';color:' + (cov?'var(--sage)':'var(--gold)') + ';border:1px solid ' + (cov?'rgba(110,201,154,.22)':'rgba(245,166,35,.2)') + ';font-size:8px">' + (cov ? '\u2713 Gedeckt' : pct + '% gedeckt') + '</span>'
+        + '</div>'
+      + '</div>'
+      + '</div>';
+  });
+  container.innerHTML = html || '<div style="text-align:center;color:var(--muted);padding:20px">Alle Meilensteine erreicht! \uD83C\uDF89</div>';
+}
+
+function renderBrief() {
+  var k = KIDS[ACT];
+  if (!k) return;
+  var age = cAge(k.birth);
+  var yrs = Math.max(1, 18-age);
+  var fvAmt = fv(k.monthly, yrs);
+  var months = yrs * 12;
+  var startYear = new Date(k.started).getFullYear();
+  var sal = k.gender === 'm' ? 'Lieber' : 'Liebe';
+  var pName = k.pName || 'dein Elternteil';
+
+  var lines = [
+    sal + ' ' + k.name + ',',
+    '',
+    'im Jahr ' + startYear + ' hat ' + pName + ' zum ersten',
+    'Mal f\u00fcr dich gespart. Du warst ' + age + ' Jahre alt.',
+    '',
+    'In den n\u00e4chsten ' + yrs + ' Jahren hat ' + pName,
+    months + ' Entscheidungen getroffen.',
+    '',
+    'Jeden Monat hat er/sie \u20ac' + k.monthly + ' f\u00fcr dich',
+    'gew\u00e4hlt \u2014 statt f\u00fcr sich selbst.',
+    '',
+    'Das ergibt heute:',
+    '',
+    '    \u20ac' + Math.round(fvAmt).toLocaleString('de-DE') + ' die dir geh\u00f6ren.',
+    '',
+    'Das ist kein Geld.',
+    'Das sind ' + months + ' Monate Liebe \u2014 in Zahlen.',
+    '',
+    'Was du damit anf\u00e4ngst \u2014',
+    'das ist jetzt deine Geschichte.',
+    '',
+    'Mach etwas Gro\u00dfes daraus.',
+    '',
+    '\u2014 Eli, im Namen von ' + pName
+  ];
+
+  var el = document.getElementById('letterText');
+  if (el) el.textContent = lines.join('\n');
+}
+
+function renderProfil() {
+  var list = document.getElementById('profilList');
+  if (!list) return;
+  list.innerHTML = KIDS.map(function(k, i){
+    var age = cAge(k.birth);
+    var yrs = Math.max(1, 18-age);
+    var fv18 = fv(k.monthly, yrs);
+    var active = i === ACT;
+    return '<div class="' + (active?'card-glow':'card') + '" style="padding:16px;cursor:pointer" onclick="switchKid(' + i + ')">'
+      + '<div style="display:flex;align-items:center;gap:12px;margin-bottom:11px">'
+        + '<div style="font-size:34px">' + emoji(k.gender) + '</div>'
+        + '<div style="flex:1">'
+          + '<div style="font-family:var(--pf);font-size:18px;font-weight:800;color:' + (active?'var(--gold2)':'var(--text)') + '">' + k.name + '</div>'
+          + '<div style="font-size:11px;color:var(--muted);margin-top:2px">' + age + ' Jahre \u00b7 seit ' + new Date(k.started).toLocaleDateString('de-DE',{month:'long',year:'numeric'}) + '</div>'
+        + '</div>'
+        + (active ? '<div class="badge bg">Aktiv</div>' : '')
+      + '</div>'
+      + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'
+        + '<div style="background:rgba(0,0,0,.25);border-radius:11px;padding:9px;text-align:center"><div style="font-size:8px;color:var(--muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:.06em">Monatlich</div><div style="font-family:var(--pf);font-weight:800;color:var(--gold)">' + eu(k.monthly) + '</div></div>'
+        + '<div style="background:rgba(0,0,0,.25);border-radius:11px;padding:9px;text-align:center"><div style="font-size:8px;color:var(--muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:.06em">Mit 18</div><div style="font-family:var(--pf);font-weight:800;color:var(--sage)">' + eu(fv18) + '</div></div>'
+      + '</div>'
+    + '</div>';
+  }).join('');
+}
+
+function switchKid(i) {
+  ACT = i;
+  save();
+  renderAll();
+  goTab('home', 0);
+}
+
+function addKid() {
+  ivStep = 0; ivAns = {};
+  document.getElementById('ivChat').innerHTML = '';
+  showS('sInterview');
+  setTimeout(function(){ askQ(0); }, 400);
+}
+
+function doShare() {
+  var k = KIDS[ACT] || {};
+  var txt = 'Ich spare jeden Monat f\u00fcr ' + (k.name||'mein Kind') + ' \u2014 mit BabyWealth. Der Brief den ' + (k.name||'mein Kind') + ' mit 18 bekommt hat mich zu Tr\u00e4nen ger\u00fchrt. \uD83D\uDC9B #BabyWealth #F\u00FCrJedesKind #KinderFinanzen';
+  if (navigator.share) {
+    navigator.share({title:'BabyWealth', text:txt}).catch(function(){});
+  } else {
+    navigator.clipboard.writeText(txt).then(function(){
+      alert('Text kopiert! Teile ihn auf Social Media \uD83D\uDC9B');
+    }).catch(function(){ alert(txt); });
+  }
+}
+
+function doPrint() { window.print(); }
+
+function doReset() {
+  if (!confirm('Wirklich alle Daten l\u00f6schen?')) return;
+  localStorage.removeItem('bw2-kids');
+  localStorage.removeItem('bw2-act');
+  KIDS = []; ACT = 0;
+  showS('sLanding');
+}
+
+// ── INIT ───────────────────────────
+window.addEventListener('DOMContentLoaded', function(){
+  load();
+
+  // init visible tab
+  var home = document.getElementById('tHome');
+  if (home) { home.classList.add('on'); home.style.display='flex'; }
+
+  if (KIDS.length > 0) {
+    showS('sApp');
+    renderAll();
+  }
+});
+</script>
+</body>
+</html>
