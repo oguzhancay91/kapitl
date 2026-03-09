@@ -1,0 +1,2050 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>BabyWealth</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --white:#ffffff;--bg:#f5f7fb;--bg2:#eaeff7;--card:#ffffff;
+  --border:#e4eaf4;--border2:#cdd7e8;
+  --blue:#3b9eff;--blue2:#1a7ee0;--blue-s:#e8f4ff;--blue-m:#b8d9ff;
+  --pink:#ff6fab;--pink2:#e0417e;--pink-s:#fff0f6;--pink-m:#ffbdd9;
+  --brand:#3b9eff;--brand2:#1a7ee0;--brand-s:#e8f4ff;--brand-m:#b8d9ff;
+  --green:#22c87a;--green2:#15a35f;--green-s:#e6faf2;
+  --amber:#f59e0b;--amber-s:#fff8e6;
+  --red:#ef4444;--red-s:#fff0f0;
+  --purple:#8b5cf6;--purple-s:#f3f0ff;
+  --t1:#1a2030;--t2:#556070;--t3:#9ca8b8;--t4:#c8d0dc;
+  --sh:'Fredoka One',cursive;--body:'Nunito',sans-serif;--mono:'DM Mono',monospace;
+  --r:20px;--rs:14px;--rxs:10px;
+  --shadow:0 2px 14px rgba(0,40,100,.07);
+  --shadow2:0 4px 24px rgba(0,40,100,.12);
+  --shadow3:0 8px 36px rgba(0,40,100,.16);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--t1);font-family:var(--body);-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;font-size:14px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes float2{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-7px) rotate(3deg)}}
+@keyframes pop{0%{transform:scale(.3);opacity:0}70%{transform:scale(1.1)}to{transform:scale(1);opacity:1}}
+@keyframes slideUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+@keyframes pulse-b{0%,100%{box-shadow:0 0 0 0 rgba(59,158,255,.35)}70%{box-shadow:0 0 0 14px rgba(59,158,255,0)}}
+@keyframes confetti-f{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(80px) rotate(540deg);opacity:0}}
+@keyframes notif-in{from{opacity:0;transform:translateX(110%)}to{opacity:1;transform:none}}
+@keyframes notif-out{from{opacity:1}to{opacity:0;transform:translateX(110%)}}
+@keyframes jar-fill-anim{from{height:0}to{height:var(--jh)}}
+@keyframes heartbeat{0%,100%{transform:scale(1)}15%{transform:scale(1.2)}30%{transform:scale(1)}}
+@keyframes deal-pulse{0%,100%{opacity:1}50%{opacity:.6}}
+@keyframes progress-fill{from{width:0}to{width:var(--pw)}}
+.screen{display:none;flex-direction:column;height:100dvh}
+.screen.on{display:flex}
+.scrl{overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;flex:1}
+.scrl::-webkit-scrollbar{width:3px}
+.scrl::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+#tabArea{flex:1;position:relative;overflow:hidden;min-height:0}
+.tc{display:none;position:absolute;inset:0;flex-direction:column}
+.tc.on{display:flex}
+/* NAV */
+.nav{flex-shrink:0;background:var(--white);border-top:1.5px solid var(--border);padding:5px 0 calc(5px + env(safe-area-inset-bottom));box-shadow:0 -3px 16px rgba(0,0,0,.06)}
+.nav-row{display:flex;justify-content:space-around}
+.nb{display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 5px;background:none;border:none;cursor:pointer;color:var(--t3);transition:all .2s;font-family:var(--body);position:relative}
+.nb.on{color:var(--brand)}.nb.on .ni-w{background:var(--brand-s)}
+.ni-w{width:36px;height:36px;border-radius:11px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.ni{font-size:19px}.nl{font-size:7.5px;font-weight:800;letter-spacing:.03em;text-transform:uppercase}
+/* CARDS */
+.card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow)}
+.cb{background:var(--brand-s);border:1.5px solid var(--brand-m);border-radius:var(--r)}
+.cg{background:var(--green-s);border:1.5px solid rgba(34,200,122,.25);border-radius:var(--r)}
+.ca{background:var(--amber-s);border:1.5px solid rgba(245,158,11,.25);border-radius:var(--r)}
+.cp{background:var(--pink-s);border:1.5px solid rgba(255,111,171,.25);border-radius:var(--r)}
+.cpur{background:var(--purple-s);border:1.5px solid rgba(139,92,246,.22);border-radius:var(--r)}
+/* BTNS */
+.btn{padding:11px 20px;border:none;border-radius:50px;font-family:var(--body);font-size:13px;font-weight:800;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.btn:active{transform:scale(.97)}
+.bb{background:linear-gradient(135deg,var(--brand),var(--brand2));color:white;box-shadow:0 4px 16px rgba(59,158,255,.28)}
+.bb:hover{transform:translateY(-2px);box-shadow:0 6px 22px rgba(59,158,255,.38)}
+.bg2{background:linear-gradient(135deg,var(--green),var(--green2));color:white;box-shadow:0 4px 16px rgba(34,200,122,.28)}
+.bp{background:linear-gradient(135deg,var(--pink),var(--pink2));color:white;box-shadow:0 4px 16px rgba(255,111,171,.28)}
+.bw{background:var(--white);border:1.5px solid var(--border2);color:var(--t1);box-shadow:var(--shadow)}
+.bgh{background:transparent;border:1.5px solid var(--border2);color:var(--t2)}
+.bgh:hover{border-color:var(--brand);color:var(--brand)}
+/* INPUTS */
+.inp{width:100%;padding:13px 17px;background:var(--bg);border:1.5px solid var(--border2);border-radius:50px;font-size:14px;font-weight:700;color:var(--t1);outline:none;font-family:var(--body);transition:all .2s}
+.inp:focus{border-color:var(--brand);background:white;box-shadow:0 0 0 3px var(--brand-s)}
+.inp::placeholder{color:var(--t4);font-size:12px;font-weight:600}
+/* BADGES */
+.bdg{display:inline-flex;align-items:center;gap:3px;padding:3px 9px;border-radius:50px;font-size:9px;font-weight:800;letter-spacing:.04em}
+.bb2{background:var(--brand-s);color:var(--brand);border:1px solid var(--brand-m)}
+.bg3{background:var(--green-s);color:var(--green2);border:1px solid rgba(34,200,122,.25)}
+.bpk{background:var(--pink-s);color:var(--pink2);border:1px solid rgba(255,111,171,.25)}
+.bam{background:var(--amber-s);color:#b45309;border:1px solid rgba(245,158,11,.25)}
+.bpu{background:var(--purple-s);color:var(--purple);border:1px solid rgba(139,92,246,.2)}
+/* PROGRESS */
+.prog{height:8px;background:var(--bg2);border-radius:5px;overflow:hidden}
+.pfill{height:100%;border-radius:5px;transition:width 1s cubic-bezier(.34,1.56,.64,1)}
+/* TOPBAR */
+.topbar{padding:12px 15px 9px;flex-shrink:0;background:var(--white);border-bottom:1.5px solid var(--border);position:sticky;top:0;z-index:10}
+/* CHAT */
+.msg{display:flex;gap:8px;align-items:flex-start;animation:fadeUp .28s ease both}
+.msg.user{flex-direction:row-reverse}
+.av-eli{width:33px;height:33px;border-radius:50%;background:linear-gradient(135deg,var(--brand),var(--brand2));display:flex;align-items:center;justify-content:center;font-family:var(--sh);font-size:12px;color:white;flex-shrink:0;box-shadow:0 3px 12px var(--brand-m)}
+.av-usr{width:33px;height:33px;border-radius:50%;background:var(--bg2);border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.bub{padding:10px 14px;font-size:13px;line-height:1.65;max-width:88%;border-radius:18px;font-weight:600}
+.msg:not(.user) .bub{background:var(--bg);border:1.5px solid var(--border);color:var(--t2);border-radius:18px 18px 18px 4px}
+.msg.user .bub{background:linear-gradient(135deg,var(--brand),var(--brand2));color:white;border-radius:18px 18px 4px 18px;box-shadow:0 4px 14px var(--brand-m)}
+.dot{display:inline-block;width:5px;height:5px;background:var(--t3);border-radius:50%;margin:0 2px;animation:blink .85s infinite}
+.dot:nth-child(2){animation-delay:.18s}.dot:nth-child(3){animation-delay:.36s}
+/* OPT */
+.opt{width:100%;padding:13px 17px;background:white;border:1.5px solid var(--border);border-radius:50px;cursor:pointer;text-align:left;font-family:var(--body);font-size:13px;font-weight:700;color:var(--t1);transition:all .18s;display:flex;align-items:center;gap:11px;box-shadow:var(--shadow)}
+.opt:hover{border-color:var(--brand);color:var(--brand);transform:translateX(3px)}
+/* MODAL */
+.ov{position:fixed;inset:0;background:rgba(10,20,50,.44);backdrop-filter:blur(8px);z-index:200;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:white;border-radius:26px 26px 0 0;padding:18px 18px 36px;width:100%;max-width:500px;animation:slideUp .3s cubic-bezier(.34,1.2,.64,1) both;max-height:92vh;overflow-y:auto;box-shadow:0 -4px 36px rgba(0,0,0,.14)}
+.handle{width:38px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 14px}
+/* TOAST */
+.toast{background:white;border:1.5px solid var(--border);border-radius:14px;padding:11px 14px;box-shadow:var(--shadow3);display:flex;align-items:center;gap:9px;font-size:12px;font-weight:700;max-width:276px;color:var(--t1)}
+.toast.show{animation:notif-in .3s ease both}.toast.hide{animation:notif-out .25s ease both}
+/* JAR */
+.jar-wrap{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;transition:transform .18s;min-width:88px}
+.jar-wrap:hover{transform:scale(1.05)}.jar-wrap:active{transform:scale(.95)}
+/* STORY RING */
+.sring{border-radius:50%;padding:3px;background:conic-gradient(var(--brand),var(--pink),var(--green),var(--amber),var(--brand));animation:spin 4s linear infinite;display:inline-flex}
+.sring-inner{border-radius:50%;border:2.5px solid white;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.sring-static{border-radius:50%;padding:3px;background:var(--border2);display:inline-flex}
+.story-add{border-radius:50%;border:2px dashed var(--border2);display:flex;align-items:center;justify-content:center;cursor:pointer;background:var(--bg);transition:all .18s}
+.story-add:hover{border-color:var(--brand)}
+/* MS DOT */
+.ms-dot{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;transition:all .2s}
+.ms-done{background:linear-gradient(135deg,var(--green),var(--green2));box-shadow:0 3px 10px rgba(34,200,122,.3)}
+.ms-next{background:linear-gradient(135deg,var(--brand),var(--brand2));animation:pulse-b 2.5s ease-in-out infinite}
+.ms-future{background:var(--bg2);border:1.5px solid var(--border)}
+/* FUNDING */
+.fund-bar{background:var(--bg2);border-radius:8px;height:11px;overflow:hidden;margin:8px 0 4px}
+.fund-fill{height:100%;border-radius:8px;background:linear-gradient(90deg,var(--brand),var(--green));transition:width 1s cubic-bezier(.34,1.56,.64,1)}
+/* SHOP ITEM */
+.shop-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--rs);border:1.5px solid var(--border);margin-bottom:8px;background:white;transition:all .18s;cursor:pointer;position:relative;overflow:hidden}
+.shop-item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--item-color,var(--brand))}
+.shop-item:hover{border-color:var(--brand);box-shadow:var(--shadow)}
+/* TOGGLE */
+.tgl{width:44px;height:24px;border-radius:12px;border:none;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0}
+.tgl-on{background:var(--brand)}.tgl-off{background:var(--bg2);border:1px solid var(--border2)}
+.tgl-k{position:absolute;top:3px;width:18px;height:18px;background:white;border-radius:50%;transition:all .2s;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.tgl-on .tgl-k{right:3px}.tgl-off .tgl-k{left:3px}
+/* LANG BTN */
+.lang-b{padding:7px 13px;border-radius:50px;border:1.5px solid var(--border);font-size:11px;font-weight:800;cursor:pointer;transition:all .2s;color:var(--t2);background:white}
+.lang-b.on{border-color:var(--brand);color:var(--brand);background:var(--brand-s)}
+/* EMOJI PICKER */
+.epc{width:44px;height:44px;border-radius:12px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;background:white;transition:all .16s}
+.epc:hover,.epc.on{border-color:var(--brand);background:var(--brand-s)}
+/* AVATAR LG */
+.av-lg{width:80px;height:80px;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:38px;background:var(--bg2);flex-shrink:0;position:relative}
+.av-cam{position:absolute;bottom:0;right:0;width:23px;height:23px;background:var(--brand);border-radius:50%;border:2.5px solid white;display:flex;align-items:center;justify-content:center;font-size:10px;cursor:pointer}
+/* CONFETTI */
+.cfp{position:fixed;pointer-events:none;z-index:1000;width:9px;height:9px;border-radius:2px}
+/* DEAL BADGE */
+.deal-live{background:var(--red-s);border:1.5px solid rgba(239,68,68,.2);border-radius:var(--r);padding:13px;margin-bottom:9px;position:relative;overflow:hidden}
+.deal-pulse{position:absolute;top:10px;right:12px;width:8px;height:8px;background:var(--red);border-radius:50%;animation:deal-pulse 1.5s ease-in-out infinite}
+/* MILESTONE FILL CARD */
+.ms-fill-card{background:white;border:1.5px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:8px;box-shadow:var(--shadow)}
+.ms-fill-bar{height:12px;background:var(--bg2);border-radius:8px;overflow:hidden;margin:8px 0 5px}
+.ms-fill-inner{height:100%;border-radius:8px;transition:width 1.2s cubic-bezier(.34,1.56,.64,1)}
+/* SHOP COLOR STRIPS */
+.shop-dm{--item-color:#f03}.shop-rewe{--item-color:#e30613}.shop-amazon{--item-color:#ff9900}.shop-dm-orange{--item-color:#f59e0b}.shop-action{--item-color:#e0007a}.shop-kik{--item-color:#e0417e}.shop-rossmann{--item-color:#e30613}.shop-lidl{--item-color:#0050aa}
+/* MENTAL CARD */
+.mental{background:linear-gradient(135deg,var(--brand-s),white);border:1.5px solid var(--brand-m);border-radius:var(--r);padding:15px;text-align:center}
+/* EURO GOAL */
+.euro-goal{background:linear-gradient(135deg,var(--green-s),white);border:1.5px solid rgba(34,200,122,.25);border-radius:var(--r);padding:15px}
+</style>
+</head>
+<body>
+<!-- LANDING -->
+<div class="screen on" id="sLand">
+<div class="scrl">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 17px;background:white;border-bottom:1.5px solid var(--border);position:sticky;top:0;z-index:50">
+    <div style="display:flex;align-items:center;gap:8px">
+      <div style="width:31px;height:31px;background:linear-gradient(135deg,var(--brand),var(--brand2));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px">🍼</div>
+      <span style="font-family:var(--sh);font-size:20px">BabyWealth</span>
+    </div>
+    <div style="display:flex;gap:7px">
+      <button onclick="showLogin()" class="btn bgh" style="padding:8px 15px;font-size:12px">Login</button>
+      <button onclick="goOB()" class="btn bb" style="padding:8px 15px;font-size:12px">Starten →</button>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div id="landHero" style="padding:42px 20px 32px;text-align:center;background:linear-gradient(170deg,var(--brand-s) 0%,white 58%);position:relative;overflow:hidden">
+    <div style="position:absolute;top:14px;left:6%;font-size:24px;animation:float 6s ease-in-out infinite;opacity:.55">🍼</div>
+    <div style="position:absolute;top:20px;right:4%;font-size:19px;animation:float2 7s ease-in-out infinite;opacity:.45">✨</div>
+    <div style="position:absolute;bottom:18px;left:3%;font-size:17px;animation:float 8s 1s ease-in-out infinite;opacity:.38">💛</div>
+    <div style="position:absolute;bottom:12px;right:7%;font-size:21px;animation:float2 6s 2s ease-in-out infinite;opacity:.45">🌟</div>
+    <div class="bdg bb2" style="margin-bottom:15px;font-size:10px;padding:5px 13px">🤖 KI-Investmentbanker · 9,99 €/Monat</div>
+    <h1 style="font-family:var(--sh);font-size:clamp(27px,6.5vw,42px);line-height:1.15;margin-bottom:13px">
+      Sparen für die<br>
+      <span id="heroAccent" style="color:var(--brand)">Meilensteine</span><br>
+      deines Kindes
+    </h1>
+    <p style="font-size:13px;color:var(--t2);line-height:1.8;max-width:300px;margin:0 auto 20px;font-weight:600">
+      <strong style="color:var(--brand)">Eli</strong>, dein KI-Investmentbanker — 24/7. Goldman Sachs verlangt €500K Minimum. Du bekommst dasselbe für <strong style="color:var(--pink)">€9,99/Monat</strong>.
+    </p>
+    <div style="display:flex;flex-direction:column;gap:8px;max-width:290px;margin:0 auto 26px">
+      <button onclick="goOB()" class="btn bb" style="padding:15px;font-size:14px;width:100%">🚀 Kostenlos starten</button>
+      <div style="display:flex;gap:7px">
+        <button onclick="socialLogin('Google')" style="flex:1;padding:11px;background:white;border:1.5px solid var(--border);border-radius:50px;cursor:pointer;font-size:12px;font-weight:800;font-family:var(--body);display:flex;align-items:center;justify-content:center;gap:6px;box-shadow:var(--shadow)">🌐 Google</button>
+        <button onclick="socialLogin('Apple')" style="flex:1;padding:11px;background:white;border:1.5px solid var(--border);border-radius:50px;cursor:pointer;font-size:12px;font-weight:800;font-family:var(--body);display:flex;align-items:center;justify-content:center;gap:6px;box-shadow:var(--shadow)">🍎 Apple</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- €1 AM TAG HOOK -->
+  <div style="padding:0 17px;margin-top:-8px">
+    <div class="euro-goal" style="position:relative">
+      <div style="font-size:9px;font-weight:800;color:var(--green2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">💡 Wusstest du?</div>
+      <div style="font-family:var(--sh);font-size:20px;color:var(--t1);margin-bottom:5px">Mit nur <span style="color:var(--green2)">€1/Tag</span> kannst du…</div>
+      <div id="euroDayHook" style="display:flex;flex-direction:column;gap:4px"></div>
+      <div style="margin-top:11px;font-size:11px;color:var(--t2);font-weight:600">Täglich erinnern lassen — damit es wirklich passiert. 🎯</div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:16px 17px 0">
+    <div class="card" style="padding:14px;text-align:center;box-shadow:var(--shadow)"><div style="font-family:var(--sh);font-size:21px;color:var(--brand)">€38K</div><div style="font-size:9px;color:var(--t3);font-weight:800;margin-top:2px">mit 18 J.</div></div>
+    <div class="card" style="padding:14px;text-align:center;box-shadow:var(--shadow)"><div style="font-family:var(--sh);font-size:21px;color:var(--green2)">7%</div><div style="font-size:9px;color:var(--t3);font-weight:800;margin-top:2px">ETF p.a.</div></div>
+    <div class="card" style="padding:14px;text-align:center;box-shadow:var(--shadow)"><div style="font-family:var(--sh);font-size:21px;color:var(--pink)">€4,23</div><div style="font-size:9px;color:var(--t3);font-weight:800;margin-top:2px">pro Tag</div></div>
+  </div>
+
+  <!-- FEATURES -->
+  <div style="padding:16px 17px 0">
+    <div style="font-size:10px;font-weight:800;color:var(--t3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:9px">Was du bekommst</div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px">
+      <span class="bdg bb2" style="font-size:10px;padding:5px 11px">🤖 Eli KI-Chat</span>
+      <span class="bdg bg3" style="font-size:10px;padding:5px 11px">🏺 Spardosen</span>
+      <span class="bdg bpk" style="font-size:10px;padding:5px 11px">🏆 Meilensteine</span>
+      <span class="bdg bam" style="font-size:10px;padding:5px 11px">🎁 Förderungen</span>
+      <span class="bdg bb2" style="font-size:10px;padding:5px 11px">📸 BabyGram</span>
+      <span class="bdg bg3" style="font-size:10px;padding:5px 11px">👨‍👩‍👧 Family Feed</span>
+      <span class="bdg bpk" style="font-size:10px;padding:5px 11px">💝 Funding</span>
+      <span class="bdg bpu" style="font-size:10px;padding:5px 11px">📊 Sparplan</span>
+    </div>
+  </div>
+
+  <!-- TESTIMONIALS -->
+  <div style="padding:16px 17px 0">
+    <div class="card" style="padding:15px;margin-bottom:9px">
+      <div style="font-size:12px;color:var(--t2);line-height:1.7;font-weight:600;margin-bottom:9px">"Jeden Tag öffne ich die App! Mit €127/Monat hat Malik in 2 Jahren €4.240. Eli hat mir ETFs erklärt die ich nie verstanden hätte."</div>
+      <div style="display:flex;align-items:center;gap:9px"><div style="width:29px;height:29px;border-radius:50%;background:var(--blue-s);display:flex;align-items:center;justify-content:center;font-size:15px">👨</div><div><div style="font-size:11px;font-weight:800">Ahmed K.</div><div style="font-size:9px;color:var(--t3)">Vater von Malik, 2</div></div><div style="margin-left:auto;color:var(--amber);font-size:11px">★★★★★</div></div>
+    </div>
+  </div>
+
+  <!-- PRICING -->
+  <div style="padding:14px 17px 60px">
+    <div class="cb" style="padding:20px;text-align:center">
+      <div style="font-size:9px;font-weight:800;color:var(--brand);letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px">ALLES INKLUSIVE</div>
+      <div style="font-family:var(--sh);font-size:38px;color:var(--t1)">€9<span style="font-size:18px;color:var(--t2)">,99</span><span style="font-size:13px;color:var(--t3)">/Mo</span></div>
+      <div style="font-size:11px;color:var(--t2);font-weight:600;margin:5px 0 15px">14 Tage kostenlos · Jederzeit kündbar</div>
+      <button onclick="goOB()" class="btn bb" style="width:100%;padding:14px;font-size:14px">Jetzt starten — gratis 🚀</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ONBOARDING -->
+<div class="screen" id="sIV">
+  <div style="padding:11px 15px 8px;background:white;border-bottom:1.5px solid var(--border);flex-shrink:0">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px">
+      <button onclick="showS('sLand')" style="background:none;border:none;cursor:pointer;color:var(--t2);font-size:20px;padding:2px">←</button>
+      <span style="font-family:var(--sh);font-size:15px">Baby-Profil erstellen</span>
+      <span id="ivPct" style="font-size:11px;font-weight:800;color:var(--brand)">0%</span>
+    </div>
+    <div class="prog"><div id="ivBar" class="pfill" style="width:0%;background:linear-gradient(90deg,var(--brand),var(--green))"></div></div>
+  </div>
+  <div id="ivChat" class="scrl" style="padding:13px;display:flex;flex-direction:column;gap:11px"></div>
+  <div id="ivAns" style="padding:9px 15px 26px;flex-shrink:0;background:white;border-top:1.5px solid var(--border)"></div>
+</div>
+
+<!-- WOW -->
+<div class="screen" id="sWow" style="align-items:center;justify-content:center;text-align:center;padding:28px 22px;background:var(--bg)">
+  <div style="max-width:340px;width:100%;position:relative;z-index:1">
+    <div id="we" style="font-size:62px;margin-bottom:15px;opacity:0;animation:float 5s ease-in-out infinite">🚀</div>
+    <div id="wl" style="font-family:var(--sh);font-size:11px;color:var(--brand);letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px;opacity:0">DEIN PLAN IST BEREIT</div>
+    <div id="wn" style="font-family:var(--sh);font-size:36px;color:var(--t1);margin-bottom:4px;opacity:0"></div>
+    <div id="ws" style="font-size:13px;color:var(--t2);font-weight:600;margin-bottom:20px;opacity:0">wird mit 18 Jahren haben</div>
+    <div id="wa" style="opacity:0;margin-bottom:15px">
+      <div id="wCard" style="border-radius:22px;padding:22px;box-shadow:var(--shadow3)">
+        <div style="font-size:9px;color:rgba(255,255,255,.7);font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px">PROJIZIERTES VERMÖGEN</div>
+        <div id="wamt" style="font-family:var(--sh);font-size:46px;color:white;line-height:1"></div>
+        <div id="wn2" style="font-size:10px;color:rgba(255,255,255,.7);font-weight:600;margin-top:3px"></div>
+      </div>
+    </div>
+    <div id="wd" style="font-size:13px;color:var(--t2);line-height:1.8;font-weight:600;opacity:0;margin-bottom:20px"></div>
+    <div id="wbtn" style="opacity:0"><button onclick="goApp()" class="btn bb" style="width:100%;padding:15px;font-size:14px">App öffnen 🎉</button></div>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="screen" id="sApp">
+<div id="tabArea">
+
+<!-- HOME TAB -->
+<div class="tc scrl on" id="tHome">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+      <div>
+        <div id="hGreet" style="font-family:var(--sh);font-size:20px">Guten Tag 👋</div>
+        <div id="hSub" style="font-size:11px;color:var(--t2);font-weight:600;margin-top:1px">–</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div onclick="goTab('eli',4)" style="display:flex;align-items:center;gap:3px;background:var(--amber-s);border:1.5px solid rgba(245,158,11,.25);border-radius:50px;padding:5px 10px;cursor:pointer">
+          <span>🔥</span><span id="hStreak" style="font-family:var(--mono);font-size:11px;color:#b45309">0</span>
+        </div>
+        <div onclick="openAvatarModal()" style="cursor:pointer;position:relative">
+          <div style="width:38px;height:38px;border-radius:50%;border:2.5px solid var(--brand);overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:21px;background:var(--bg2);position:relative">
+            <span id="hAvEmoji">👶</span>
+            <img id="hAvImg" src="" style="display:none;width:100%;height:100%;object-fit:cover;position:absolute;inset:0">
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="padding:11px 14px 84px">
+
+    <!-- WEALTH CARD -->
+    <div id="wealthCard" style="border-radius:22px;padding:18px;margin-bottom:11px;position:relative;overflow:hidden;box-shadow:var(--shadow3)">
+      <div style="position:absolute;top:-22px;right:-22px;width:100px;height:100px;background:rgba(255,255,255,.1);border-radius:50%"></div>
+      <div style="position:relative;z-index:1">
+        <div style="font-size:9px;color:rgba(255,255,255,.6);font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px">Angespartes Vermögen</div>
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:11px">
+          <div>
+            <div id="hTotal" style="font-family:var(--sh);font-size:38px;color:white;line-height:1">€0</div>
+            <div id="hKidLine" style="font-size:10px;color:rgba(255,255,255,.55);font-weight:600;margin-top:2px">für –</div>
+          </div>
+          <div id="hBigEmoji" style="font-size:50px;animation:float 5s ease-in-out infinite">👶</div>
+        </div>
+        <div style="margin-bottom:9px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:3px">
+            <span style="font-size:9px;color:rgba(255,255,255,.45);font-weight:700">Ziel mit 18 Jahren</span>
+            <span id="hPct" style="font-size:10px;font-weight:800;color:white">0%</span>
+          </div>
+          <div style="height:8px;background:rgba(255,255,255,.15);border-radius:5px;overflow:hidden">
+            <div id="hBar" style="height:100%;background:rgba(255,255,255,.85);border-radius:5px;width:0%;transition:width 1s cubic-bezier(.34,1.56,.64,1)"></div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
+          <div style="background:rgba(255,255,255,.12);border-radius:10px;padding:7px;text-align:center">
+            <div style="font-size:7px;color:rgba(255,255,255,.45);font-weight:700;text-transform:uppercase;margin-bottom:2px">Mit 18</div>
+            <div id="hAt18" style="font-family:var(--mono);font-size:11px;color:white">–</div>
+          </div>
+          <div style="background:rgba(255,255,255,.12);border-radius:10px;padding:7px;text-align:center">
+            <div style="font-size:7px;color:rgba(255,255,255,.45);font-weight:700;text-transform:uppercase;margin-bottom:2px">Pro Tag</div>
+            <div id="hDay" style="font-family:var(--mono);font-size:11px;color:white">–</div>
+          </div>
+          <div style="background:rgba(255,255,255,.12);border-radius:10px;padding:7px;text-align:center">
+            <div style="font-size:7px;color:rgba(255,255,255,.45);font-weight:700;text-transform:uppercase;margin-bottom:2px">Laufzeit</div>
+            <div id="hYrs" style="font-family:var(--mono);font-size:11px;color:white">–</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MENTAL SUPPORT -->
+    <div id="mentalCard" class="mental" style="margin-bottom:11px">
+      <div id="mentalEmoji" style="font-size:28px;margin-bottom:6px">💛</div>
+      <div id="mentalMsg" style="font-family:var(--sh);font-size:16px;color:var(--t1);line-height:1.3;margin-bottom:3px">–</div>
+      <div id="mentalSub" style="font-size:11px;color:var(--t2);font-weight:600">–</div>
+    </div>
+
+    <!-- SPARDOSEN (groß) -->
+    <div class="card" style="padding:16px;margin-bottom:11px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <div id="jarTitle" style="font-family:var(--sh);font-size:17px">Spardosen</div>
+        <div style="display:flex;gap:7px">
+          <button onclick="openAddJar()" style="font-size:10px;font-weight:800;color:var(--brand);background:var(--brand-s);border:1.5px solid var(--brand-m);padding:6px 12px;border-radius:50px;cursor:pointer">+ Neu</button>
+          <button onclick="openDeposit()" style="font-size:10px;font-weight:800;color:var(--green2);background:var(--green-s);border:1.5px solid rgba(34,200,122,.25);padding:6px 12px;border-radius:50px;cursor:pointer">💰 Einzahlen</button>
+        </div>
+      </div>
+      <div id="jarRow" style="display:flex;gap:10px;overflow-x:auto;padding-bottom:8px;-webkit-overflow-scrolling:touch"></div>
+    </div>
+
+    <!-- €1 CHALLENGE CARD -->
+    <div id="euroChalCard" style="border-radius:var(--r);padding:15px;margin-bottom:11px;background:linear-gradient(135deg,#e6faf2,white);border:1.5px solid rgba(34,200,122,.25);box-shadow:var(--shadow)">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <div>
+          <div style="font-size:9px;font-weight:800;color:var(--green2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px">🎯 Die €1/Tag Challenge</div>
+          <div style="font-family:var(--sh);font-size:17px;color:var(--t1)">Nur <span id="euroChalAmt" style="color:var(--green2)">€1 täglich</span> und…</div>
+        </div>
+        <button onclick="openDeposit()" style="padding:8px 14px;font-size:10px;font-weight:800;color:white;background:linear-gradient(135deg,var(--green),var(--green2));border:none;border-radius:50px;cursor:pointer;box-shadow:0 3px 10px rgba(34,200,122,.3)">💰 Heute einzahlen</button>
+      </div>
+      <div id="euroChalGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px"></div>
+      <div style="background:rgba(34,200,122,.09);border-radius:var(--rxs);padding:9px 11px;display:flex;align-items:center;gap:9px">
+        <div style="font-size:20px">📲</div>
+        <div style="flex:1">
+          <div style="font-size:11px;font-weight:800;color:var(--green2)">Tägliche Erinnerung</div>
+          <div style="font-size:9px;color:var(--t2);font-weight:600">Wir erinnern dich täglich — Challenge bleibt lebendig!</div>
+        </div>
+        <button onclick="activateDailyReminder(this)" id="reminderToggle" class="tgl tgl-off" style="flex-shrink:0"><div class="tgl-k"></div></button>
+      </div>
+      <div id="chalProgress" style="margin-top:9px"></div>
+    </div>
+
+    <!-- DAILY DEAL (Eli) -->
+    <div id="dailyDealCard" class="deal-live" style="margin-bottom:11px">
+      <div class="deal-pulse"></div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <div style="width:32px;height:32px;background:linear-gradient(135deg,var(--brand),var(--brand2));border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--sh);font-size:12px;color:white;flex-shrink:0;animation:heartbeat 3s ease-in-out infinite">Eli</div>
+        <div>
+          <div style="font-size:10px;font-weight:800;color:var(--red);text-transform:uppercase;letter-spacing:.06em">🔥 Deal des Tages</div>
+          <div style="font-size:9px;color:var(--t3);font-weight:600" id="dealDate"></div>
+        </div>
+        <button onclick="goTab('eli',4)" style="margin-left:auto;font-size:9px;font-weight:800;color:var(--brand);background:var(--brand-s);border:1.5px solid var(--brand-m);padding:4px 10px;border-radius:50px;cursor:pointer">Eli fragen →</button>
+      </div>
+      <div id="dealText" style="font-size:12px;color:var(--t1);line-height:1.65;font-weight:700"></div>
+      <div id="dealLinks" style="margin-top:8px;display:flex;gap:7px;flex-wrap:wrap"></div>
+    </div>
+
+    <!-- ELI TIP -->
+    <div class="cb" style="padding:14px;margin-bottom:11px;border-radius:var(--r)">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:7px">
+        <div style="width:32px;height:32px;background:linear-gradient(135deg,var(--brand),var(--brand2));border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--sh);font-size:11px;color:white;flex-shrink:0;animation:heartbeat 3s ease-in-out infinite">Eli</div>
+        <div><div style="font-weight:800;font-size:12px;color:var(--brand)">Eli's Tipp des Tages</div><div id="tipDate" style="font-size:9px;color:var(--t3);font-weight:600"></div></div>
+      </div>
+      <div id="tipText" style="font-size:12px;color:var(--t2);line-height:1.7;font-weight:600"></div>
+    </div>
+
+    <!-- QUICK ACTIONS -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:11px">
+      <button onclick="goTab('plan',2)" class="card" style="padding:13px;border:none;cursor:pointer;text-align:left;box-shadow:var(--shadow);transition:all .18s;-webkit-tap-highlight-color:transparent">
+        <div style="font-size:22px;margin-bottom:5px">📈</div>
+        <div style="font-size:11px;font-weight:800;color:var(--t1)">Sparplan</div>
+        <div style="font-size:9px;color:var(--t3);font-weight:600;margin-top:1px">ETF · Bauspar · Gold</div>
+      </button>
+      <button onclick="goTab('aus',1)" class="card" style="padding:13px;border:none;cursor:pointer;text-align:left;box-shadow:var(--shadow);transition:all .18s">
+        <div style="font-size:22px;margin-bottom:5px">💸</div>
+        <div style="font-size:11px;font-weight:800;color:var(--t1)">Ausgaben</div>
+        <div style="font-size:9px;color:var(--t3);font-weight:600;margin-top:1px">DM · REWE · Amazon</div>
+      </button>
+      <button onclick="goTab('profil',3)" class="card" style="padding:13px;border:none;cursor:pointer;text-align:left;box-shadow:var(--shadow);transition:all .18s">
+        <div style="font-size:22px;margin-bottom:5px">📸</div>
+        <div style="font-size:11px;font-weight:800;color:var(--t1)">BabyGram</div>
+        <div style="font-size:9px;color:var(--t3);font-weight:600;margin-top:1px">Erinnerungen & Feed</div>
+      </button>
+      <button onclick="goTab('foerd',5)" class="card" style="padding:13px;border:none;cursor:pointer;text-align:left;box-shadow:var(--shadow);transition:all .18s">
+        <div style="font-size:22px;margin-bottom:5px">🎁</div>
+        <div style="font-size:11px;font-weight:800;color:var(--t1)">Förderungen</div>
+        <div style="font-size:9px;color:var(--t3);font-weight:600;margin-top:1px">Kindergeld & mehr</div>
+      </button>
+    </div>
+
+    <!-- BADGES -->
+    <div class="card" style="padding:14px;margin-bottom:11px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:11px">
+        <div style="font-family:var(--sh);font-size:16px">Badges 🏅</div>
+        <button onclick="goTab('settings',6)" style="font-size:9px;font-weight:800;color:var(--amber);background:var(--amber-s);border:1.5px solid rgba(245,158,11,.25);padding:4px 10px;border-radius:50px;cursor:pointer">Alle →</button>
+      </div>
+      <div id="hBadgeRow" style="display:flex;gap:9px;overflow-x:auto;padding-bottom:2px"></div>
+    </div>
+
+  </div>
+</div><!-- /tHome -->
+
+<!-- AUSGABEN TAB -->
+<div class="tc scrl" id="tAus">
+  <div class="topbar">
+    <div style="font-family:var(--sh);font-size:18px">💸 Ausgaben</div>
+    <div style="font-size:11px;color:var(--t2);font-weight:600;margin-top:1px">Shops · Kategorien · DE-Vergleich · Prognose</div>
+  </div>
+  <div style="padding:11px 14px 84px">
+    <!-- Summary -->
+    <div id="ausgSummary" style="border-radius:20px;padding:16px;margin-bottom:11px;box-shadow:var(--shadow2)">
+      <div style="font-size:8px;color:rgba(255,255,255,.55);font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px">Monatliche Baby-Ausgaben</div>
+      <div id="ausgTotal" style="font-family:var(--sh);font-size:34px;color:white">€0</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:9px">
+        <div style="background:rgba(255,255,255,.12);border-radius:9px;padding:7px;text-align:center">
+          <div style="font-size:7px;color:rgba(255,255,255,.45);font-weight:700;text-transform:uppercase;margin-bottom:1px">DE-Ø</div>
+          <div id="ausgAvg" style="font-family:var(--mono);font-size:13px;color:white">€770</div>
+        </div>
+        <div style="background:rgba(255,255,255,.12);border-radius:9px;padding:7px;text-align:center">
+          <div style="font-size:7px;color:rgba(255,255,255,.45);font-weight:700;text-transform:uppercase;margin-bottom:1px">Status</div>
+          <div id="ausgStatus" style="font-family:var(--mono);font-size:11px;color:white">–</div>
+        </div>
+      </div>
+    </div>
+    <!-- Eli Tip -->
+    <div id="ausgTipBox" class="cb" style="padding:12px;margin-bottom:11px;display:none;border-radius:var(--r)">
+      <div style="display:flex;gap:8px"><span style="font-size:19px;flex-shrink:0">🤖</span><div><div style="font-size:10px;font-weight:800;color:var(--brand);margin-bottom:2px;text-transform:uppercase;letter-spacing:.06em">Eli's Spartipp</div><div id="ausgTipTxt" style="font-size:12px;color:var(--t2);line-height:1.65;font-weight:600"></div></div></div>
+    </div>
+    <!-- SHOPS section -->
+    <div class="card" style="padding:15px;margin-bottom:11px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <div style="font-family:var(--sh);font-size:16px">🛍️ Meine Shops</div>
+        <div style="font-size:9px;color:var(--t3);font-weight:700">Tippe zum Erfassen</div>
+      </div>
+      <div id="shopCatTabs" style="display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;margin-bottom:10px;-webkit-overflow-scrolling:touch"></div>
+      <div id="shopCatItems"></div>
+    </div>
+    <!-- Prognose -->
+    <div class="cb" style="padding:14px;margin-bottom:11px;border-radius:var(--r)">
+      <div style="display:flex;align-items:center;gap:7px;margin-bottom:9px">
+        <span style="font-size:19px">🔮</span>
+        <div><div style="font-weight:800;font-size:13px;color:var(--brand)">Prognose nächster Monat</div><div style="font-size:9px;color:var(--t3);font-weight:600">KI-basiert · automatisch</div></div>
+      </div>
+      <div id="prognoseList"></div>
+      <button onclick="eliChip('Detaillierte Ausgaben-Prognose und Spartipps für nächsten Monat für mein Kind')" class="btn bb" style="width:100%;padding:10px;font-size:11px;margin-top:9px">🤖 Eli fragen →</button>
+    </div>
+    <!-- Starter Kit integriert -->
+    <div class="card" style="padding:14px;margin-bottom:11px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div style="font-family:var(--sh);font-size:16px">🛒 Baby Starter Kit</div>
+        <div class="bdg bam">Ø €3.200</div>
+      </div>
+      <div id="kitList"></div>
+      <button onclick="openShopMod()" class="btn bgh" style="width:100%;padding:10px;font-size:11px;margin-top:8px;border-radius:50px">Smart Shopping →</button>
+    </div>
+  </div>
+</div><!-- /tAus -->
+
+<!-- SPARPLAN TAB -->
+<div class="tc scrl" id="tPlan">
+  <div class="topbar">
+    <div style="font-family:var(--sh);font-size:18px">📈 Sparplan</div>
+    <div style="font-size:11px;color:var(--t2);font-weight:600;margin-top:1px">Meilensteine · Anlageformen · Brief</div>
+  </div>
+  <div style="padding:11px 14px 84px">
+    <!-- Hero projection -->
+    <div id="planHero" style="border-radius:20px;padding:18px;margin-bottom:11px;box-shadow:var(--shadow2)">
+      <div style="font-size:8px;color:rgba(255,255,255,.55);font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px">Projiziertes Vermögen mit 18</div>
+      <div id="planAt18" style="font-family:var(--sh);font-size:36px;color:white;line-height:1">–</div>
+      <div id="planSub" style="font-size:10px;color:rgba(255,255,255,.6);font-weight:600;margin-top:3px;margin-bottom:13px">–</div>
+      <input type="range" id="planSlider" min="25" max="1000" value="127" oninput="onPlanSlider(this.value)" style="width:100%;accent-color:white;cursor:pointer;height:5px">
+      <div style="display:flex;justify-content:space-between;margin-top:5px;font-size:9px;color:rgba(255,255,255,.5);font-weight:700"><span>€25</span><span id="planMoLbl" style="color:white;font-size:10px">–</span><span>€1.000</span></div>
+    </div>
+
+    <!-- MEILENSTEINE KOSTEN (ganz oben, mit Füllstand) -->
+    <div class="card" style="padding:15px;margin-bottom:11px">
+      <div style="font-family:var(--sh);font-size:16px;margin-bottom:3px">🏆 Meilensteine erreichen</div>
+      <div style="font-size:11px;color:var(--t2);font-weight:600;margin-bottom:12px">So lange dauert es bei deiner Rate</div>
+      <div id="msFillList"></div>
+    </div>
+
+    <!-- Investment options with example calc -->
+    <div class="card" style="padding:15px;margin-bottom:11px">
+      <div style="font-family:var(--sh);font-size:16px;margin-bottom:3px">Anlageformen</div>
+      <div style="font-size:11px;color:var(--t2);font-weight:600;margin-bottom:12px">Beispielrechnung bei aktueller Rate</div>
+      <div id="invOpts"></div>
+    </div>
+
+    <!-- Brief im Sparplan -->
+    <div class="card" style="padding:15px;margin-bottom:11px">
+      <div style="font-family:var(--sh);font-size:16px;margin-bottom:3px">✉️ Brief an dein Kind</div>
+      <div style="font-size:11px;color:var(--t2);font-weight:600;margin-bottom:11px">Schreibe Worte die er/sie mit 18 liest</div>
+      <div id="briefPrev" style="display:none;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--rs);padding:12px;font-size:12px;color:var(--t2);line-height:1.7;font-weight:600;margin-bottom:10px;font-style:italic"></div>
+      <textarea id="briefInp" placeholder="Lieber Malik, als du noch klein warst…" style="width:100%;min-height:90px;padding:12px 14px;background:var(--bg);border:1.5px solid var(--border2);border-radius:var(--rs);font-family:var(--body);font-size:13px;color:var(--t1);resize:none;outline:none;line-height:1.65;font-weight:600;transition:all .2s" onfocus="this.style.borderColor='var(--brand)'" onblur="this.style.borderColor='var(--border2)'"></textarea>
+      <button onclick="saveBrief()" class="btn bb" style="width:100%;padding:11px;font-size:12px;margin-top:8px">Brief speichern 💌</button>
+    </div>
+  </div>
+</div><!-- /tPlan -->
+
+<!-- BABYGRAM TAB (was Profil) -->
+<div class="tc scrl" id="tProfil">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <div>
+        <div style="font-family:var(--sh);font-size:20px">📸 BabyGram</div>
+        <div style="font-size:11px;color:var(--t2);font-weight:600;margin-top:1px">Erinnerungen · Family Feed · Funding</div>
+      </div>
+      <div style="display:flex;gap:7px">
+        <button onclick="addPhoto()" style="width:33px;height:33px;background:var(--brand-s);border:1.5px solid var(--brand-m);border-radius:50%;cursor:pointer;font-size:15px">📸</button>
+        <button onclick="openFamilyInvite()" style="width:33px;height:33px;background:var(--bg2);border:1.5px solid var(--border2);border-radius:50%;cursor:pointer;font-size:15px">👨‍👩‍👧</button>
+      </div>
+    </div>
+  </div>
+  <div style="padding:11px 14px 84px">
+    <!-- IG-style profile header -->
+    <div class="card" style="padding:16px;margin-bottom:11px">
+      <div style="display:flex;align-items:center;gap:13px;margin-bottom:13px">
+        <div onclick="openAvatarModal()" style="cursor:pointer;position:relative;flex-shrink:0">
+          <div class="av-lg" id="stAvLg">
+            <span id="stAvEmoji">👶</span>
+            <img id="stAvImg" src="" style="display:none;width:100%;height:100%;object-fit:cover;position:absolute;inset:0">
+          </div>
+          <div class="av-cam">📷</div>
+        </div>
+        <div style="flex:1">
+          <div id="stName" style="font-family:var(--sh);font-size:19px">–</div>
+          <div id="stAge" style="font-size:11px;color:var(--t2);font-weight:600;margin-bottom:6px">–</div>
+          <div style="display:flex;gap:5px;flex-wrap:wrap">
+            <div class="bdg bb2" id="stBadgesCnt">0 Badges</div>
+            <div class="bdg bam" id="stStreakCnt">0 🔥</div>
+          </div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:13px">
+        <div style="text-align:center"><div id="stPhotoCnt" style="font-family:var(--sh);font-size:19px">0</div><div style="font-size:9px;color:var(--t3);font-weight:700">Fotos</div></div>
+        <div style="text-align:center"><div id="stMsCnt" style="font-family:var(--sh);font-size:19px">0</div><div style="font-size:9px;color:var(--t3);font-weight:700">Milestones</div></div>
+        <div style="text-align:center"><div id="stSaved" style="font-family:var(--sh);font-size:19px;color:var(--brand)">€0</div><div style="font-size:9px;color:var(--t3);font-weight:700">Gespart</div></div>
+      </div>
+      <div style="display:flex;gap:7px">
+        <button onclick="addPhoto()" class="btn bb" style="flex:1;padding:9px;font-size:11px">📸 Erinnerung</button>
+        <button onclick="doShare()" class="btn bgh" style="flex:1;padding:9px;font-size:11px;border-radius:50px">📤 Teilen</button>
+      </div>
+    </div>
+
+    <!-- Memory bubbles (story-style, NO story word) -->
+    <div class="card" style="padding:14px;margin-bottom:11px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:11px">
+        <div style="font-family:var(--sh);font-size:16px">✨ Erinnerungen</div>
+        <button onclick="addPhoto()" style="font-size:9px;font-weight:800;color:var(--brand);background:var(--brand-s);border:1.5px solid var(--brand-m);padding:5px 10px;border-radius:50px;cursor:pointer">+ Hinzufügen</button>
+      </div>
+      <div id="memBubbles" style="display:flex;gap:11px;overflow-x:auto;padding-bottom:5px;-webkit-overflow-scrolling:touch"></div>
+    </div>
+
+    <!-- MILESTONE CLUSTERS (datum hervorheben, kein Geld) -->
+    <div class="card" style="padding:14px;margin-bottom:11px">
+      <div style="font-family:var(--sh);font-size:16px;margin-bottom:3px">🏆 Meilensteine</div>
+      <div style="font-size:11px;color:var(--t2);font-weight:600;margin-bottom:12px">Mit Datum · Brief & Foto pro Milestone</div>
+      <div id="bgMsClusters"></div>
+    </div>
+
+    <!-- GALLERY -->
+    <div class="card" style="padding:14px;margin-bottom:11px">
+      <div style="font-family:var(--sh);font-size:16px;margin-bottom:11px">Galerie</div>
+      <div id="stGallery" style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px"></div>
+    </div>
+
+    <!-- FUNDING -->
+    <div class="card" style="padding:14px;margin-bottom:11px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px">
+        <div style="font-family:var(--sh);font-size:16px">💝 Funding</div>
+        <button onclick="openFundingModal()" style="font-size:10px;font-weight:800;color:var(--pink2);background:var(--pink-s);border:1.5px solid var(--pink-m);padding:6px 11px;border-radius:50px;cursor:pointer">+ Erstellen</button>
+      </div>
+      <div style="font-size:11px;color:var(--t2);font-weight:600;margin-bottom:11px">Lass Familie & Freunde mitsparen</div>
+      <div id="fundingList"></div>
+    </div>
+
+    <!-- FAMILY FEED -->
+    <div class="card" style="padding:14px;margin-bottom:11px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:11px">
+        <div style="font-family:var(--sh);font-size:16px">👨‍👩‍👧 Family Feed</div>
+        <button onclick="openFamilyInvite()" style="font-size:9px;font-weight:800;color:var(--purple);background:var(--purple-s);border:1.5px solid rgba(139,92,246,.22);padding:4px 10px;border-radius:50px;cursor:pointer">+ Einladen</button>
+      </div>
+      <div id="famFeed"></div>
+      <div style="margin-top:11px;display:flex;gap:7px">
+        <input id="famComment" type="text" placeholder="Nachricht für die Familie…" class="inp" style="flex:1;font-size:12px;padding:9px 14px">
+        <button onclick="postComment()" class="btn bb" style="padding:9px 14px;border-radius:50px;flex-shrink:0">→</button>
+      </div>
+    </div>
+  </div>
+</div><!-- /tProfil (BabyGram) -->
+
+<!-- ELI TAB -->
+<div class="tc" id="tEli" style="flex-direction:column">
+  <div class="topbar" style="padding:9px 13px">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:7px">
+      <div style="width:36px;height:36px;background:linear-gradient(135deg,var(--brand),var(--brand2));border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--sh);font-size:13px;color:white;animation:heartbeat 3s ease-in-out infinite;box-shadow:0 3px 14px var(--brand-m);flex-shrink:0">Eli</div>
+      <div style="flex:1">
+        <div style="font-family:var(--sh);font-size:14px;color:var(--brand)">Eli · KI-Investmentbanker</div>
+        <div style="display:flex;align-items:center;gap:3px;margin-top:1px">
+          <div style="width:5px;height:5px;background:var(--green);border-radius:50%;animation:blink 2s infinite"></div>
+          <span style="font-size:9px;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.05em">24/7 · 6 Sprachen</span>
+        </div>
+      </div>
+      <button onclick="openPaywall()" style="display:flex;align-items:center;gap:4px;background:linear-gradient(135deg,var(--brand),var(--brand2));border:none;border-radius:50px;padding:6px 12px;cursor:pointer;font-size:10px;font-weight:800;color:white;flex-shrink:0;font-family:var(--body)">💎 Pro</button>
+      <select id="eliLangSel" onchange="eliLang=this.value" style="background:var(--bg);border:1.5px solid var(--border2);color:var(--t2);padding:5px 8px;border-radius:9px;font-size:10px;cursor:pointer;font-family:var(--body);font-weight:700">
+        <option value="de">🇩🇪 DE</option><option value="en">🇬🇧 EN</option><option value="tr">🇹🇷 TR</option>
+        <option value="es">🇪🇸 ES</option><option value="it">🇮🇹 IT</option><option value="fr">🇫🇷 FR</option>
+      </select>
+    </div>
+    <div style="display:flex;gap:5px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:2px">
+      <button onclick="eliChip('Bester ETF für mein Kind?')" class="btn bgh" style="font-size:9px;padding:5px 11px;border-radius:50px;white-space:nowrap;font-size:9px">🌍 ETF</button>
+      <button onclick="eliChip('Alle Förderungen für mein Kind optimieren')" class="btn bgh" style="font-size:9px;padding:5px 11px;border-radius:50px;white-space:nowrap">🎁 Förderungen</button>
+      <button onclick="eliChip('Wo spare ich bei Baby-Ausgaben am meisten?')" class="btn bgh" style="font-size:9px;padding:5px 11px;border-radius:50px;white-space:nowrap">🛒 Sparen</button>
+      <button onclick="eliChip('Was gibt es heute auf Kleinanzeigen günstig für Babys?')" class="btn bgh" style="font-size:9px;padding:5px 11px;border-radius:50px;white-space:nowrap">🏷️ Kleinanzeigen</button>
+      <button onclick="eliChip('Steuertipps Kinderdepot Freistellungsauftrag')" class="btn bgh" style="font-size:9px;padding:5px 11px;border-radius:50px;white-space:nowrap">💰 Steuern</button>
+    </div>
+  </div>
+  <div id="eliMsgs" style="flex:1;overflow-y:auto;padding:13px;display:flex;flex-direction:column;gap:11px;background:var(--bg);-webkit-overflow-scrolling:touch"></div>
+  <div style="padding:9px 13px 22px;background:white;border-top:1.5px solid var(--border);flex-shrink:0">
+    <div style="display:flex;gap:7px">
+      <input id="eliInp" type="text" placeholder="Frag Eli alles…" class="inp" style="flex:1;font-size:13px" onkeydown="if(event.key==='Enter')eliSend()">
+      <button onclick="eliSend()" class="btn bb" style="padding:11px 16px;border-radius:50px;flex-shrink:0">→</button>
+    </div>
+  </div>
+</div>
+
+<!-- FÖRDERUNG TAB -->
+<div class="tc scrl" id="tFoerd">
+  <div class="topbar">
+    <div style="font-family:var(--sh);font-size:18px">🎁 Förderungen</div>
+    <div style="font-size:11px;color:var(--t2);font-weight:600;margin-top:1px">Was der Staat dir zahlt</div>
+  </div>
+  <div style="padding:11px 14px 84px">
+    <div id="foerdHero" style="border-radius:20px;padding:16px;margin-bottom:11px;box-shadow:var(--shadow2)">
+      <div style="font-size:8px;color:rgba(255,255,255,.55);font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px">Jahres-Förderung · Anspruch</div>
+      <div id="foerdTotal" style="font-family:var(--sh);font-size:34px;color:white">€0</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.7);font-weight:600;margin-top:7px;background:rgba(255,255,255,.1);border-radius:8px;padding:7px">💡 Viele Eltern lassen tausende Euro liegen!</div>
+    </div>
+    <div id="foerdList"></div>
+    <button onclick="eliChip('Analysiere alle Förderungen für mein Kind und zeige die optimale Strategie')" class="btn bb" style="width:100%;padding:12px;font-size:12px;margin-top:4px">🤖 Eli: Vollständige Analyse →</button>
+  </div>
+</div>
+
+<!-- EINSTELLUNGEN TAB (was Einstellungen/Profil letzter) -->
+<div class="tc scrl" id="tSettings">
+  <div class="topbar">
+    <div style="font-family:var(--sh);font-size:18px">⚙️ Einstellungen</div>
+    <div style="font-size:11px;color:var(--t2);font-weight:600;margin-top:1px">Profil · Sprache · Badges · Notifications</div>
+  </div>
+  <div style="padding:11px 14px 84px">
+    <div class="card" style="padding:14px;margin-bottom:11px">
+      <div style="font-size:10px;font-weight:800;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Sprache</div>
+      <div style="display:flex;gap:5px;flex-wrap:wrap" id="langBtns">
+        <button class="lang-b on" onclick="setLang('de',this)">🇩🇪 DE</button>
+        <button class="lang-b" onclick="setLang('en',this)">🇬🇧 EN</button>
+        <button class="lang-b" onclick="setLang('tr',this)">🇹🇷 TR</button>
+        <button class="lang-b" onclick="setLang('es',this)">🇪🇸 ES</button>
+        <button class="lang-b" onclick="setLang('it',this)">🇮🇹 IT</button>
+        <button class="lang-b" onclick="setLang('fr',this)">🇫🇷 FR</button>
+      </div>
+    </div>
+    <div id="settingsKids" style="margin-bottom:10px"></div>
+    <button onclick="addKid()" class="btn bb" style="width:100%;padding:13px;margin-bottom:11px">➕ Weiteres Kind hinzufügen</button>
+    <div class="card" style="padding:14px;margin-bottom:11px">
+      <div style="font-family:var(--sh);font-size:16px;margin-bottom:3px">🏅 Badges & Streak</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:11px;margin-top:8px">
+        <span style="font-size:10px;font-weight:700;color:var(--t3)">Streak</span>
+        <div style="flex:1;height:8px;background:var(--bg2);border-radius:5px;overflow:hidden"><div id="streakBar" style="height:100%;background:linear-gradient(90deg,var(--amber),var(--pink));border-radius:5px;transition:width .8s"></div></div>
+        <span id="streakCount" style="font-family:var(--mono);font-size:12px;color:var(--amber)">0 🔥</span>
+      </div>
+      <div id="badgesGrid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px"></div>
+    </div>
+    <div class="card" style="padding:14px;margin-bottom:11px">
+      <div style="font-family:var(--sh);font-size:16px;margin-bottom:12px">🔔 Benachrichtigungen</div>
+      <div id="notifList"></div>
+    </div>
+    <div class="card" style="padding:14px;margin-bottom:11px">
+      <button onclick="openFamilyInvite()" style="display:flex;align-items:center;gap:9px;width:100%;padding:10px 13px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--rs);cursor:pointer;font-family:var(--body);font-size:12px;font-weight:700;color:var(--t1);margin-bottom:6px">👨‍👩‍👧 Familie einladen</button>
+      <button onclick="doReset()" style="display:flex;align-items:center;gap:9px;width:100%;padding:10px 13px;background:var(--red-s);border:1.5px solid rgba(239,68,68,.2);border-radius:var(--rs);cursor:pointer;font-family:var(--body);font-size:12px;font-weight:700;color:var(--red)">🗑️ Alle Daten löschen</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- /tabArea -->
+
+<!-- BOTTOM NAV: Home · Ausgaben · Sparplan · BabyGram · Eli · Förderung · Einstellungen -->
+<nav class="nav">
+  <div class="nav-row">
+    <button class="nb on" id="nb0" onclick="goTab('home',0)"><div class="ni-w"><div class="ni">🏠</div></div><div class="nl">Home</div></button>
+    <button class="nb" id="nb1" onclick="goTab('aus',1)"><div class="ni-w"><div class="ni">💸</div></div><div class="nl">Ausgaben</div></button>
+    <button class="nb" id="nb2" onclick="goTab('plan',2)"><div class="ni-w"><div class="ni">📈</div></div><div class="nl">Sparplan</div></button>
+    <button class="nb" id="nb3" onclick="goTab('profil',3)"><div class="ni-w"><div class="ni">📸</div></div><div class="nl">BabyGram</div></button>
+    <button class="nb" id="nb4" onclick="goTab('eli',4)"><div class="ni-w"><div class="ni">🤖</div></div><div class="nl">Eli</div></button>
+    <button class="nb" id="nb5" onclick="goTab('foerd',5)"><div class="ni-w"><div class="ni">🎁</div></div><div class="nl">Förderung</div></button>
+    <button class="nb" id="nb6" onclick="goTab('settings',6)"><div class="ni-w"><div class="ni">⚙️</div></div><div class="nl">Einstellungen</div></button>
+  </div>
+</nav>
+</div><!-- /sApp -->
+
+<!-- MODALS -->
+<div id="depositMod" class="ov" style="display:none" onclick="if(event.target===this)closeDeposit()">
+  <div class="sheet">
+    <div class="handle"></div>
+    <div style="text-align:center;margin-bottom:14px"><div style="font-family:var(--sh);font-size:20px">💰 Einzahlung</div><div style="font-size:11px;color:var(--t3);font-weight:600;margin-top:2px">In Spardose einzahlen</div></div>
+    <div style="position:relative;margin-bottom:11px">
+      <span style="position:absolute;left:18px;top:50%;transform:translateY(-50%);font-family:var(--sh);font-size:20px;color:var(--t3)">€</span>
+      <input id="depAmt" type="number" placeholder="100" class="inp" style="padding-left:42px;font-size:26px;font-weight:800">
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:13px">
+      <button onclick="setDep(25)" class="btn bgh" style="padding:8px;font-size:13px;font-weight:800;border-radius:50px">€25</button>
+      <button onclick="setDep(100)" class="btn bgh" style="padding:8px;font-size:13px;font-weight:800;border-radius:50px">€100</button>
+      <button onclick="setDep(250)" class="btn bgh" style="padding:8px;font-size:13px;font-weight:800;border-radius:50px">€250</button>
+      <button onclick="setDep(500)" class="btn bgh" style="padding:8px;font-size:13px;font-weight:800;border-radius:50px">€500</button>
+    </div>
+    <div style="margin-bottom:12px">
+      <div style="font-size:10px;font-weight:800;color:var(--t3);margin-bottom:7px;text-transform:uppercase;letter-spacing:.06em">Spardose wählen</div>
+      <div id="jarChoice" style="display:flex;gap:7px;overflow-x:auto;padding-bottom:3px"></div>
+    </div>
+    <!-- PayPal -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+      <button onclick="confirmDep()" class="btn bg2" style="padding:13px;font-size:13px">💰 Bestätigen</button>
+      <button onclick="paypalDep()" style="padding:13px;background:#003087;color:white;border:none;border-radius:50px;cursor:pointer;font-size:12px;font-weight:800;font-family:var(--body);display:flex;align-items:center;justify-content:center;gap:6px">🅿️ PayPal</button>
+    </div>
+  </div>
+</div>
+
+<div id="addJarMod" class="ov" style="display:none" onclick="if(event.target===this)closeAddJar()">
+  <div class="sheet">
+    <div class="handle"></div>
+    <div style="font-family:var(--sh);font-size:20px;text-align:center;margin-bottom:13px">Neue Spardose</div>
+    <div style="margin-bottom:10px"><div style="font-size:10px;font-weight:800;color:var(--t3);margin-bottom:7px;text-transform:uppercase;letter-spacing:.06em">Ziel wählen</div><div id="jarPresets" style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px"></div></div>
+    <div style="margin-bottom:10px"><div style="font-size:10px;font-weight:800;color:var(--t3);margin-bottom:5px;text-transform:uppercase;letter-spacing:.06em">Name</div><input id="jarName" type="text" placeholder="z.B. Fußballschuhe" class="inp"></div>
+    <div style="margin-bottom:13px"><div style="font-size:10px;font-weight:800;color:var(--t3);margin-bottom:5px;text-transform:uppercase;letter-spacing:.06em">Sparziel (€)</div><input id="jarGoal" type="number" placeholder="150" class="inp"></div>
+    <button onclick="confirmAddJar()" class="btn bb" style="width:100%;padding:13px">Erstellen 🎉</button>
+  </div>
+</div>
+
+<div id="expMod" class="ov" style="display:none" onclick="if(event.target===this)closeExpMod()">
+  <div class="sheet">
+    <div class="handle"></div>
+    <div id="expModTitle" style="font-family:var(--sh);font-size:20px;text-align:center;margin-bottom:3px"></div>
+    <div id="expModShop" style="font-size:11px;color:var(--t3);font-weight:700;text-align:center;margin-bottom:13px"></div>
+    <div style="position:relative;margin-bottom:11px">
+      <span style="position:absolute;left:18px;top:50%;transform:translateY(-50%);font-family:var(--sh);font-size:20px;color:var(--t3)">€</span>
+      <input id="expAmt" type="number" placeholder="0" class="inp" style="padding-left:40px;font-size:26px;font-weight:800">
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:13px">
+      <button onclick="setExp(10)" class="btn bgh" style="padding:8px;font-size:12px;font-weight:800">€10</button>
+      <button onclick="setExp(25)" class="btn bgh" style="padding:8px;font-size:12px;font-weight:800">€25</button>
+      <button onclick="setExp(50)" class="btn bgh" style="padding:8px;font-size:12px;font-weight:800">€50</button>
+      <button onclick="setExp(100)" class="btn bgh" style="padding:8px;font-size:12px;font-weight:800">€100</button>
+    </div>
+    <button onclick="confirmExp()" class="btn bb" style="width:100%;padding:13px">Speichern ✓</button>
+  </div>
+</div>
+
+<div id="shopMod" class="ov" style="display:none" onclick="if(event.target===this)closeShopMod()">
+  <div class="sheet">
+    <div class="handle"></div>
+    <div style="font-family:var(--sh);font-size:20px;text-align:center;margin-bottom:13px">🛍️ Smart Shopping</div>
+    <div id="shopModList"></div>
+    <button onclick="eliChip('Finde aktuelle Baby-Deals und Kleinanzeigen-Tipps für maximales Sparen');closeShopMod();goTab(\'eli\',4)" class="btn bb" style="width:100%;padding:11px;margin-top:9px;font-size:12px">🤖 Eli: Live-Deals + Kleinanzeigen →</button>
+    <button onclick="closeShopMod()" class="btn bgh" style="width:100%;padding:10px;margin-top:7px;border-radius:50px;font-size:12px">Schließen</button>
+  </div>
+</div>
+
+<div id="fundingMod" class="ov" style="display:none" onclick="if(event.target===this)closeFundingMod()">
+  <div class="sheet">
+    <div class="handle"></div>
+    <div style="font-family:var(--sh);font-size:20px;text-align:center;margin-bottom:3px">💝 Funding erstellen</div>
+    <div style="font-size:11px;color:var(--t3);font-weight:600;text-align:center;margin-bottom:15px">Familie & Freunde können mitsparen</div>
+    <div style="margin-bottom:10px"><div style="font-size:10px;font-weight:800;color:var(--t3);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em">Was möchtest du kaufen?</div><input id="fundName" type="text" placeholder="z.B. Fahrrad zum 5. Geburtstag 🎂" class="inp" style="font-size:13px"></div>
+    <div style="margin-bottom:10px"><div style="font-size:10px;font-weight:800;color:var(--t3);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em">Betrag (€)</div><input id="fundAmt" type="number" placeholder="300" class="inp"></div>
+    <div style="margin-bottom:13px"><div style="font-size:10px;font-weight:800;color:var(--t3);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em">Nachricht (optional)</div><input id="fundDesc" type="text" placeholder="Hey! Malik hat bald Geburtstag…" class="inp" style="font-size:13px"></div>
+    <button onclick="confirmFunding()" class="btn bp" style="width:100%;padding:13px;font-size:13px">Funding starten 💝</button>
+  </div>
+</div>
+
+<div id="gamPop" style="display:none;position:fixed;inset:0;z-index:300;background:rgba(10,20,50,.45);backdrop-filter:blur(8px);align-items:center;justify-content:center">
+  <div style="background:white;border-radius:24px;padding:26px 20px;max-width:295px;width:90%;text-align:center;animation:pop .38s ease both;box-shadow:var(--shadow3)">
+    <div id="gPopEmoji" style="font-size:60px;margin-bottom:12px;animation:float 3s ease-in-out infinite">🏆</div>
+    <div id="gPopTitle" style="font-family:var(--sh);font-size:21px;margin-bottom:6px"></div>
+    <div id="gPopText" style="font-size:13px;color:var(--t2);line-height:1.65;font-weight:600;margin-bottom:20px"></div>
+    <button onclick="closeGamPop()" class="btn bb" style="width:100%;padding:12px">Weiter 🚀</button>
+  </div>
+</div>
+
+<div id="avMod" class="ov" style="display:none" onclick="if(event.target===this)closeAvMod()">
+  <div class="sheet">
+    <div class="handle"></div>
+    <div style="font-family:var(--sh);font-size:20px;text-align:center;margin-bottom:13px">Profilbild</div>
+    <div style="margin-bottom:13px">
+      <div style="font-size:10px;font-weight:800;color:var(--t3);margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em">Emoji wählen</div>
+      <div style="display:flex;gap:7px;flex-wrap:wrap" id="emojiPick">
+        <div class="epc on" onclick="pickEmoji(this,'👶')">👶</div><div class="epc" onclick="pickEmoji(this,'👧')">👧</div>
+        <div class="epc" onclick="pickEmoji(this,'👦')">👦</div><div class="epc" onclick="pickEmoji(this,'🧒')">🧒</div>
+        <div class="epc" onclick="pickEmoji(this,'🌟')">🌟</div><div class="epc" onclick="pickEmoji(this,'🐣')">🐣</div>
+        <div class="epc" onclick="pickEmoji(this,'🦋')">🦋</div><div class="epc" onclick="pickEmoji(this,'🌈')">🌈</div>
+      </div>
+    </div>
+    <button onclick="document.getElementById('fileAvatar').click()" class="btn bgh" style="width:100%;padding:11px;border-radius:50px;margin-bottom:11px">📷 Foto hochladen</button>
+    <button onclick="confirmAvatar()" class="btn bb" style="width:100%;padding:12px">Speichern ✓</button>
+  </div>
+</div>
+
+<div id="loginMod" class="ov" style="display:none" onclick="if(event.target===this)closeLogin()">
+  <div class="sheet">
+    <div class="handle"></div>
+    <div style="text-align:center;margin-bottom:16px"><div style="font-size:38px;margin-bottom:7px">🍼</div><div style="font-family:var(--sh);font-size:21px">Willkommen zurück</div></div>
+    <div style="margin-bottom:9px"><input type="email" placeholder="deine@email.de" class="inp" style="font-size:14px"></div>
+    <div style="margin-bottom:13px"><input type="password" placeholder="Passwort" class="inp" style="font-size:14px"></div>
+    <button onclick="closeLogin();goOB()" class="btn bb" style="width:100%;padding:13px;font-size:14px;margin-bottom:9px">Anmelden →</button>
+    <div style="display:flex;gap:7px">
+      <button onclick="socialLogin('Google')" style="flex:1;padding:11px;background:white;border:1.5px solid var(--border);border-radius:50px;cursor:pointer;font-size:12px;font-weight:800;font-family:var(--body);display:flex;align-items:center;justify-content:center;gap:6px">🌐 Google</button>
+      <button onclick="socialLogin('Apple')" style="flex:1;padding:11px;background:white;border:1.5px solid var(--border);border-radius:50px;cursor:pointer;font-size:12px;font-weight:800;font-family:var(--body);display:flex;align-items:center;justify-content:center;gap:6px">🍎 Apple</button>
+    </div>
+  </div>
+</div>
+
+<div id="famMod" class="ov" style="display:none" onclick="if(event.target===this)closeFamMod()">
+  <div class="sheet">
+    <div class="handle"></div>
+    <div style="font-family:var(--sh);font-size:20px;text-align:center;margin-bottom:6px">👨‍👩‍👧 Familie einladen</div>
+    <div style="font-size:12px;color:var(--t2);text-align:center;font-weight:600;margin-bottom:15px">Familie kann Meilensteine sehen, kommentieren und mitsparen!</div>
+    <div style="background:var(--brand-s);border:1.5px solid var(--brand-m);border-radius:13px;padding:13px;margin-bottom:13px">
+      <div style="font-size:10px;font-weight:800;color:var(--brand);margin-bottom:3px;text-transform:uppercase">Dein Familien-Link</div>
+      <div id="famLink" style="font-family:var(--mono);font-size:11px;color:var(--t1);word-break:break-all;line-height:1.5">–</div>
+    </div>
+    <button onclick="copyFamLink()" class="btn bb" style="width:100%;padding:12px;margin-bottom:7px">🔗 Link kopieren & teilen</button>
+    <button onclick="closeFamMod()" class="btn bgh" style="width:100%;padding:10px;border-radius:50px;font-size:12px">Schließen</button>
+  </div>
+</div>
+
+<!-- ADD SHOP ITEM MODAL -->
+<div id="addShopMod" class="ov" style="display:none" onclick="if(event.target===this)closeAddShopMod()">
+  <div class="sheet">
+    <div class="handle"></div>
+    <div style="font-family:var(--sh);font-size:20px;text-align:center;margin-bottom:3px">➕ Eigenes Produkt</div>
+    <div style="font-size:11px;color:var(--t3);font-weight:600;text-align:center;margin-bottom:14px">Füge deinen eigenen Eintrag hinzu</div>
+    <div style="margin-bottom:9px">
+      <div style="font-size:10px;font-weight:800;color:var(--t3);margin-bottom:5px;text-transform:uppercase;letter-spacing:.06em">Shop</div>
+      <select id="newShopSel" style="width:100%;padding:12px 16px;background:var(--bg);border:1.5px solid var(--border2);border-radius:50px;font-size:13px;font-weight:700;color:var(--t1);outline:none;font-family:var(--body)">
+        <option value="dm">💊 DM</option><option value="rewe">🛒 REWE</option>
+        <option value="amazon">📦 Amazon</option><option value="rossmann">🏪 Rossmann</option>
+        <option value="action">🎯 Action</option><option value="sonstige">🏬 Sonstige</option>
+      </select>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:9px">
+      <div style="flex:0 0 70px"><div style="font-size:10px;font-weight:800;color:var(--t3);margin-bottom:5px;text-transform:uppercase;letter-spacing:.06em">Emoji</div><input id="newItemIco" type="text" placeholder="🧸" class="inp" style="text-align:center;font-size:22px;padding:11px 8px"></div>
+      <div style="flex:1"><div style="font-size:10px;font-weight:800;color:var(--t3);margin-bottom:5px;text-transform:uppercase;letter-spacing:.06em">Produktname</div><input id="newItemName" type="text" placeholder="z.B. Babysunscreen" class="inp"></div>
+    </div>
+    <div style="margin-bottom:13px"><div style="font-size:10px;font-weight:800;color:var(--t3);margin-bottom:5px;text-transform:uppercase;letter-spacing:.06em">Monatl. Durchschnitt (€)</div><input id="newItemAvg" type="number" placeholder="15" class="inp"></div>
+    <button onclick="confirmAddShopItem()" class="btn bb" style="width:100%;padding:13px">Hinzufügen ✓</button>
+  </div>
+</div>
+
+
+<!-- PAYWALL MODAL -->
+<div id="paywallMod" class="ov" style="display:none;align-items:center!important" onclick="if(event.target===this)closePaywall()">
+  <div style="background:white;border-radius:26px;padding:26px 22px;max-width:360px;width:93%;animation:pop .35s ease both;box-shadow:0 8px 50px rgba(0,0,0,.2);margin:auto">
+    <div style="text-align:center;margin-bottom:18px">
+      <div style="width:52px;height:52px;background:linear-gradient(135deg,var(--brand),var(--brand2));border-radius:16px;display:flex;align-items:center;justify-content:center;font-family:var(--sh);font-size:20px;color:white;margin:0 auto 10px;box-shadow:0 4px 16px var(--brand-m)">Eli</div>
+      <div style="font-family:var(--sh);font-size:21px;margin-bottom:4px">BabyWealth Pro</div>
+      <div style="font-size:12px;color:var(--t2);font-weight:600">14 Tage kostenlos · Jederzeit kündbar</div>
+    </div>
+    <div style="background:var(--bg);border-radius:var(--r);padding:14px;margin-bottom:14px">
+      <div style="display:flex;flex-direction:column;gap:7px">
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700"><span>🤖</span> Eli KI-Chat unbegrenzt</div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700"><span>📸</span> BabyGram · unbegrenzte Fotos</div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700"><span>💝</span> Funding + Family Features</div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700"><span>🎁</span> Alle Förderungs-Details</div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700"><span>📈</span> Sparplan + Anlageanalyse</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
+      <div id="planMonthly" onclick="selectPlan('monthly')" style="border:2px solid var(--brand);background:var(--brand-s);border-radius:var(--r);padding:12px;text-align:center;cursor:pointer;transition:all .18s">
+        <div style="font-size:9px;font-weight:800;color:var(--brand);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px">Monatlich</div>
+        <div style="font-family:var(--sh);font-size:22px;color:var(--t1)">€9<span style="font-size:13px;color:var(--t2)">,99</span></div>
+        <div style="font-size:9px;color:var(--t3);font-weight:600">pro Monat</div>
+      </div>
+      <div id="planYearly" onclick="selectPlan('yearly')" style="border:2px solid var(--border);border-radius:var(--r);padding:12px;text-align:center;cursor:pointer;transition:all .18s;position:relative">
+        <div style="position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:var(--green);color:white;font-size:8px;font-weight:800;padding:2px 8px;border-radius:20px;white-space:nowrap">SPARE 33%</div>
+        <div style="font-size:9px;font-weight:800;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px">Jährlich</div>
+        <div style="font-family:var(--sh);font-size:22px;color:var(--t1)">€79<span style="font-size:13px;color:var(--t2)">,99</span></div>
+        <div style="font-size:9px;color:var(--t3);font-weight:600">pro Jahr</div>
+      </div>
+    </div>
+    <!-- Payment methods -->
+    <button onclick="startCheckout('stripe')" class="btn bb" style="width:100%;padding:13px;font-size:13px;margin-bottom:8px">💳 Mit Karte bezahlen</button>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:11px">
+      <button onclick="startCheckout('apple')" style="padding:11px;background:black;color:white;border:none;border-radius:50px;cursor:pointer;font-size:12px;font-weight:800;font-family:var(--body)"> Apple Pay</button>
+      <button onclick="startCheckout('google')" style="padding:11px;background:white;border:1.5px solid var(--border);border-radius:50px;cursor:pointer;font-size:12px;font-weight:800;font-family:var(--body)">🌐 Google</button>
+      <button onclick="startCheckout('paypal')" style="padding:11px;background:#003087;color:white;border:none;border-radius:50px;cursor:pointer;font-size:11px;font-weight:800;font-family:var(--body)">🅿️ PayPal</button>
+    </div>
+    <button onclick="closePaywall()" style="width:100%;background:none;border:none;cursor:pointer;font-size:11px;color:var(--t3);font-weight:700;font-family:var(--body);padding:4px">Erstmal kostenlos weiter →</button>
+    <div style="text-align:center;margin-top:7px;font-size:9px;color:var(--t4);font-weight:600">Sicher · DSGVO-konform · Jederzeit kündbar</div>
+  </div>
+</div>
+
+<input id="fileAvatar" type="file" accept="image/*" style="display:none" onchange="handleAvatarFile(this)">
+<input id="filePhoto" type="file" accept="image/*" style="display:none" onchange="handlePhotoFile(this)">
+<div id="toastBox" style="position:fixed;top:calc(env(safe-area-inset-top,0px)+13px);right:13px;z-index:999;display:flex;flex-direction:column;gap:7px;pointer-events:none;max-width:275px"></div>
+<script>
+'use strict';
+// ═══ DATA ═══
+var KIDS=[],ACT=0,eliHistory=[],eliLang='de';
+var streakData={count:0,lastDate:''};
+var notifSettings={tips:true,milestones:true,offers:false,reminders:true};
+var pickedEmoji='👶',selectedAvatarImg='';
+var famComments=[],fundingItems=[];
+var _curExpCat='',_curExpShop='',selJarIdx=0;
+
+var JAR_PRESETS=[
+  {n:'Führerschein',e:'🚗',c:'#3b9eff',g:3500},{n:'Studium',e:'🎓',c:'#22c87a',g:20000},
+  {n:'Wohnung',e:'🏠',c:'#f472b6',g:8000},{n:'Fahrrad',e:'🚲',c:'#f59e0b',g:250},
+  {n:'Fußballschuhe',e:'⚽',c:'#22c87a',g:120},{n:'Smartphone',e:'📱',c:'#8b5cf6',g:500},
+  {n:'Urlaub',e:'✈️',c:'#3b9eff',g:2000},{n:'Musik',e:'🎸',c:'#f97316',g:800}
+];
+var JARS_DEF=[
+  {id:'j1',n:'Führerschein',e:'🚗',c:'#3b9eff',g:3500,s:0},
+  {id:'j2',n:'Studium',e:'🎓',c:'#22c87a',g:20000,s:0},
+  {id:'j3',n:'Fahrrad',e:'🚲',c:'#f59e0b',g:250,s:0},
+  {id:'j4',n:'Fußballschuhe',e:'⚽',c:'#15a35f',g:120,s:0},
+  {id:'j5',n:'Erste Wohnung',e:'🏠',c:'#f472b6',g:8000,s:0},
+  {id:'j6',n:'Spielekonsole',e:'🎮',c:'#8b5cf6',g:600,s:0},
+  {id:'j7',n:'Familienurlaub',e:'✈️',c:'#f97316',g:3000,s:0},
+  {id:'j8',n:'Auslandsreise',e:'🌍',c:'#06b6d4',g:2500,s:0}
+];
+
+// SHOPS with colored categories
+var SHOPS=[
+  {id:'dm',name:'DM',ico:'💊',color:'#e03',bg:'#fff0f2',items:[
+    {id:'windeln',name:'Windeln',ico:'🧷',avg:22},{id:'creme',name:'Babycreme',ico:'🧴',avg:8},
+    {id:'shampoo',name:'Shampoo',ico:'🚿',avg:5},{id:'wipes',name:'Feuchttücher',ico:'💧',avg:9},
+    {id:'snacks',name:'Babysnacks',ico:'🍪',avg:12}
+  ]},
+  {id:'rewe',name:'REWE',ico:'🛒',color:'#e30613',bg:'#fff0f0',items:[
+    {id:'nahrung',name:'Babynahrung',ico:'🍼',avg:45},{id:'beikost',name:'Beikost',ico:'🥕',avg:30},
+    {id:'trinken',name:'Getränke',ico:'🥤',avg:8}
+  ]},
+  {id:'amazon',name:'Amazon',ico:'📦',color:'#ff9900',bg:'#fff8e6',items:[
+    {id:'spielzeug',name:'Spielzeug',ico:'🧸',avg:20},{n:'Bücher',id:'buecher',name:'Bücher',ico:'📚',avg:12},
+    {id:'kleidung_a',name:'Kleidung',ico:'👕',avg:25}
+  ]},
+  {id:'rossmann',name:'Rossmann',ico:'🏪',color:'#cc0000',bg:'#fff0f0',items:[
+    {id:'windeln_r',name:'Windeln',ico:'🧷',avg:18},{id:'pflege',name:'Pflege',ico:'🧴',avg:10}
+  ]},
+  {id:'action',name:'Action',ico:'🎯',color:'#e0007a',bg:'#fff0f8',items:[
+    {id:'deko',name:'Deko & Zubehör',ico:'🎨',avg:15},{id:'spielzeug_a',name:'Spielzeug',ico:'🧸',avg:10}
+  ]},
+  {id:'sonstige',name:'Sonstige',ico:'🏬',color:'#8b5cf6',bg:'#f3f0ff',items:[
+    {id:'kita',name:'Kita',ico:'🏫',avg:200},{id:'arzt',name:'Arzt',ico:'🏥',avg:20},
+    {id:'hobbys',name:'Hobbys',ico:'⚽',avg:30},{id:'kleidung',name:'Kleidung',ico:'👕',avg:45}
+  ]}
+];
+var _activeShop='dm';
+
+var MS_CLUSTERS=[
+  {id:'baby',label:'Baby-Zeit',icon:'🍼',color:'#3b9eff',items:[
+    {age:0,lbl:'Geburt',ico:'🍼',desc:'Willkommen auf der Welt!'},
+    {age:.08,lbl:'Erstes Lächeln',ico:'😊',desc:'Dein Herz schmilzt dahin'},
+    {age:.5,lbl:'Sitzen & Krabbeln',ico:'🪑',desc:'Die Welt erkunden'},
+    {age:1,lbl:'Erste Schritte',ico:'👟',desc:'Ein unvergesslicher Moment'}
+  ]},
+  {id:'kleinkind',label:'Kleinkind',icon:'🧒',color:'#22c87a',items:[
+    {age:1.5,lbl:'Erste Worte',ico:'💬',desc:'Mama, Papa — der Anfang!'},
+    {age:3,lbl:'Kita-Start',ico:'🏫',desc:'Der erste große Abschnitt'},
+    {age:4,lbl:'Erste Hobbys',ico:'⚽',desc:'Sport · Musik · Kreativität'}
+  ]},
+  {id:'schulkind',label:'Schulkind',icon:'📚',color:'#f59e0b',items:[
+    {age:6,lbl:'Einschulung',ico:'🎒',desc:'Schultüte & Ranzen'},
+    {age:8,lbl:'Erstes Fahrrad',ico:'🚲',desc:'Freiheit auf Rädern'},
+    {age:10,lbl:'Erstes Handy',ico:'📱',desc:'Erste digitale Schritte'}
+  ]},
+  {id:'teenager',label:'Teenager',icon:'🎸',color:'#8b5cf6',items:[
+    {age:13,lbl:'Teenager',ico:'🎸',desc:'Eigene Identität entsteht'},
+    {age:17,lbl:'Führerschein',ico:'🚗',desc:'Auf ins Leben!'},
+    {age:18,lbl:'Abitur',ico:'🎓',desc:'Schulzeit endet'}
+  ]},
+  {id:'erwachsen',label:'Erwachsen',icon:'🚀',color:'#f472b6',items:[
+    {age:19,lbl:'Erste Wohnung',ico:'🏠',desc:'Eigenständigkeit'},
+    {age:20,lbl:'Studium',ico:'📚',desc:'Bildung ohne Schulden'},
+    {age:25,lbl:'Business',ico:'🚀',desc:'Eigenes Unternehmen'}
+  ]}
+];
+
+// Milestone COSTS (for Sparplan tab only)
+var MS_COSTS=[
+  {lbl:'Einschulung 🎒',cost:600,ico:'🎒'},{lbl:'Erstes Fahrrad 🚲',cost:250,ico:'🚲'},
+  {lbl:'Kita-Start 🏫',cost:1200,ico:'🏫'},{lbl:'Führerschein 🚗',cost:3500,ico:'🚗'},
+  {lbl:'Erste Wohnung 🏠',cost:5000,ico:'🏠'},{lbl:'Studium 📚',cost:20000,ico:'📚'}
+];
+
+var BADGES_DEF=[
+  {id:'first_save',ico:'💰',name:'Erster Sparer',desc:'Erste Einzahlung',unlocked:false},
+  {id:'week_streak',ico:'🔥',name:'7-Tage-Streak',desc:'7 Tage aktiv',unlocked:false},
+  {id:'photo_1',ico:'📸',name:'Erinnerung',desc:'Erstes Foto',unlocked:false},
+  {id:'eli_chat',ico:'🤖',name:'Eli-Fan',desc:'Mit Eli gechattet',unlocked:false},
+  {id:'big_save',ico:'⭐',name:'Großsparer',desc:'€1.000+ gespart',unlocked:false},
+  {id:'family',ico:'👨‍👩‍👧',name:'Familie',desc:'Familie eingeladen',unlocked:false},
+  {id:'funding',ico:'💝',name:'Funding',desc:'Funding erstellt',unlocked:false},
+  {id:'jar_full',ico:'🏺',name:'Volle Dose',desc:'Spardose gefüllt',unlocked:false},
+  {id:'euro_challenge',ico:'🎯',name:'€1 Challenge',desc:'30 Tage täglich eingezahlt',unlocked:false},
+  {id:'family_jar',ico:'👨\u200d👩\u200d👧',name:'Familien-Sparer',desc:'Familie hat mitgespart',unlocked:false}
+];
+
+var WISSEN=[
+  'Der MSCI World ETF hat in 30 Jahren Ø 8,5% p.a. geliefert. Wer durchhielt, gewann in JEDEM Crash.',
+  'Kindergeld €250/Mo in ETF = €113.000 mit 18. Das Kindergeld alleine finanziert das Studium!',
+  'Freistellungsauftrag €1.000/Jahr steuerfrei. Einmal stellen — ewig profitieren.',
+  '1 Jahr früher starten = ca. €4.800 mehr mit 18. Heute ist immer besser als morgen.',
+  'Großeltern können bis €400.000 steuerfrei schenken. ETF-Depot = bestes Geschenk.',
+  'ElterngeldPlus + Partnerschaftsbonus = 28 Monate Förderung statt 14.',
+  'Bei 7% verdoppelt sich Geld alle 10 Jahre. Mit 18 hast du 2x deinen Einsatz zurück.',
+  'Auf Kleinanzeigen findest du Kinderwagen, Hochstühle, Spielzeug für 70% günstiger!'
+];
+
+var DAILY_DEALS=[
+  {text:'🛒 DM: Pampers Jumbo-Pack aktuell günstiger. Kleines Tipp: Abo-Spare-Funktion spart zusätzlich 5%.',links:[{l:'DM.de',u:'https://dm.de'},{l:'Kleinanzeigen',u:'https://kleinanzeigen.de/s-windeln'}]},
+  {text:'📦 Amazon: Baby-Spielzeug-Sets bis -40%. Plus: Gebraucht auf Kleinanzeigen oft für 80% weniger!',links:[{l:'Amazon Baby',u:'https://amazon.de/baby'},{l:'Kleinanzeigen Spielzeug',u:'https://kleinanzeigen.de/s-baby-spielzeug'}]},
+  {text:'🏪 Rossmann: Eigenmarke Baby-Creme günstiger als Markenprodukte — selbe Inhaltsstoffe.',links:[{l:'Rossmann.de',u:'https://rossmann.de'},{l:'Kleinanzeigen Baby',u:'https://kleinanzeigen.de/s-baby'}]},
+  {text:'🎯 Action: Babydecken, Strampler & Deko zu Aktionspreisen. Lohnt sich wöchentlich!',links:[{l:'Action.de',u:'https://action.de'},{l:'Kleinanzeigen Baby-Kleidung',u:'https://kleinanzeigen.de/s-baby-kleidung'}]},
+  {text:'🛒 REWE: Hipp & Bebivita Babynahrung im Angebot. Vorrat anlegen lohnt sich.',links:[{l:'REWE.de',u:'https://rewe.de'},{l:'Kleinanzeigen',u:'https://kleinanzeigen.de/s-baby'}]},
+  {text:'💊 DM: Babyöl & Feuchttücher — Eigenmarke spart €8/Monat vs. Marke. Kaufe 3 auf Vorrat!',links:[{l:'DM.de',u:'https://dm.de'},{l:'Kleinanzeigen Babybedarf',u:'https://kleinanzeigen.de/s-babybedarf'}]},
+  {text:'🌍 Kleinanzeigen TIPP: Hochstuhl, Laufstall, Kinderwagen oft fast neu für 20-30% Neupreis!',links:[{l:'Kleinanzeigen Baby',u:'https://kleinanzeigen.de/s-baby'},{l:'Baby-Markt Sale',u:'https://baby-markt.de'}]}
+];
+
+var MENTAL=[
+  {e:'💛',msg:'Jeder gesparte Euro zählt',sub:'Du baust heute an der Freiheit von morgen.'},
+  {e:'🌟',msg:'Kleiner Held, großer Traum',sub:'Was du heute sparst, ändert sein ganzes Leben.'},
+  {e:'🍀',msg:'Zeit ist die stärkste Kraft',sub:'Jeder Tag früher = hunderte Euro mehr mit 18.'},
+  {e:'❤️',msg:'Das ist Liebe in Zahlen',sub:'Kein Spielzeug bedeutet mehr als finanzielle Freiheit.'},
+  {e:'🚀',msg:'Du machst das großartig',sub:'Schon heute bist du ein Held für dein Kind.'},
+  {e:'💪',msg:'Heute aktiv = Morgen frei',sub:'Konsistenz ist wichtiger als Betrag.'},
+  {e:'🌈',msg:'Jeder Milestone ist greifbar',sub:'Du bist auf dem richtigen Weg — wirklich.'}
+];
+
+var QS=[
+  {key:'pName',q:'Hallo! Ich bin Eli 👋\n\nDein KI-Investmentbanker für dein Kind.\n\nWie heißt du?',type:'text',ph:'Dein Vorname'},
+  {key:'phase',qf:function(a){return 'Schön, '+a.pName+'! 🌟\n\nIn welcher Phase bist du?'},type:'opts',opts:[
+    {v:'geboren',l:'🍼 Kind bereits geboren'},{v:'schwanger',l:'🤰 Noch schwanger'},{v:'geplant',l:'👶 Wir planen es'}]},
+  {key:'cName',qf:function(a){return a.phase==='schwanger'?'Habt ihr schon einen Namen?':'Wie heißt dein Kind?'},type:'text',ph:'Name des Kindes'},
+  {key:'cGender',qf:function(a){return (a.cName||'Dein Kind')+' 💛\nMädchen oder Junge?'},type:'opts',opts:[
+    {v:'m',l:'👦 Junge'},{v:'f',l:'👧 Mädchen'},{v:'n',l:'🧒 Noch unbekannt'}]},
+  {key:'cBirth',qf:function(a){return a.phase==='schwanger'?'Errechneter Termin?':(a.cName||'dein Kind')+' — Geburtsdatum?'},type:'date'},
+  {key:'dream',qf:function(a){return 'Was ist dein größter Wunsch für '+(a.cName||'dein Kind')+'?'},type:'opts',opts:[
+    {v:'studium',l:'🎓 Studium ohne Schulden'},{v:'freiheit',l:'🌍 Finanzielle Freiheit früh'},
+    {v:'wohnung',l:'🏠 Eigene Wohnung mit 25'},{v:'business',l:'🚀 Eigenes Business gründen'},
+    {v:'maxsparen',l:'💎 Maximal sparen — finanzielle Unabhängigkeit'},
+    {v:'sicher',l:'🛡️ Sicherheitsnetz — nie in Not geraten'}]},
+  {key:'monthly',qf:function(a){var y=Math.max(1,18-Math.max(0,cAge(a.cBirth)));return 'Was kannst du monatlich für '+(a.cName||'dein Kind')+' sparen?\n\nBei 7% ETF über '+y+' Jahre macht jeder Euro einen riesigen Unterschied!'},type:'amount',ph:'127'}
+];
+var ivAns={};
+
+// ═══ UTILS ═══
+function eu(n){return '€'+Math.round(n).toLocaleString('de-DE')}
+function fv(mo,yrs,rate){rate=rate||.07;if(yrs<=0)return 0;var r=rate/12,n=yrs*12;return Math.round(mo*((Math.pow(1+r,n)-1)/r))}
+function cAge(b){if(!b)return 0;var d=new Date(b),n=new Date(),a=n.getFullYear()-d.getFullYear();if(n.getMonth()<d.getMonth()||(n.getMonth()===d.getMonth()&&n.getDate()<d.getDate()))a--;return Math.max(0,a)}
+function emj(g){return g==='m'?'👦':g==='f'?'👧':'🧒'}
+function qs(id){return document.getElementById(id)}
+function showS(id){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('on')});var s=qs(id);if(s)s.classList.add('on')}
+function save(){try{localStorage.setItem('bw8k',JSON.stringify(KIDS));localStorage.setItem('bw8a',String(ACT));localStorage.setItem('bw8str',JSON.stringify(streakData));localStorage.setItem('bw8fc',JSON.stringify(famComments));localStorage.setItem('bw8fi',JSON.stringify(fundingItems))}catch(e){}}
+function load(){
+  try{var k=localStorage.getItem('bw8k');if(k)KIDS=JSON.parse(k)}catch(e){}
+  try{var a=localStorage.getItem('bw8a');if(a!==null)ACT=parseInt(a)||0}catch(e){}
+  try{var s=localStorage.getItem('bw8str');if(s)streakData=JSON.parse(s)}catch(e){}
+  try{var fc=localStorage.getItem('bw8fc');if(fc)famComments=JSON.parse(fc)}catch(e){}
+  try{var fi=localStorage.getItem('bw8fi');if(fi)fundingItems=JSON.parse(fi)}catch(e){}
+}
+
+function setBrand(g){
+  var isF=g==='f';
+  document.documentElement.style.setProperty('--brand',isF?'#ff6fab':'#3b9eff');
+  document.documentElement.style.setProperty('--brand2',isF?'#e0417e':'#1a7ee0');
+  document.documentElement.style.setProperty('--brand-s',isF?'#fff0f6':'#e8f4ff');
+  document.documentElement.style.setProperty('--brand-m',isF?'#ffbdd9':'#b8d9ff');
+  var h=qs('heroAccent');if(h)h.style.color=isF?'#ff6fab':'#3b9eff';
+  var lh=qs('landHero');if(lh)lh.style.background=isF?'linear-gradient(170deg,#fff0f6 0%,white 58%)':'linear-gradient(170deg,#e8f4ff 0%,white 58%)';
+}
+
+// ═══ TOAST ═══
+function showToast(msg,type){
+  var box=qs('toastBox');if(!box)return;
+  var div=document.createElement('div');div.className='toast show';
+  var icons={success:'✅',error:'❌',eli:'🤖',info:'💡'};
+  div.innerHTML='<span>'+(icons[type]||'💡')+'</span><span style="flex:1">'+msg+'</span>';
+  div.style.pointerEvents='auto';box.appendChild(div);
+  setTimeout(function(){div.classList.remove('show');div.classList.add('hide');setTimeout(function(){if(box.contains(div))box.removeChild(div)},280)},3000);
+}
+
+// ═══ CONFETTI ═══
+function spawnConfetti(){
+  var cols=['#3b9eff','#22c87a','#f59e0b','#ff6fab','#8b5cf6','#f97316'];
+  for(var i=0;i<22;i++){var p=document.createElement('div');p.className='cfp';p.style.cssText='left:'+Math.random()*100+'vw;top:'+(20+Math.random()*40)+'vh;background:'+cols[i%cols.length]+';animation:confetti-f '+(1+Math.random()*.9)+'s ease both;animation-delay:'+Math.random()*.5+'s';document.body.appendChild(p);setTimeout(function(x){if(document.body.contains(x))document.body.removeChild(x)},2400,p)}
+}
+
+// ═══ LANDING ═══
+function showLogin(){qs('loginMod').style.display='flex'}
+function closeLogin(){qs('loginMod').style.display='none'}
+function socialLogin(p){closeLogin();showToast(p+' Login...','info');setTimeout(goOB,700)}
+
+function renderLanding(){
+  // €1 am Tag hook
+  var hook=qs('euroDayHook');
+  if(hook){
+    var items=[
+      {y:5,goal:'Fahrrad & Fußballschuhe (€370)',e:'🚲'},
+      {y:10,goal:'Schulausrüstung + Handy (€1.095)',e:'📱'},
+      {y:18,goal:'€6.570 angespart — Startkapital fürs Leben',e:'🚀'}
+    ];
+    hook.innerHTML=items.map(function(it){
+      return '<div style="display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:1px dashed rgba(34,200,122,.2)">'+
+        '<span style="font-size:18px">'+it.e+'</span>'+
+        '<span style="font-size:12px;font-weight:700;color:var(--t1)"><strong style="color:var(--green2)">in '+it.y+' Jahren</strong> — '+it.goal+'</span></div>';
+    }).join('');
+  }
+  var dd=qs('dealDate');if(dd)dd.textContent=new Date().toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'});
+}
+
+// ═══ ONBOARDING ═══
+function goOB(){ivAns={};qs('ivChat').innerHTML='';showS('sIV');setTimeout(function(){askQ(0)},400)}
+function addKid(){goOB()}
+function addEliMsg(txt,delay){
+  delay=delay||0;var chat=qs('ivChat');
+  setTimeout(function(){
+    var w=document.createElement('div');w.className='msg';
+    w.innerHTML='<div class="av-eli">Eli</div><div><div style="font-size:9px;font-weight:800;color:var(--t3);margin-bottom:3px;text-transform:uppercase;letter-spacing:.04em">ELI</div><div class="bub"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div></div>';
+    chat.appendChild(w);chat.scrollTop=chat.scrollHeight;
+    setTimeout(function(){var b=w.querySelector('.bub');if(b)b.innerHTML=txt.replace(/\n/g,'<br>');chat.scrollTop=chat.scrollHeight},650);
+  },delay);
+}
+function addUserMsg(txt){
+  var chat=qs('ivChat');var el=document.createElement('div');el.className='msg user';
+  el.innerHTML='<div class="av-usr">👤</div><div><div class="bub">'+txt+'</div></div>';
+  chat.appendChild(el);chat.scrollTop=chat.scrollHeight;
+}
+function askQ(i){
+  var q=QS[i];if(!q){finishIV();return}
+  var pct=Math.round(i/QS.length*100);
+  var bar=qs('ivBar'),pe=qs('ivPct');if(bar)bar.style.width=pct+'%';if(pe)pe.textContent=pct+'%';
+  addEliMsg(q.qf?q.qf(ivAns):q.q,300);
+  setTimeout(function(){renderAns(i)},1050);
+}
+function renderAns(i){
+  var q=QS[i],area=qs('ivAns');if(!area)return;
+  if(q.type==='opts'){
+    area.innerHTML='<div style="display:flex;flex-direction:column;gap:7px;animation:slideUp .25s ease both">'+q.opts.map(function(o,idx){return '<button id="qo'+idx+'" class="opt">'+o.l+'</button>'}).join('')+'</div>';
+    q.opts.forEach(function(o,idx){var b=qs('qo'+idx);if(b)b.addEventListener('click',function(){pickOpt(i,q.key,o.v,o.l)})});
+  } else if(q.type==='date'){
+    var today=new Date().toISOString().split('T')[0];
+    area.innerHTML='<div style="display:flex;flex-direction:column;gap:8px;animation:slideUp .25s ease both"><input id="dI" type="date" max="'+today+'" class="inp" style="font-size:16px;font-weight:700"><button id="dB" class="btn bb" style="padding:13px;width:100%;border-radius:50px">Weiter →</button></div>';
+    var b=qs('dB');if(b)b.addEventListener('click',function(){pickDate(i,q.key)});
+  } else {
+    var isA=q.type==='amount';
+    area.innerHTML='<div style="display:flex;flex-direction:column;gap:8px;animation:slideUp .25s ease both"><div style="position:relative">'+(isA?'<span style="position:absolute;left:18px;top:50%;transform:translateY(-50%);font-family:var(--sh);font-size:20px;color:var(--t3)">€</span>':'')+
+      '<input id="tI" type="'+(isA?'number':'text')+'" placeholder="'+(q.ph||'')+'" class="inp" style="font-size:'+(isA?'24px':'18px')+';font-weight:800;padding-left:'+(isA?'42px':'18px')+'"></div>'+
+      '<button id="tB" class="btn bb" style="padding:13px;width:100%;border-radius:50px">Weiter →</button></div>';
+    var inp=qs('tI'),b2=qs('tB');
+    if(inp){inp.focus();inp.addEventListener('keydown',function(e){if(e.key==='Enter')pickText(i,q.key)})}
+    if(b2)b2.addEventListener('click',function(){pickText(i,q.key)});
+  }
+}
+function pickOpt(i,key,val,lbl){
+  ivAns[key]=val;addUserMsg(lbl);qs('ivAns').innerHTML='';
+  if(key==='cGender')setBrand(val);
+  var resp={f:'👧 Ein Mädchen! Wunderschön.',m:'👦 Ein Junge! Was für eine Freude.',n:'Perfekt!',
+    studium:'Bildung ohne Schulden ❤️',freiheit:'Finanzielle Freiheit — das beste Geschenk.',
+    wohnung:'Eigene Wohnung mit 25 🏠',business:'Business-Gründer 🚀',
+    maxsparen:'💎 Maximales Sparen — echter Weitblick!',sicher:'🛡️ Sicherheitsnetz — das Klügste!',
+    geboren:'Los gehts 🚀',schwanger:'Aufregend! Ich helfe euch vorzuplanen 🤰',geplant:'Vorausschauend 💪'};
+  if(resp[val])addEliMsg(resp[val],300);
+  setTimeout(function(){askQ(i+1)},resp[val]?1600:500);
+}
+function pickDate(i,key){
+  var inp=qs('dI');if(!inp||!inp.value){if(inp)inp.style.borderColor='var(--red)';return}
+  ivAns[key]=inp.value;var age=cAge(inp.value);
+  addUserMsg(new Date(inp.value).toLocaleDateString('de-DE',{day:'numeric',month:'long',year:'numeric'}));
+  qs('ivAns').innerHTML='';
+  var name=ivAns.cName||'dein Kind';
+  addEliMsg(age===0?'Ein Baby! 🍼 Perfekt — früher Start = mehr Vermögen.':'Mit '+age+' Jahren hat '+name+' noch <strong>'+(18-age)+' Jahre</strong> bis 18!',300);
+  setTimeout(function(){askQ(i+1)},1700);
+}
+function pickText(i,key){
+  var inp=qs('tI');if(!inp||!inp.value.trim()){if(inp)inp.style.borderColor='var(--red)';return}
+  var val=inp.value.trim();ivAns[key]=key==='monthly'?parseFloat(val)||127:val;
+  addUserMsg(key==='monthly'?'€'+val:val);qs('ivAns').innerHTML='';
+  if(key==='monthly'){var y=Math.max(1,18-cAge(ivAns.cBirth)),f=fv(parseFloat(val),y);addEliMsg('Mit <strong>€'+val+'/Monat</strong> hat '+(ivAns.cName||'dein Kind')+' mit 18 Jahren <strong>'+eu(f)+'</strong> — nur <strong>€'+(parseFloat(val)/30).toFixed(2)+'/Tag</strong> ☕',400)}
+  else if(key==='pName')addEliMsg('Willkommen, <strong>'+val+'</strong>! 🌟',300);
+  else if(key==='cName')addEliMsg('<strong>'+val+'</strong> — was ein schöner Name! 💛',300);
+  setTimeout(function(){askQ(i+1)},1700);
+}
+function finishIV(){
+  var bar=qs('ivBar'),pe=qs('ivPct');if(bar)bar.style.width='100%';if(pe)pe.textContent='100%';
+  qs('ivAns').innerHTML='';
+  addEliMsg('Perfekt! 🎉 Berechne den optimalen Plan für <strong>'+(ivAns.cName||'dein Kind')+'</strong>…',200);
+  var kid={pName:ivAns.pName||'',name:ivAns.cName||'Mein Kind',birth:ivAns.cBirth||'',gender:ivAns.cGender||'n',
+    phase:ivAns.phase||'geboren',dream:ivAns.dream||'freiheit',monthly:ivAns.monthly||127,
+    started:new Date().toISOString(),extra:0,expenses:{},jars:JSON.parse(JSON.stringify(JARS_DEF)),
+    photos:[],stories:[],avatarImg:'',avatarEmoji:'👶',badges:JSON.parse(JSON.stringify(BADGES_DEF)),
+    brief:'',msDates:{},msBriefs:{}};
+  KIDS.push(kid);ACT=KIDS.length-1;save();
+  setTimeout(function(){showWow(kid)},2000);
+}
+
+// ═══ WOW ═══
+function showWow(k){
+  showS('sWow');
+  var age=cAge(k.birth),yrs=Math.max(1,18-age),fv18=fv(k.monthly,yrs);
+  var daily=(k.monthly/30).toFixed(2);
+  var dm={studium:'Studium vollständig finanziert.',freiheit:'Finanzielle Freiheit mit 25.',wohnung:'Erste eigene Wohnung.',business:'Startkapital fürs Business.',maxsparen:'Maximales Vermögen. Echte Unabhängigkeit.',sicher:'Sicherheitsnetz für jede Lebenslage.'};
+  var g=k.gender,grad=g==='f'?'linear-gradient(135deg,#ff6fab,#e0417e)':g==='m'?'linear-gradient(135deg,#3b9eff,#1a7ee0)':'linear-gradient(135deg,#3b9eff,#22c87a)';
+  var wc=qs('wCard');if(wc)wc.style.background=grad;
+  function sh(id,delay,fn){setTimeout(function(){var el=qs(id);if(!el)return;if(fn)fn(el);el.style.opacity='1'},delay)}
+  sh('we',200);sh('wl',600);sh('wn',900,function(el){el.textContent=k.name});sh('ws',1200);
+  sh('wa',1500,function(){var a=qs('wamt'),n2=qs('wn2');if(a)a.textContent=eu(fv18);if(n2)n2.textContent=k.name+' · '+yrs+' Jahre · 7% ETF'});
+  sh('wd',2100,function(el){el.innerHTML='Nur <strong style="color:var(--brand)">€'+daily+'/Tag</strong> ☕ — <span style="color:var(--green2)">'+(dm[k.dream]||'Ein Leben ohne finanzielle Sorgen.')+'</span>'});
+  sh('wbtn',2700);spawnConfetti();
+}
+
+// ═══ APP & TABS ═══
+var TAB_MAP={home:'tHome',aus:'tAus',plan:'tPlan',profil:'tProfil',eli:'tEli',foerd:'tFoerd',settings:'tSettings'};
+function goTab(name,idx){
+  Object.keys(TAB_MAP).forEach(function(k){var el=qs(TAB_MAP[k]);if(el){el.classList.remove('on');el.style.display='none'}});
+  var el=qs(TAB_MAP[name]);if(el){el.classList.add('on');el.style.display='flex'}
+  document.querySelectorAll('.nb').forEach(function(b,i){b.classList.toggle('on',i===idx)});
+  var r={home:renderHome,aus:renderAusgaben,plan:renderPlan,profil:renderProfil,eli:renderEli,foerd:renderFoerd,settings:renderSettings};
+  if(r[name])r[name]();
+}
+function goApp(){showS('sApp');updateStreak();renderAll()}
+function renderAll(){renderHome();renderAusgaben();renderPlan();renderProfil();renderFoerd();renderSettings()}
+
+// ═══ HOME ═══
+function renderHome(){
+  var k=KIDS[ACT];if(!k)return;
+  setBrand(k.gender);
+  var age=cAge(k.birth),yrs=Math.max(1,18-age),fv18=fv(k.monthly,yrs);
+  var elapsed=Math.max(0,(Date.now()-new Date(k.started).getTime())/(1000*60*60*24*30.44));
+  var saved=k.extra+elapsed*k.monthly,pct=Math.min(100,Math.round(saved/Math.max(1,fv18)*100));
+  var hr=new Date().getHours(),gr=hr<12?'Guten Morgen':hr<18?'Guten Tag':'Guten Abend';
+  if(qs('hGreet'))qs('hGreet').textContent=gr+', '+(k.pName||k.name)+' 👋';
+  if(qs('hSub'))qs('hSub').textContent=k.phase==='schwanger'?'🤰 '+k.name+' kommt bald!':'Sparplan für '+k.name+' läuft 🌟';
+  if(qs('hStreak'))qs('hStreak').textContent=streakData.count;
+  syncAvatars(k);
+  var g=k.gender,grad=g==='f'?'linear-gradient(135deg,#ff6fab,#e0417e)':g==='m'?'linear-gradient(135deg,#3b9eff,#1a7ee0)':'linear-gradient(135deg,#3b9eff,#22c87a)';
+  var wc=qs('wealthCard');if(wc)wc.style.background=grad;
+  if(qs('hTotal'))qs('hTotal').textContent=eu(saved);
+  if(qs('hKidLine'))qs('hKidLine').textContent='für '+k.name+' · '+age+' Jahre';
+  if(qs('hPct'))qs('hPct').textContent=pct+'%';
+  if(qs('hBar'))qs('hBar').style.width=pct+'%';
+  if(qs('hAt18'))qs('hAt18').textContent=eu(fv18);
+  if(qs('hDay'))qs('hDay').textContent='€'+(k.monthly/30).toFixed(2);
+  if(qs('hYrs'))qs('hYrs').textContent=yrs+' J';
+  if(qs('hBigEmoji'))qs('hBigEmoji').textContent=emj(k.gender);
+  if(qs('jarTitle'))qs('jarTitle').textContent=k.name+"'s Spardosen";
+  // Mental
+  var mi=new Date().getDate()%MENTAL.length,m=MENTAL[mi];
+  if(qs('mentalEmoji'))qs('mentalEmoji').textContent=m.e;
+  if(qs('mentalMsg'))qs('mentalMsg').textContent=m.msg+' für '+k.name;
+  if(qs('mentalSub'))qs('mentalSub').textContent=m.sub;
+  var mc=qs('mentalCard');if(mc)mc.style.background=k.gender==='f'?'linear-gradient(135deg,#fff0f6,white)':'linear-gradient(135deg,#e8f4ff,white)';
+  // Daily deal
+  var di=new Date().getDate()%DAILY_DEALS.length,deal=DAILY_DEALS[di];
+  if(qs('dealText'))qs('dealText').textContent=deal.text;
+  if(qs('dealDate'))qs('dealDate').textContent=new Date().toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'});
+  if(qs('dealLinks'))qs('dealLinks').innerHTML=deal.links.map(function(lnk){return '<a href="'+lnk.u+'" target="_blank" style="font-size:10px;font-weight:800;color:var(--brand);background:var(--brand-s);border:1.5px solid var(--brand-m);padding:5px 11px;border-radius:50px;text-decoration:none;display:inline-flex;align-items:center;gap:4px">🔗 '+lnk.l+'</a>'}).join('');
+  // Tip
+  var ti=new Date().getDate()%WISSEN.length;
+  if(qs('tipText'))qs('tipText').textContent=WISSEN[ti];
+  if(qs('tipDate'))qs('tipDate').textContent=new Date().toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'});
+  renderJars();
+  renderEuroChallenge();
+  renderBadgeRowHome();
+}
+function syncAvatars(k){
+  ['hAvEmoji','stAvEmoji'].forEach(function(id){var el=qs(id);if(el)el.textContent=k.avatarEmoji||emj(k.gender)});
+  ['hAvImg','stAvImg'].forEach(function(id){var el=qs(id);if(el){el.src=k.avatarImg||'';el.style.display=k.avatarImg?'block':'none'}});
+}
+function renderStoriesRowHome(){/* removed from home */}
+function renderJars(){
+  var k=KIDS[ACT],row=qs('jarRow');if(!row||!k)return;
+  row.innerHTML=(k.jars||[]).map(function(j,idx){
+    var pct=j.g>0?Math.min(100,Math.round(j.s/j.g*100)):0,fh=Math.round(pct*.64);
+    return '<div class="jar-wrap" onclick="openDepForJar('+idx+')" style="animation:fadeUp .3s '+(idx*.06)+'s ease both">'+
+      '<div style="width:92px;height:100px;position:relative;flex-shrink:0">'+
+        '<svg viewBox="0 0 92 100" style="width:100%;height:100%;filter:drop-shadow(0 3px 8px '+j.c+'33)">'+
+          '<rect x="10" y="5" width="72" height="13" rx="7" fill="'+j.c+'" opacity=".75"/>'+
+          '<rect x="5" y="16" width="82" height="76" rx="15" fill="'+j.c+'" opacity=".06"/>'+
+          '<rect x="5" y="16" width="82" height="76" rx="15" fill="none" stroke="'+j.c+'" stroke-width="2" opacity=".3"/>'+
+          (fh>0?'<rect x="5" y="'+(92-fh)+'" width="82" height="'+fh+'" rx="0 0 15 15" fill="'+j.c+'" opacity=".28"/>':'')+ 
+          (fh>0?'<ellipse cx="46" cy="'+(92-fh)+'" rx="41" ry="5" fill="'+j.c+'" opacity=".38"/>':'')+
+        '</svg>'+
+        '<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-52%);font-size:28px;z-index:3">'+j.e+'</div>'+
+        (pct>0?'<div style="position:absolute;bottom:14px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:9px;color:white;z-index:3;font-weight:500;text-shadow:0 1px 3px rgba(0,0,0,.5)">'+pct+'%</div>':'')+
+      '</div>'+
+      '<div style="font-size:11px;font-weight:800;color:var(--t1);text-align:center;max-width:88px;line-height:1.3">'+j.n+'</div>'+
+      '<div style="font-family:var(--mono);font-size:11px;color:var(--t2)">'+eu(j.s)+'</div>'+
+      '<div style="font-size:9px;color:var(--t3)">von '+eu(j.g)+'</div>'+
+      '<button onclick="shareJar('+idx+',event)" style="margin-top:4px;font-size:8px;font-weight:800;color:var(--purple);background:var(--purple-s);border:1px solid rgba(139,92,246,.2);padding:3px 9px;border-radius:20px;cursor:pointer;white-space:nowrap">👨\u200d👩\u200d👧 Familie</button>'+
+    '</div>';
+  }).join('');
+}
+function renderEuroChallenge(){
+  var k=KIDS[ACT],el=qs('euroChalGrid');if(!el||!k)return;
+  var daily=k.monthly/30;
+  var items=[
+    {y:1,e:'🚲',title:'Fahrrad-Reparatur',sub:'Reifenwechsel, Licht, Schloss',val:Math.round(daily*365)},
+    {y:2,e:'🎮',title:'Spielekonsole',sub:'Nintendo Switch komplett',val:Math.round(daily*365*2)},
+    {y:3,e:'✈️',title:'Wochenend-Trip',sub:'Mallorca, Kroatien, Türkei',val:Math.round(daily*365*3)},
+    {y:5,e:'🌍',title:'Auslandsreise',sub:'Bali, New York, Japan',val:Math.round(daily*365*5)}
+  ];
+  el.innerHTML=items.map(function(it){
+    return '<div style="background:white;border:1.5px solid rgba(34,200,122,.2);border-radius:var(--rs);padding:9px;text-align:center;cursor:pointer" onclick="openDeposit()">'+
+      '<div style="font-size:22px;margin-bottom:3px">'+it.e+'</div>'+
+      '<div style="font-size:9px;font-weight:800;color:var(--green2)">in '+it.y+' Jahr'+(it.y>1?'en':'')+'</div>'+
+      '<div style="font-size:9px;font-weight:800;color:var(--t1);margin:2px 0">'+it.title+'</div>'+
+      '<div style="font-size:8px;color:var(--t3);font-weight:600">'+it.sub+'</div>'+
+      '<div style="font-family:var(--mono);font-size:10px;color:var(--green2);font-weight:700;margin-top:3px">'+eu(it.val)+'</div>'+
+    '</div>';
+  }).join('');
+  // Challenge progress
+  var cp=qs('chalProgress'),days=(k.challengeDays||[]).length;
+  if(cp){
+    var pct=Math.min(100,Math.round(days/30*100));
+    cp.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">'+
+      '<span style="font-size:10px;font-weight:800;color:var(--t2)">30-Tage Challenge: <strong style="color:var(--green2)">'+days+'/30</strong></span>'+
+      (days>=30?'<span class="bdg bg3">🏆 Abgeschlossen!</span>':'<span style="font-size:9px;color:var(--t3);font-weight:600">'+eu((30-days)*1)+' noch fehlen</span>')+
+    '</div>'+
+    '<div style="height:7px;background:var(--bg2);border-radius:5px;overflow:hidden">'+
+      '<div style="height:100%;width:'+pct+'%;background:linear-gradient(90deg,var(--green),var(--brand));border-radius:5px;transition:width .8s"></div>'+
+    '</div>';
+  }
+}
+function activateDailyReminder(btn){
+  btn.className=btn.className.includes('tgl-on')?'tgl tgl-off':'tgl tgl-on';
+  var on=btn.className.includes('tgl-on');
+  btn.querySelector('.tgl-k').style.cssText=on?'right:3px':'left:3px';
+  showToast(on?'📲 Erinnerung aktiviert! Täglich 9 Uhr.':'🔕 Erinnerung deaktiviert','info');
+}
+function renderBadgeRowHome(){
+  var k=KIDS[ACT],row=qs('hBadgeRow');if(!row||!k)return;
+  var badges=k.badges||BADGES_DEF;
+  row.innerHTML=badges.slice(0,6).map(function(b){
+    return '<div style="display:flex;flex-direction:column;align-items:center;gap:2px">'+
+      '<div style="width:42px;height:42px;border-radius:50%;background:'+(b.unlocked?'var(--brand-s)':'var(--bg2)')+';border:2px solid '+(b.unlocked?'var(--brand)':'var(--border2)')+';display:flex;align-items:center;justify-content:center;font-size:19px;'+(b.unlocked?'box-shadow:0 3px 10px var(--brand-m)':'filter:grayscale(.7);opacity:.45')+'">'+b.ico+'</div>'+
+      '<div style="font-size:7px;font-weight:800;color:'+(b.unlocked?'var(--brand)':'var(--t3)')+';text-align:center;max-width:44px;line-height:1.3">'+b.name+'</div></div>';
+  }).join('');
+}
+
+// ═══ AUSGABEN (SHOPS) ═══
+function renderAusgaben(){
+  var k=KIDS[ACT];if(!k)return;
+  var total=calcExpTotal(k),avg=770;
+  var g=k.gender,grad=g==='f'?'linear-gradient(135deg,#ff6fab,#e0417e)':g==='m'?'linear-gradient(135deg,#3b9eff,#1a7ee0)':'linear-gradient(135deg,#f97316,#ef4444)';
+  var ac=qs('ausgSummary');if(ac)ac.style.background=grad;
+  if(qs('ausgTotal'))qs('ausgTotal').textContent=eu(total);
+  var diff=total-avg;
+  if(qs('ausgStatus'))qs('ausgStatus').textContent=diff>50?'Über Ø':diff<-50?'Unter Ø ✓':'Im Ø';
+  var tb=qs('ausgTipBox'),tt=qs('ausgTipTxt');
+  if(tb&&tt&&diff>80){tb.style.display='block';tt.textContent='Du gibst '+eu(diff)+' mehr aus als der DE-Ø. Überprüfe DM-Windeln im Abo und kaufe Kleidung auf Kleinanzeigen — Ersparnis bis €80/Monat möglich!'}
+  else if(tb)tb.style.display='none';
+  // Shop tabs
+  renderShopTabs();
+  // Prognose
+  renderPrognose(k);
+  // Starter Kit
+  renderKitList();
+}
+function calcExpTotal(k){
+  if(!k)return 0;var t=0;var exp=k.expenses||{};
+  SHOPS.forEach(function(sh){sh.items.forEach(function(it){t+=exp[it.id]!==undefined?exp[it.id]:it.avg})});
+  return t;
+}
+function renderShopTabs(){
+  var tabs=qs('shopCatTabs'),items=qs('shopCatItems');if(!tabs||!items)return;
+  tabs.innerHTML=SHOPS.map(function(sh){
+    var active=sh.id===_activeShop;
+    return '<button onclick="setActiveShop(\''+sh.id+'\')" style="display:flex;align-items:center;gap:5px;padding:7px 13px;background:'+(active?sh.color:'white')+';border:1.5px solid '+(active?sh.color:sh.color+'44')+';border-radius:50px;cursor:pointer;font-size:12px;font-weight:800;color:'+(active?'white':sh.color)+';white-space:nowrap;transition:all .2s;flex-shrink:0">'+sh.ico+' '+sh.name+'</button>';
+  }).join('');
+  var shop=SHOPS.find(function(s){return s.id===_activeShop})||SHOPS[0];
+  var k=KIDS[ACT];var exp=k?k.expenses||{}:{};
+  items.innerHTML='<div style="background:'+shop.bg+';border:1.5px solid '+shop.color+'22;border-radius:var(--r);overflow:hidden">'+
+    '<div style="padding:11px 13px 6px;border-bottom:1.5px solid '+shop.color+'15;display:flex;align-items:center;gap:8px">'+
+      '<span style="font-size:20px">'+shop.ico+'</span>'+
+      '<span style="font-family:var(--sh);font-size:15px;color:'+shop.color+'">'+shop.name+'</span>'+
+      '<button onclick="openAddShopItemMod()" style="margin-left:auto;font-size:9px;font-weight:800;color:'+shop.color+';background:'+shop.color+'14;border:1px solid '+shop.color+'30;padding:4px 10px;border-radius:20px;cursor:pointer">+ Produkt</button>'+
+    '</div>'+
+    shop.items.map(function(it){
+      var val=exp[it.id]!==undefined?exp[it.id]:it.avg;
+      var diff=val-it.avg;var clr=diff>5?'var(--red)':diff<-5?'var(--green2)':'var(--t3)';
+      var dlbl=diff>0?'+'+eu(diff):diff<0?eu(diff):'= Ø';
+      return '<div onclick="openExpMod(\''+it.id+'\',\''+it.ico+' '+it.name+'\',\''+shop.name+'\')" style="display:flex;align-items:center;gap:10px;padding:11px 13px;border-bottom:1.5px solid '+shop.color+'12;cursor:pointer;transition:all .18s" onmouseover="this.style.background=\''+shop.color+'08\'" onmouseout="this.style.background=\'\'">'+
+        '<div style="width:34px;height:34px;border-radius:10px;background:'+shop.color+'15;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0">'+it.ico+'</div>'+
+        '<div style="flex:1">'+
+          '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px">'+
+            '<span style="font-size:12px;font-weight:800;color:var(--t1)">'+it.name+'</span>'+
+            '<div style="display:flex;align-items:center;gap:5px">'+
+              '<span style="font-size:8px;font-weight:800;padding:2px 7px;border-radius:20px;background:'+shop.color+'12;color:'+clr+'">'+dlbl+'</span>'+
+              '<span style="font-family:var(--sh);font-size:14px;color:'+shop.color+'">'+eu(val)+'</span>'+
+            '</div>'+
+          '</div>'+
+          '<div style="height:5px;background:'+shop.color+'18;border-radius:3px;overflow:hidden"><div style="height:100%;width:'+Math.min(100,Math.round(val/Math.max(1,it.avg)*100))+'%;background:'+shop.color+';border-radius:3px;transition:width .8s"></div></div>'+
+          '<div style="font-size:8px;color:var(--t3);font-weight:600;margin-top:2px">DE-Ø '+eu(it.avg)+'/Mo</div>'+
+        '</div>'+
+      '</div>'+(it.custom?'<button onclick="removeShopItem(event,\''+shop.id+'\',\''+it.id+'\')" style="background:none;border:none;cursor:pointer;color:var(--red);font-size:16px;padding:4px 6px;flex-shrink:0">×</button>':'')+
+    '</div>';
+    }).join('')+
+  '</div>';
+}
+function setActiveShop(id){_activeShop=id;renderShopTabs()}
+function renderPrognose(k){
+  var age=cAge(k.birth);
+  var pl=qs('prognoseList');if(!pl)return;
+  var BUYLISTS=[
+    ['🧷 Windeln Gr.1→2 wechseln','🍼 Milchpulpe Vorrat anlegen','🧴 Babycreme nachkaufen','👕 Erstlingskleidung Gr.62→68'],
+    ['🥕 Beikost starten (Gläschen)','🪑 Hochstuhl kaufen','🧸 Greifling & Rassel','📚 Erste Pappbilderbücher'],
+    ['👟 Lauflernschuhe (Gr.22-24)','🚲 Laufrad vorbereiten','🎨 Fingerfarben & Knete','🧩 Puzzle ab 2J'],
+    ['🎒 Kita-Rucksack','🖍️ Buntstifte & Malsachen','👕 Kleidung Gr.98-104','⚽ Erster Fußball'],
+    ['🎸 Einfaches Musikinstrument','🚲 Fahrrad mit Stützrädern','🎨 Bastelset groß','📚 Kinderbücher Alter 4+'],
+    ['🎒 Schul-Vorbereitung','🖊️ Schreiblernheft','📐 Lineal + Schulbedarf','🏊 Schwimmkurs anmelden'],
+    ['📱 Erstes Handy (günstig)','🎮 Gaming-Zubehör','🎽 Sportkleidung','📚 Lernhilfen Klasse 1-2'],
+    ['🚲 Fahrrad ohne Stützräder','⚽ Sportverein beitreten','🎨 Kunstkurs','🧩 Komplexe Puzzles 500+']
+  ];
+  var TRENDS=[
+    ['📈 Windeln +12% teurer 2024','💡 DM-Eigenmarke 40% günstiger als Pampers','🏷️ Kleinanzeigen: Kinderwagen stark gefragt'],
+    ['📈 Bio-Babynahrung +8% Preissteigerung','💡 Saisongemüse pürieren spart bis €60/Mo','🏷️ Secondhand Spielzeug auf Kleinanzeigen boomt'],
+    ['📈 Lauflernschuhe: Marken €70+','💡 Wachstum schnell: alle 3 Mo neue Größe','🏷️ Kleiderkreisel für Kinderkleidung sehr günstig'],
+    ['📈 Kita-Kosten steigen bundesweit','💡 Kita-Kosten zu 2/3 steuerlich absetzbar','🏷️ Spielzeug nach Weihnachten 40% günstiger'],
+    ['📈 Sportvereine +5% Beiträge','💡 Kinderturnen günstiger als privat','🏷️ Gebrauchte Musikinstrumente: Kleinanzeigen'],
+    ['📈 Schulranzen-Preise: €150-250','💡 Decathlon/Tchibo-Ranzen ab €40 gut','🏷️ Schulranzen Secondhand Top-Zustand'],
+    ['📈 Smartphones: Refurbished 50% günstiger','💡 Mediamarkt Gebrauchtgeräte sehr gut','🏷️ Handy-Kleinanzeigen: iPhone SE ab €150'],
+    ['📈 Fahrräder: Preise stabil geblieben','💡 Decathlon: gutes Preis-Leistung','🏷️ Fahrrad Kleinanzeigen fast neu ab €80']
+  ];
+  var idx=Math.min(age,7);
+  var buys=BUYLISTS[idx];
+  var trends=TRENDS[idx];
+  var trendColors=['var(--red-s)','var(--brand-s)','var(--amber-s)'];
+  pl.innerHTML=
+    '<div style="font-size:10px;font-weight:800;color:var(--brand);text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px">🛒 Diesen Monat kaufen — '+k.name+' ist '+age+' J</div>'+
+    '<div style="display:flex;flex-direction:column;gap:5px;margin-bottom:11px">'+
+      buys.map(function(item){
+        var ico=item.split(' ')[0];
+        var txt=item.slice(item.indexOf(' ')+1);
+        return '<div style="display:flex;align-items:center;gap:9px;padding:8px 11px;background:white;border:1.5px solid var(--border);border-radius:var(--rs)">'+
+          '<span style="font-size:17px;flex-shrink:0">'+ico+'</span>'+
+          '<span style="font-size:11px;font-weight:700;color:var(--t1)">'+txt+'</span>'+
+        '</div>';
+      }).join('')+
+    '</div>'+
+    '<div style="font-size:10px;font-weight:800;color:var(--amber);text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px">📊 Aktuelle Markt-Trends</div>'+
+    '<div style="display:flex;flex-direction:column;gap:5px">'+
+      trends.map(function(t,ti){
+        var ico=t.split(' ')[0];
+        var txt=t.slice(t.indexOf(' ')+1);
+        return '<div style="display:flex;align-items:flex-start;gap:7px;padding:7px 10px;background:'+trendColors[ti%3]+';border-radius:var(--rs)">'+
+          '<span style="font-size:14px;flex-shrink:0">'+ico+'</span>'+
+          '<span style="font-size:10px;font-weight:700;color:var(--t2);line-height:1.5">'+txt+'</span>'+
+        '</div>';
+      }).join('')+
+    '</div>';
+}
+function renderKitList(){
+  var kl=qs('kitList');if(!kl)return;
+  var items=[{ico:'🛒',n:'Kinderwagen',avg:600,t:'Joie ab €250 · Kleinanzeigen 70% günstiger'},{ico:'🛏️',n:'Babybett',avg:250,t:'Ikea + Kokosmatratze'},{ico:'🚗',n:'Babyschale',avg:200,t:'Maxi-Cosi Pebble 360'},{ico:'📱',n:'Babyphone',avg:80,t:'Philips DECT'}];
+  kl.innerHTML=items.map(function(item){
+    return '<div class="shop-item" style="--item-color:var(--brand)">'+
+      '<div style="width:34px;height:34px;border-radius:10px;background:var(--brand-s);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0">'+item.ico+'</div>'+
+      '<div style="flex:1"><div style="font-size:12px;font-weight:800;color:var(--t1)">'+item.n+'</div><div style="font-size:9px;color:var(--brand);font-weight:700;margin-top:1px">💡 '+item.t+'</div></div>'+
+      '<div style="font-family:var(--sh);font-size:13px;color:var(--t1)">Ø '+eu(item.avg)+'</div></div>';
+  }).join('');
+}
+
+// ═══ SPARPLAN ═══
+function renderPlan(){
+  var k=KIDS[ACT];if(!k)return;
+  var age=cAge(k.birth),yrs=Math.max(1,18-age);
+  var g=k.gender,grad=g==='f'?'linear-gradient(135deg,#ff6fab,#e0417e)':g==='m'?'linear-gradient(135deg,#3b9eff,#1a7ee0)':'linear-gradient(135deg,#3b9eff,#22c87a)';
+  var ph=qs('planHero');if(ph)ph.style.background=grad;
+  updatePlanProj(k.monthly,yrs,k);
+  var sl=qs('planSlider');if(sl)sl.value=k.monthly;
+  renderMsFill(k);
+  renderInvOpts(k);
+  var bi=qs('briefInp');if(bi&&k.brief)bi.value=k.brief;
+  var bp=qs('briefPrev');if(bp&&k.brief){bp.style.display='block';bp.textContent='"'+k.brief.slice(0,110)+(k.brief.length>110?'…':'')+'"'}
+}
+function updatePlanProj(mo,yrs,k){
+  var f=fv(mo,yrs);
+  if(qs('planAt18'))qs('planAt18').textContent=eu(f);
+  if(qs('planSub'))qs('planSub').textContent='Bei €'+mo+'/Mo über '+yrs+' Jahre · 7% ETF';
+  if(qs('planMoLbl'))qs('planMoLbl').textContent='€'+mo+'/Monat';
+}
+function onPlanSlider(val){var k=KIDS[ACT];if(!k)return;k.monthly=parseFloat(val)||127;save();var yrs=Math.max(1,18-cAge(k.birth));updatePlanProj(k.monthly,yrs,k);renderMsFill(k)}
+function renderMsFill(k){
+  var el=qs('msFillList');if(!el||!k)return;
+  var mo=k.monthly||127;
+  el.innerHTML=MS_COSTS.map(function(m){
+    var saved=k.extra||0;
+    var needed=Math.max(0,m.cost-saved);
+    var monthsNeeded=needed>0?Math.ceil(needed/mo):0;
+    var yearsNeeded=(monthsNeeded/12).toFixed(1);
+    var pct=needed<=0?100:Math.min(100,Math.round(saved/m.cost*100));
+    var statusColor=needed<=0?'var(--green2)':monthsNeeded<=24?'var(--brand)':'var(--amber)';
+    return '<div class="ms-fill-card">'+
+      '<div style="display:flex;align-items:center;justify-content:space-between">'+
+        '<div style="display:flex;align-items:center;gap:8px">'+
+          '<span style="font-size:22px">'+m.ico+'</span>'+
+          '<div><div style="font-size:13px;font-weight:800;color:var(--t1)">'+m.lbl+'</div>'+
+            '<div style="font-size:10px;color:var(--t2);font-weight:600;margin-top:1px">Ziel: '+eu(m.cost)+'</div></div>'+
+        '</div>'+
+        '<div style="text-align:right">'+
+          '<div style="font-family:var(--sh);font-size:14px;color:'+statusColor+'">'+eu(m.cost-needed)+'</div>'+
+          '<div style="font-size:9px;color:var(--t3);font-weight:700">von '+eu(m.cost)+'</div>'+
+        '</div>'+
+      '</div>'+
+      '<div class="ms-fill-bar"><div class="ms-fill-inner" style="width:'+pct+'%;background:'+(needed<=0?'var(--green)':'linear-gradient(90deg,var(--brand),var(--green))')+'"></div></div>'+
+      '<div style="display:flex;justify-content:space-between;align-items:center">'+
+        '<span style="font-size:10px;font-weight:700;color:'+statusColor+'">'+(needed<=0?'✅ Erreicht!':'💪 Noch '+eu(needed)+' nötig')+'</span>'+
+        (needed>0?'<span style="font-size:10px;font-weight:800;color:var(--brand)">Mit €'+mo+'/Mo → '+yearsNeeded+' Jahre</span>':'')+
+      '</div>'+
+      (needed>0?'<button onclick="openMsFunding(\''+m.lbl+'\','+m.cost+')" style="margin-top:8px;width:100%;padding:7px 11px;font-size:10px;font-weight:800;color:var(--pink2);background:var(--pink-s);border:1.5px solid rgba(255,111,171,.25);border-radius:50px;cursor:pointer">💝 Familie einladen mitzufunden</button>':'')+
+    '</div>';
+  }).join('');
+}
+function renderInvOpts(k){
+  var el=qs('invOpts');if(!el||!k)return;
+  var mo=k.monthly||127,yrs=Math.max(1,18-cAge(k.birth));
+  var opts=[
+    {ico:'🌍',name:'MSCI World ETF',rate:.085,risk:'Mittel',tag:'Empfohlen',col:'var(--brand)'},
+    {ico:'📈',name:'S&P 500 ETF',rate:.092,risk:'Mittel',tag:'',col:'var(--green2)'},
+    {ico:'🏠',name:'Bausparvertrag',rate:.025,risk:'Sehr niedrig',tag:'Sicher',col:'var(--amber)'},
+    {ico:'🥇',name:'Gold ETF',rate:.06,risk:'Mittel',tag:'Sachwert',col:'#b45309'},
+    {ico:'🔋',name:'ESG Nachhaltig',rate:.08,risk:'Mittel',tag:'Grün',col:'var(--green2)'}
+  ];
+  el.innerHTML=opts.map(function(opt){
+    var f=fv(mo,yrs,opt.rate);var diff=Math.round(f-fv(mo,yrs));
+    return '<div style="display:flex;align-items:center;gap:10px;padding:11px;background:var(--bg);border-radius:var(--rs);border:1.5px solid var(--border);margin-bottom:8px;cursor:pointer" onclick="eliChip(\'Erkläre '+opt.name+' im Detail für mein Kinderdepot — Vor- und Nachteile\')">'+
+      '<div style="font-size:24px;flex-shrink:0">'+opt.ico+'</div>'+
+      '<div style="flex:1">'+
+        '<div style="display:flex;align-items:center;gap:5px;margin-bottom:2px">'+
+          '<span style="font-size:12px;font-weight:800;color:var(--t1)">'+opt.name+'</span>'+
+          (opt.tag?'<span class="bdg bg3" style="font-size:8px">'+opt.tag+'</span>':'')+
+        '</div>'+
+        '<div style="font-size:9px;color:var(--t3);font-weight:700">Risiko: '+opt.risk+'</div>'+
+      '</div>'+
+      '<div style="text-align:right">'+
+        '<div style="font-family:var(--sh);font-size:14px;color:'+opt.col+'">'+eu(f)+'</div>'+
+        '<div style="font-size:8px;color:var(--t3);font-weight:700">mit 18 · '+Math.round(opt.rate*100)+'% p.a.</div>'+
+        (diff!==0?'<div style="font-size:8px;font-weight:800;color:var(--green2)">+'+eu(Math.abs(diff))+' vs. Ø</div>':'')+
+      '</div>'+
+    '</div>';
+  }).join('');
+}
+function saveBrief(){
+  var k=KIDS[ACT],bi=qs('briefInp');if(!k||!bi)return;
+  k.brief=bi.value;save();
+  var bp=qs('briefPrev');if(bp&&k.brief){bp.style.display='block';bp.textContent='"'+k.brief.slice(0,110)+(k.brief.length>110?'…':'')+'"'}
+  showToast('💌 Brief gespeichert!','success');spawnConfetti();unlockBadge('eli_chat');
+}
+
+// ═══ BABYGRAM (PROFIL) ═══
+function renderProfil(){
+  var k=KIDS[ACT];if(!k)return;
+  var age=cAge(k.birth);
+  var elapsed=Math.max(0,(Date.now()-new Date(k.started).getTime())/(1000*60*60*24*30.44));
+  var saved=k.extra+elapsed*k.monthly;
+  if(qs('stName'))qs('stName').textContent=k.name;
+  if(qs('stAge'))qs('stAge').textContent=age+' Jahre · seit '+new Date(k.started).toLocaleDateString('de-DE',{month:'long',year:'numeric'});
+  var bc=(k.badges||[]).filter(function(b){return b.unlocked}).length;
+  if(qs('stBadgesCnt'))qs('stBadgesCnt').textContent=bc+' Badges';
+  if(qs('stStreakCnt'))qs('stStreakCnt').textContent=streakData.count+' Tage 🔥';
+  if(qs('stPhotoCnt'))qs('stPhotoCnt').textContent=(k.photos||[]).length;
+  var allMs=MS_CLUSTERS.reduce(function(a,c){return a.concat(c.items)},[]);
+  if(qs('stMsCnt'))qs('stMsCnt').textContent=allMs.filter(function(m){return m.age<=age}).length;
+  if(qs('stSaved'))qs('stSaved').textContent=eu(saved);
+  syncAvatars(k);
+  renderMemBubbles();renderGallery();renderBgMsClusters();renderFundingList();renderFamFeed();
+}
+function renderMemBubbles(){
+  var k=KIDS[ACT],el=qs('memBubbles');if(!el)return;
+  var html='<div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex-shrink:0" onclick="addPhoto()">'+
+    '<div class="story-add" style="width:60px;height:60px;font-size:22px">+</div>'+
+    '<span style="font-size:9px;font-weight:800;color:var(--t3)">Neu</span></div>';
+  (k.stories||[]).slice(-8).reverse().forEach(function(s,i){
+    html+='<div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex-shrink:0" onclick="viewMemory(\''+s.label+'\',\''+s.src+'\')">'+
+      '<div class="sring" style="width:64px;height:64px"><div class="sring-inner" style="width:58px;height:58px"><img src="'+s.src+'" style="width:100%;height:100%;object-fit:cover"></div></div>'+
+      '<span style="font-size:9px;font-weight:800;color:var(--t2);max-width:62px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+s.label+'</span>'+
+      (s.date?'<span style="font-size:7.5px;color:var(--t3);font-weight:600">'+new Date(s.date).toLocaleDateString('de-DE',{day:'2-digit',month:'short'})+'</span>':'')+
+    '</div>';
+  });
+  el.innerHTML=html;
+}
+function renderGallery(){
+  var k=KIDS[ACT],el=qs('stGallery');if(!el)return;
+  var h='<div onclick="addPhoto()" style="aspect-ratio:1;border-radius:10px;border:2px dashed var(--border2);display:flex;align-items:center;justify-content:center;cursor:pointer;background:var(--bg);font-size:22px">+</div>';
+  (k.photos||[]).forEach(function(p,i){h+='<img src="'+p+'" style="aspect-ratio:1;border-radius:10px;object-fit:cover;cursor:pointer;border:1.5px solid var(--border)" onclick="removePhoto('+i+')">'});
+  el.innerHTML=h;
+}
+function renderBgMsClusters(){
+  var k=KIDS[ACT],el=qs('bgMsClusters');if(!el)return;
+  var age=cAge(k.birth);var msD=k.msDates||{},msB=k.msBriefs||{};
+  el.innerHTML=MS_CLUSTERS.map(function(cl){
+    var done=cl.items.filter(function(m){return m.age<=age}).length,pct=Math.round(done/cl.items.length*100);
+    return '<div style="border:1.5px solid var(--border);border-radius:var(--r);margin-bottom:10px;overflow:hidden">'+
+      '<div style="padding:12px 13px;display:flex;align-items:center;gap:10px;background:'+cl.color+'0a">'+
+        '<div style="font-size:22px">'+cl.icon+'</div>'+
+        '<div style="flex:1"><div style="font-family:var(--sh);font-size:14px;color:'+cl.color+'">'+cl.label+'</div>'+
+        '<div style="font-size:9px;color:var(--t3);font-weight:600">'+done+'/'+cl.items.length+' · '+pct+'%</div></div>'+
+        '<div class="bdg" style="background:'+cl.color+'14;color:'+cl.color+';border:1px solid '+cl.color+'28">'+pct+'%</div>'+
+      '</div>'+
+      '<div style="height:6px;background:var(--bg2)"><div style="height:100%;width:'+pct+'%;background:'+cl.color+';transition:width 1s"></div></div>'+
+      cl.items.map(function(m){
+        var st=m.age<=age?'done':m.age<=age+.5?'next':'future';
+        var hasBrief=msB[m.lbl]&&msB[m.lbl].length>0;
+        var msDate=msD[m.lbl];
+        // Show actual date if saved, else estimated
+        var dateStr=msDate?'📅 '+new Date(msDate).toLocaleDateString('de-DE',{day:'numeric',month:'long',year:'numeric'}):st==='done'?'ca. '+new Date(new Date().getFullYear()-age+Math.floor(m.age),0).getFullYear():'in ca. '+(m.age-age>0?Math.round((m.age-age)*10)/10+' J':'bald');
+        return '<div style="display:flex;align-items:flex-start;gap:9px;padding:10px 13px;border-top:1.5px solid var(--border)">'+
+          '<div class="ms-dot ms-'+st+'">'+m.ico+'</div>'+
+          '<div style="flex:1;padding-top:1px">'+
+            '<div style="font-size:12px;font-weight:800;color:var(--t1);margin-bottom:2px">'+m.lbl+
+              (st==='done'?'<span style="margin-left:6px;font-size:9px;font-weight:800;color:var(--green2);background:var(--green-s);padding:2px 7px;border-radius:20px">✅ Erreicht</span>':'')+
+            '</div>'+
+            '<div style="font-size:10px;font-weight:800;color:'+(msDate?'var(--brand)':'var(--t3)')+';margin-bottom:4px">'+dateStr+'</div>'+
+            '<div style="font-size:10px;color:var(--t2);font-weight:600;margin-bottom:5px">'+m.desc+'</div>'+
+            (hasBrief?'<div style="background:var(--bg);border-left:3px solid '+cl.color+';padding:6px 9px;border-radius:0 8px 8px 0;font-size:10px;color:var(--t2);line-height:1.55;font-weight:600;font-style:italic;margin-bottom:5px">'+msB[m.lbl]+'</div>':'')+
+            '<div style="display:flex;gap:5px;flex-wrap:wrap">'+
+              (st==='done'?'<button onclick="addPhotoForMs(\''+m.lbl+'\')" style="font-size:9px;font-weight:800;color:'+cl.color+';background:'+cl.color+'12;border:1px solid '+cl.color+'25;padding:3px 9px;border-radius:20px;cursor:pointer">📸 Foto</button>':'')+ 
+              '<button onclick="openMsBrief(\''+m.lbl+'\',\''+cl.color+'\')" style="font-size:9px;font-weight:800;color:'+cl.color+';background:'+cl.color+'12;border:1px solid '+cl.color+'25;padding:3px 9px;border-radius:20px;cursor:pointer">✍️ '+(hasBrief?'Brief':'Brief schreiben')+'</button>'+
+              (st!=='done'?'<button onclick="markMsDate(\''+m.lbl+'\')" style="font-size:9px;font-weight:800;color:var(--amber);background:var(--amber-s);border:1px solid rgba(245,158,11,.25);padding:3px 9px;border-radius:20px;cursor:pointer">📅 Datum setzen</button>':'')+
+            '</div>'+
+          '</div>'+
+        '</div>';
+      }).join('')+
+    '</div>';
+  }).join('');
+}
+function openMsBrief(label,color){
+  var k=KIDS[ACT];if(!k)return;if(!k.msBriefs)k.msBriefs={};
+  var existing=k.msBriefs[label]||'';
+  var txt=prompt('Brief für "'+label+'":\n(Eli kann dir helfen — schreib einfach etwas!)',existing);
+  if(txt!==null){k.msBriefs[label]=txt;save();renderBgMsClusters();showToast('✍️ Brief gespeichert!','success')}
+}
+function markMsDate(label){
+  var k=KIDS[ACT];if(!k)return;if(!k.msDates)k.msDates={};
+  var d=prompt('Datum für "'+label+'" (TT.MM.JJJJ):','');
+  if(d){var parts=d.split('.');if(parts.length===3){var iso=parts[2]+'-'+parts[1].padStart(2,'0')+'-'+parts[0].padStart(2,'0');k.msDates[label]=iso;save();renderBgMsClusters();showToast('📅 Datum gespeichert!','success')}}
+}
+function renderFundingList(){
+  var k=KIDS[ACT],el=qs('fundingList');if(!el)return;
+  if(fundingItems.length===0){el.innerHTML='<div style="text-align:center;padding:15px;color:var(--t3);font-size:12px;font-weight:600">Noch kein Funding erstellt.<br>Lass Familie & Freunde mitsparen!</div>';return}
+  el.innerHTML=fundingItems.map(function(f,i){
+    var pct=f.goal>0?Math.min(100,Math.round(f.raised/f.goal*100)):0;
+    return '<div style="background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:9px">'+
+      '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5px">'+
+        '<div><div style="font-size:13px;font-weight:800;color:var(--t1)">'+f.name+'</div>'+
+        (f.desc?'<div style="font-size:11px;color:var(--t2);font-weight:600;margin-top:1px">'+f.desc+'</div>':'')+
+        '</div><div class="bdg bpk">'+eu(f.goal)+'</div>'+
+      '</div>'+
+      '<div class="fund-bar"><div class="fund-fill" style="width:'+pct+'%"></div></div>'+
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:9px">'+
+        '<span style="font-size:11px;font-weight:700;color:var(--green2)">'+eu(f.raised)+' gesammelt</span>'+
+        '<span style="font-size:9px;font-weight:700;color:var(--t3)">'+pct+'% · '+eu(f.goal-f.raised)+' fehlen</span>'+
+      '</div>'+
+      '<div style="display:flex;gap:6px">'+
+        '<button onclick="fundContrib('+i+')" class="btn bb" style="flex:1;padding:8px;font-size:11px">💝 Spenden</button>'+
+        '<button onclick="copyFundLink('+i+')" class="btn bgh" style="flex:1;padding:8px;font-size:11px;border-radius:50px">🔗 Teilen</button>'+
+      '</div></div>';
+  }).join('');
+}
+function renderFamFeed(){
+  var k=KIDS[ACT],el=qs('famFeed');if(!el)return;
+  var elapsed=Math.max(0,(Date.now()-new Date(k.started).getTime())/(1000*60*60*24*30.44));
+  var saved=k.extra+elapsed*k.monthly;
+  var posts=[{n:k.pName||'Eltern',e:emj(k.gender),txt:'🌟 Sparplan für '+k.name+' läuft! Schon '+eu(saved)+' angespart.',t:'Gerade eben',likes:3,liked:false}].concat(
+    famComments.slice(-4).map(function(c){return {n:c.name,e:'👤',txt:c.text,t:c.time,likes:0,liked:false}})
+  );
+  el.innerHTML=posts.map(function(p,i){
+    return '<div style="background:white;border:1.5px solid var(--border);border-radius:var(--r);margin-bottom:9px;overflow:hidden">'+
+      '<div style="padding:11px 13px 7px;display:flex;align-items:center;gap:9px">'+
+        '<div style="width:33px;height:33px;border-radius:50%;background:var(--brand-s);border:1.5px solid var(--brand-m);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0">'+p.e+'</div>'+
+        '<div style="flex:1"><div style="font-size:12px;font-weight:800">'+p.n+'</div><div style="font-size:9px;color:var(--t3);font-weight:600">'+p.t+'</div></div>'+
+      '</div>'+
+      '<div style="padding:0 13px 9px;font-size:12px;color:var(--t2);line-height:1.65;font-weight:600">'+p.txt+'</div>'+
+      '<div style="padding:7px 13px 11px;display:flex;gap:13px;border-top:1.5px solid var(--border)">'+
+        '<button onclick="likeFP(this)" class="'+(p.liked?'liked':'')+'" style="background:none;border:none;cursor:pointer;font-size:12px;font-weight:800;color:'+(p.liked?'var(--pink)':'var(--t3)')+';display:flex;align-items:center;gap:4px;font-family:var(--body)">♥ '+p.likes+'</button>'+
+        '<button style="background:none;border:none;cursor:pointer;font-size:12px;font-weight:800;color:var(--t3);font-family:var(--body)" onclick="qs(\'famComment\').focus()">💬 Antworten</button>'+
+      '</div></div>';
+  }).join('');
+}
+function likeFP(btn){btn.classList.toggle('liked');var parts=btn.textContent.trim().split(' '),n=parseInt(parts[1])||0;btn.textContent='♥ '+(btn.classList.contains('liked')?n+1:Math.max(0,n-1));btn.style.color=btn.classList.contains('liked')?'var(--pink)':'var(--t3)'}
+function postComment(){
+  var inp=qs('famComment');if(!inp||!inp.value.trim())return;
+  var k=KIDS[ACT];famComments.push({name:k?k.pName||'Eltern':'Eltern',text:inp.value.trim(),time:'Gerade eben'});
+  inp.value='';save();renderFamFeed();
+}
+
+// ═══ ELI ═══
+function renderEli(){
+  if(eliHistory.length===0){
+    var k=KIDS[ACT];var yrs=k?Math.max(1,18-cAge(k.birth)):18;
+    addEliToChat('Hallo! Ich bin Eli 🤖 — dein KI-Investmentbanker.\n\n'+(k?'Plan für <strong>'+k.name+'</strong>: €'+k.monthly+'/Mo → <strong>'+eu(fv(k.monthly,yrs))+'</strong> mit 18.':'Erstelle ein Profil um loszulegen.')+'\n\nWie kann ich helfen?');
+  }
+}
+function eliChip(txt){goTab('eli',4);var inp=qs('eliInp');if(inp)inp.value=txt;setTimeout(eliSend,300)}
+function eliSend(){
+  var inp=qs('eliInp');if(!inp)return;var txt=inp.value.trim();if(!txt)return;
+  checkPro('eli',function(){
+  inp.value='';
+  addUserToChat(txt);eliHistory.push({role:'user',content:txt});
+  showEliTyping();unlockBadge('eli_chat');
+  var k=KIDS[ACT];
+  var sys='Du bist Eli, freundlicher KI-Investmentbanker für BabyWealth. Antworte auf Sprache: '+eliLang+'. Kind: '+(k?k.name+', '+cAge(k.birth)+' Jahre, monatl. '+eu(k.monthly):'unbekannt')+'. Kompetent, ermutigend, max 4 Sätze, nutze konkrete Zahlen.';
+  fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:500,system:sys,messages:eliHistory.slice(-8)})})
+  .then(function(r){return r.json()}).then(function(d){
+    removeEliTyping();var reply=d.content&&d.content[0]?d.content[0].text:'Kurze Pause.';
+    addEliToChat(reply);eliHistory.push({role:'assistant',content:reply});
+  }).catch(function(){removeEliTyping();addEliToChat('Kurze Pause 🤖 — Tipp: '+WISSEN[Math.floor(Math.random()*WISSEN.length)])});
+});}
+function addEliToChat(txt){var m=qs('eliMsgs');if(!m)return;var el=document.createElement('div');el.className='msg';el.innerHTML='<div class="av-eli">Eli</div><div><div class="bub">'+txt.replace(/\n/g,'<br>')+'</div></div>';m.appendChild(el);m.scrollTop=m.scrollHeight}
+function addUserToChat(txt){var m=qs('eliMsgs');if(!m)return;var el=document.createElement('div');el.className='msg user';el.innerHTML='<div class="av-usr">👤</div><div><div class="bub">'+txt+'</div></div>';m.appendChild(el);m.scrollTop=m.scrollHeight}
+function showEliTyping(){var m=qs('eliMsgs');if(!m)return;var el=document.createElement('div');el.className='msg';el.id='eliTyp';el.innerHTML='<div class="av-eli">Eli</div><div><div class="bub"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div></div>';m.appendChild(el);m.scrollTop=m.scrollHeight}
+function removeEliTyping(){var el=qs('eliTyp');if(el&&el.parentNode)el.parentNode.removeChild(el)}
+
+// ═══ FÖRDERUNG ═══
+function renderFoerd(){
+  var k=KIDS[ACT];if(!k)return;
+  var age=cAge(k.birth),total=(250+age<2?1200:0)*12;
+  var g=k.gender,grad=g==='f'?'linear-gradient(135deg,#ff6fab,#e0417e)':g==='m'?'linear-gradient(135deg,#3b9eff,#1a7ee0)':'linear-gradient(135deg,#22c87a,#15a35f)';
+  var fh=qs('foerdHero');if(fh)fh.style.background=grad;
+  if(qs('foerdTotal'))qs('foerdTotal').textContent=eu(total);
+  var foerds=[
+    {ico:'👶',name:'Kindergeld',amt:'€250/Mo',desc:'Ab Geburt bis 25 (in Ausbildung). ETF-Tipp: €250/Mo @7% = <strong>€113.000!</strong>',color:'var(--brand)'},
+    {ico:'👩‍👦',name:'Elterngeld',amt:'€300–1.800/Mo',desc:'12–14 Monate. 65–67% Nettolohn. ElterngeldPlus = 24 Monate!',color:'var(--pink2)'},
+    {ico:'🏫',name:'Kita & Steuer',amt:'Bis €4.000/J',desc:'2/3 der Kita-Kosten absetzbar. Berlin fast kostenlos.',color:'var(--amber)'},
+    {ico:'🎁',name:'Kinderzuschlag',amt:'Bis €250/Mo',desc:'Familienkasse Antrag stellen — viele verpassen das!',color:'var(--green2)'},
+    {ico:'🚌',name:'ÖPNV kostenlos',amt:'Gratis',desc:'Kinder bis 6 Jahre in fast allen Städten kostenlos.',color:'var(--purple)'}
+  ];
+  var fl=qs('foerdList');
+  if(fl)fl.innerHTML=foerds.map(function(f){
+    return '<div class="card" style="padding:14px;margin-bottom:9px">'+
+      '<div style="display:flex;align-items:center;gap:10px;margin-bottom:7px">'+
+        '<span style="font-size:26px;flex-shrink:0">'+f.ico+'</span>'+
+        '<div style="flex:1"><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:13px;font-weight:800">'+f.name+'</span><span style="font-family:var(--sh);font-size:13px;color:'+f.color+'">'+f.amt+'</span></div>'+
+        '<div style="font-size:11px;color:var(--t2);font-weight:600;margin-top:2px;line-height:1.5">'+f.desc+'</div></div>'+
+      '</div>'+
+      '<button onclick="eliChip(\'Erkläre '+f.name+' im Detail und Optimierungs-Strategie\')" class="btn bgh" style="width:100%;padding:8px;font-size:10px;border-radius:50px;margin-top:4px">🤖 Eli: '+f.name+' optimieren →</button>'+
+    '</div>';
+  }).join('');
+}
+
+// ═══ EINSTELLUNGEN ═══
+function renderSettings(){
+  var k=KIDS[ACT];if(!k)return;
+  var pct=Math.min(100,Math.round(streakData.count/30*100));
+  if(qs('streakBar'))qs('streakBar').style.width=pct+'%';
+  if(qs('streakCount'))qs('streakCount').textContent=streakData.count+' 🔥';
+  var bg=qs('badgesGrid');
+  if(bg){var badges=k.badges||BADGES_DEF;bg.innerHTML=badges.map(function(b){return '<div style="display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer" onclick="showBadgeDetail(\''+b.name+'\',\''+b.desc+'\',\''+b.ico+'\','+b.unlocked+')"><div style="width:50px;height:50px;border-radius:50%;background:'+(b.unlocked?'var(--brand-s)':'var(--bg2)')+';border:2px solid '+(b.unlocked?'var(--brand)':'var(--border2)')+';display:flex;align-items:center;justify-content:center;font-size:22px;'+(b.unlocked?'box-shadow:0 3px 12px var(--brand-m)':'filter:grayscale(.7);opacity:.45')+'">'+b.ico+'</div><div style="font-size:7px;font-weight:800;color:'+(b.unlocked?'var(--brand)':'var(--t3)')+';text-align:center;max-width:52px;line-height:1.2">'+b.name+'</div></div>'}).join('')}
+  var nl=qs('notifList');
+  if(nl){var notifs=[{k:'tips',l:'💰 Spar-Tipps'},{k:'milestones',l:'🏆 Meilenstein-Alerts'},{k:'offers',l:'🛒 Angebote'},{k:'reminders',l:'📅 Tägliche Erinnerung'}];nl.innerHTML=notifs.map(function(n){var on=notifSettings[n.k];return '<div style="display:flex;align-items:center;justify-content:space-between;padding:10px;background:var(--bg);border-radius:var(--rs);border:1.5px solid var(--border);margin-bottom:6px"><span style="font-size:12px;font-weight:800">'+n.l+'</span><button onclick="toggleNotif(\''+n.k+'\',this)" class="tgl '+(on?'tgl-on':'tgl-off')+'"><div class="tgl-k"></div></button></div>'}).join('')}
+  var sk=qs('settingsKids');if(sk){sk.innerHTML=KIDS.map(function(ki,i){return '<div class="'+(i===ACT?'cb':'')+' card" style="padding:13px;margin-bottom:8px;cursor:pointer;border-radius:var(--r)" onclick="switchKid('+i+')"><div style="display:flex;align-items:center;gap:10px"><div style="font-size:28px">'+emj(ki.gender)+'</div><div style="flex:1"><div style="font-family:var(--sh);font-size:15px;color:'+(i===ACT?'var(--brand)':'var(--t1)')+'">'+ki.name+'</div><div style="font-size:9px;color:var(--t3);font-weight:600">'+cAge(ki.birth)+' J · '+eu(ki.monthly)+'/Mo</div></div>'+(i===ACT?'<div class="bdg bb2">Aktiv</div>':'')+'</div></div>'}).join('')}
+}
+function toggleNotif(k,btn){notifSettings[k]=!notifSettings[k];save();var on=notifSettings[k];btn.className='tgl '+(on?'tgl-on':'tgl-off');showToast(on?'🔔 Aktiviert':'🔕 Deaktiviert','info')}
+function setLang(lang,btn){document.querySelectorAll('.lang-b').forEach(function(b){b.classList.remove('on')});if(btn)btn.classList.add('on');showToast('🌍 '+lang.toUpperCase(),'info')}
+function switchKid(i){ACT=i;save();setBrand(KIDS[i].gender);renderAll()}
+function showBadgeDetail(name,desc,ico,unlocked){qs('gPopEmoji').textContent=ico;qs('gPopTitle').textContent=name;qs('gPopText').textContent=unlocked?desc+' — Badge freigeschaltet! 🎉':'Noch nicht: '+desc;qs('gamPop').style.display='flex'}
+function closeGamPop(){qs('gamPop').style.display='none'}
+function unlockBadge(id){var k=KIDS[ACT];if(!k||!k.badges)return;var b=k.badges.find(function(x){return x.id===id});if(b&&!b.unlocked){b.unlocked=true;save();showGamPop('🏅 Badge freigeschaltet!',b.ico+' <strong>'+b.name+'</strong>',b.ico);spawnConfetti()}}
+function showGamPop(title,text,emoji){qs('gPopEmoji').textContent=emoji||'🎉';qs('gPopTitle').textContent=title;qs('gPopText').innerHTML=text;qs('gamPop').style.display='flex';spawnConfetti()}
+
+// ═══ STREAK ═══
+function updateStreak(){
+  var today=new Date().toISOString().split('T')[0];if(streakData.lastDate===today)return;
+  var yest=new Date(Date.now()-86400000).toISOString().split('T')[0];
+  if(streakData.lastDate===yest)streakData.count++;else streakData.count=1;
+  streakData.lastDate=today;save();if(streakData.count>=7)unlockBadge('week_streak');
+}
+
+// ═══ DEPOSIT ═══
+function openDeposit(){
+  var k=KIDS[ACT];if(!k)return;selJarIdx=0;
+  var jl=qs('jarChoice');
+  if(jl)jl.innerHTML=(k.jars||[]).map(function(j,i){return '<button id="jch'+i+'" onclick="selJar('+i+')" style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 11px;background:'+(i===0?'var(--brand-s)':'var(--bg)')+';border:1.5px solid '+(i===0?'var(--brand)':'var(--border)')+';border-radius:11px;cursor:pointer;min-width:60px;font-family:var(--body)"><span style="font-size:17px">'+j.e+'</span><span style="font-size:8px;font-weight:800;color:var(--t2)">'+j.n+'</span></button>'}).join('');
+  qs('depositMod').style.display='flex';
+}
+function openDepForJar(idx){selJarIdx=idx;openDeposit();setTimeout(function(){selJar(idx)},50)}
+function selJar(i){selJarIdx=i;var k=KIDS[ACT];if(!k)return;(k.jars||[]).forEach(function(j,idx){var b=qs('jch'+idx);if(b){b.style.borderColor=idx===i?'var(--brand)':'var(--border)';b.style.background=idx===i?'var(--brand-s)':'var(--bg)'}})}
+function setDep(v){var i=qs('depAmt');if(i)i.value=v}
+function confirmDep(){
+  var inp=qs('depAmt'),val=parseFloat(inp?inp.value:0)||0;if(val<=0)return;
+  var k=KIDS[ACT];if(!k)return;
+  k.extra+=val;if(k.jars&&k.jars[selJarIdx]){k.jars[selJarIdx].s+=val;if(k.jars[selJarIdx].s>=k.jars[selJarIdx].g)unlockBadge('jar_full')}
+  save();closeDeposit();renderHome();
+  unlockBadge('first_save');if((k.extra||0)>=1000)unlockBadge('big_save');
+  if(!k.challengeDays)k.challengeDays=[];
+  var td=new Date().toISOString().split('T')[0];
+  if(k.challengeDays.indexOf(td)<0){k.challengeDays.push(td);save()}
+  if((k.challengeDays||[]).length>=30)unlockBadge('euro_challenge');
+  showGamPop('💰 Eingezahlt!',eu(val)+' für '+k.name+' gespart! 🎉','💰');
+}
+function paypalDep(){
+  var inp=qs('depAmt'),val=parseFloat(inp?inp.value:0)||0;
+  if(val<=0){showToast('Betrag eingeben','error');return}
+  showToast('🅿️ PayPal wird geöffnet…','info');
+  setTimeout(function(){
+    window.open('https://www.paypal.com/paypalme/babywealth/'+val,'_blank');
+    confirmDep();
+  },800);
+}
+function closeDeposit(){qs('depositMod').style.display='none'}
+
+// ═══ ADD JAR ═══
+function openAddJar(){
+  var pr=qs('jarPresets');
+  if(pr)pr.innerHTML=JAR_PRESETS.map(function(p,i){return '<button id="jp'+i+'" onclick="pickJarPreset('+i+')" style="padding:7px 3px;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px"><span style="font-size:17px">'+p.e+'</span><span style="font-size:8px;font-weight:800;color:var(--t2)">'+p.n+'</span></button>'}).join('');
+  qs('addJarMod').style.display='flex';
+}
+function pickJarPreset(i){var p=JAR_PRESETS[i];var jn=qs('jarName'),jg=qs('jarGoal');if(jn)jn.value=p.n;if(jg)jg.value=p.g;document.querySelectorAll('[id^="jp"]').forEach(function(b){b.style.borderColor='var(--border)';b.style.background='var(--bg)'});var b=qs('jp'+i);if(b){b.style.borderColor='var(--brand)';b.style.background='var(--brand-s)'}}
+function confirmAddJar(){
+  var jn=qs('jarName'),jg=qs('jarGoal');var name=(jn?jn.value.trim():'')||'Neues Ziel',goal=parseFloat(jg?jg.value:0)||0;
+  var k=KIDS[ACT];if(!k)return;if(!k.jars)k.jars=[];
+  var emojis=['🎯','💫','🌟','🎪','🎨','🏆'],cols=['#3b9eff','#22c87a','#f59e0b','#f472b6','#8b5cf6'];
+  k.jars.push({id:'j'+Date.now(),n:name,e:emojis[k.jars.length%emojis.length],c:cols[k.jars.length%cols.length],g:goal,s:0});
+  save();closeAddJar();renderHome();showToast('🏺 "'+name+'" erstellt!','success');
+}
+function closeAddJar(){qs('addJarMod').style.display='none'}
+
+// ═══ EXPENSES ═══
+function openExpMod(catId,catName,shopName){
+  _curExpCat=catId;
+  var k=KIDS[ACT];if(!k)return;
+  if(qs('expModTitle'))qs('expModTitle').textContent=catName;
+  if(qs('expModShop'))qs('expModShop').textContent=shopName?'@ '+shopName:'';
+  var ex=k.expenses&&k.expenses[catId]!==undefined?k.expenses[catId]:'';
+  var inp=qs('expAmt');if(inp)inp.value=ex;
+  qs('expMod').style.display='flex';setTimeout(function(){if(inp)inp.focus()},200);
+}
+function closeExpMod(){qs('expMod').style.display='none'}
+function setExp(v){var i=qs('expAmt');if(i)i.value=v}
+function confirmExp(){
+  var inp=qs('expAmt'),val=parseFloat(inp?inp.value:0)||0;
+  var k=KIDS[ACT];if(!k)return;if(!k.expenses)k.expenses={};k.expenses[_curExpCat]=val;
+  save();closeExpMod();renderAusgaben();showToast('✅ Gespeichert!','success');
+}
+
+// ═══ SHOP MODAL ═══
+function openShopMod(){
+  var STARTER=[
+    {ico:'🛒',n:'Kinderwagen',avg:600,t:'Joie/Chicco ab €250 · Kleinanzeigen bis 70% günstiger',c:'var(--brand)'},
+    {ico:'🛏️',n:'Babybett + Matratze',avg:280,t:'Ikea Sniglar €60 + Kokosmatratze €90 · gebraucht ab €40',c:'var(--green2)'},
+    {ico:'🧷',n:'Windeln (3 Monate)',avg:90,t:'DM-Abo 5% Rabatt · Pampers Jumbo-Pack',c:'#e03'},
+    {ico:'🚗',n:'Babyschale 0-18 Mo',avg:220,t:'Maxi-Cosi Pebble 360 · Kleinanzeigen ab €80',c:'var(--amber)'},
+    {ico:'👕',n:'Erstlingskleidung',avg:150,t:'H&M + Vinted + Kleinanzeigen · 70% günstiger',c:'var(--pink2)'},
+    {ico:'📱',n:'Babyphone',avg:85,t:'Philips DECT Avent · Gebraucht ab €30',c:'var(--purple)'},
+    {ico:'🛁',n:'Babywanne',avg:65,t:'Tummy Tub faltbar · Kleinanzeigen ab €10',c:'var(--brand)'},
+    {ico:'🍼',n:'Flaschen & Milchpumpe',avg:130,t:'Medela Swing gebraucht · Avent Natural Flaschen',c:'var(--green2)'},
+    {ico:'🪑',n:'Hochstuhl',avg:160,t:'Ikea Antilop €25 · TRIPP TRAPP gebraucht ab €50',c:'var(--amber)'},
+    {ico:'🧸',n:'Erstes Spielzeug-Set',avg:80,t:'Greifling + Rassel + Mobile · DM/Lidl günstig',c:'var(--purple)'},
+    {ico:'💊',n:'Erste-Hilfe Ausstattung',avg:55,t:'Fieberthermometer + Nasensauger + Zeckenzange',c:'var(--red)'},
+    {ico:'📚',n:'Erstlage Babybücher',avg:40,t:'Pappbilderbücher · 4-5 Stück reichen am Anfang',c:'var(--brand)'},
+    {ico:'🧴',n:'Pflege-Set (3 Mo)',avg:45,t:'DM Eigenmarke = gleiche Qualität, 60% günstiger',c:'#e03'},
+    {ico:'🎒',n:'Wickeltasche',avg:60,t:'Kipling/Samsonite · oder Rucksack von Kleinanzeigen',c:'var(--amber)'},
+    {ico:'🌡️',n:'Badethermometer',avg:15,t:'Wichtig für Badewassertemperatur 37°C',c:'var(--green2)'},
+    {ico:'💺',n:'Schaukelstuhl / Wippe',avg:120,t:'BabyBjörn Wippe · gebraucht ab €30',c:'var(--purple)'}
+  ];
+  var sl=qs('shopModList');
+  if(sl)sl.innerHTML=STARTER.map(function(item){return '<div class="shop-item" style="--item-color:'+item.c+'"><div style="width:34px;height:34px;border-radius:10px;background:'+item.c+'18;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0">'+item.ico+'</div><div style="flex:1"><div style="font-size:12px;font-weight:800;color:var(--t1)">'+item.n+'</div><div style="font-size:9px;color:'+item.c+';font-weight:700;margin-top:1px">💡 '+item.t+'</div></div><div style="font-family:var(--sh);font-size:13px;color:var(--t1)">Ø '+eu(item.avg)+'</div></div>'}).join('');
+  qs('shopMod').style.display='flex';
+}
+function closeShopMod(){qs('shopMod').style.display='none'}
+
+// ═══ FUNDING ═══
+function openFundingModal(){qs('fundingMod').style.display='flex'}
+function closeFundingMod(){qs('fundingMod').style.display='none'}
+function confirmFunding(){
+  var fn=qs('fundName'),fa=qs('fundAmt'),fd=qs('fundDesc');
+  if(!fn||!fn.value.trim()||!fa||!fa.value){showToast('Bitte Name und Betrag!','error');return}
+  fundingItems.push({name:fn.value.trim(),goal:parseFloat(fa.value)||300,raised:0,desc:fd?fd.value.trim():'',created:new Date().toLocaleDateString('de-DE')});
+  fn.value='';fa.value='';if(fd)fd.value='';
+  save();closeFundingMod();renderFundingList();unlockBadge('funding');
+  showGamPop('💝 Funding erstellt!','Teile den Link mit Familie & Freunden!','💝');
+}
+function fundContrib(i){var amt=parseFloat(prompt('Wie viel spenden? (€)')||0);if(amt>0){fundingItems[i].raised+=amt;save();renderFundingList();showToast('💝 Danke! '+eu(amt)+' gespendet!','success');spawnConfetti()}}
+function copyFundLink(i){var link='https://babywealth.app/fund/'+Math.random().toString(36).slice(2,7).toUpperCase();if(navigator.clipboard)navigator.clipboard.writeText(link).then(function(){showToast('🔗 Link kopiert!','success')});else showToast('Link: '+link,'info')}
+
+// ═══ AVATAR & PHOTOS ═══
+function openAvatarModal(){qs('avMod').style.display='flex'}
+function closeAvMod(){qs('avMod').style.display='none'}
+function pickEmoji(el,emoji){pickedEmoji=emoji;selectedAvatarImg='';document.querySelectorAll('.epc').forEach(function(e){e.classList.remove('on')});el.classList.add('on')}
+function handleAvatarFile(input){var file=input.files[0];if(!file)return;var reader=new FileReader();reader.onload=function(e){selectedAvatarImg=e.target.result;showToast('📷 Foto geladen!','success')};reader.readAsDataURL(file)}
+function confirmAvatar(){var k=KIDS[ACT];if(!k)return;k.avatarEmoji=pickedEmoji;if(selectedAvatarImg)k.avatarImg=selectedAvatarImg;save();closeAvMod();syncAvatars(k)}
+function addPhoto(){qs('filePhoto').click()}
+function addPhotoForMs(label){var inp=qs('filePhoto');if(inp){inp._msLabel=label;inp.click()}}
+function handlePhotoFile(input){
+  var file=input.files[0];if(!file)return;
+  var reader=new FileReader();
+  reader.onload=function(e){
+    var k=KIDS[ACT];if(!k)return;if(!k.photos)k.photos=[];if(!k.stories)k.stories=[];
+    var label=input._msLabel||new Date().toLocaleDateString('de-DE',{day:'2-digit',month:'short',year:'numeric'});
+    input._msLabel=null;
+    k.photos.push(e.target.result);k.stories.push({src:e.target.result,label:label,date:new Date().toISOString()});
+    save();renderHome();renderProfil();unlockBadge('photo_1');showToast('📸 Gespeichert!','success');spawnConfetti();
+  };reader.readAsDataURL(file);
+}
+function removePhoto(i){var k=KIDS[ACT];if(!k)return;(k.photos||[]).splice(i,1);(k.stories||[]).splice(i,1);save();renderProfil()}
+function viewMemory(label,src){if(src){var w=window.open('','_blank','width=400,height=600');if(w)w.document.write('<html><body style="margin:0;background:#000;display:flex;align-items:center;justify-content:center;height:100vh"><img src="'+src+'" style="max-width:100%;max-height:100%;border-radius:12px"><p style="position:fixed;bottom:20px;color:white;font-family:sans-serif;text-align:center;width:100%">'+label+'</p></body></html>')}else showToast('📸 '+label,'info')}
+
+
+// SHOP ITEM MANAGEMENT
+function openAddShopItemMod(){var s=qs('addShopMod');if(s)s.style.display='flex'}
+function closeAddShopMod(){var s=qs('addShopMod');if(s)s.style.display='none'}
+function confirmAddShopItem(){
+  var sid=qs('newShopSel').value;
+  var ico=(qs('newItemIco').value||'🛒').trim();
+  var name=(qs('newItemName').value||'').trim();
+  var avg=parseFloat(qs('newItemAvg').value)||10;
+  if(!name){showToast('Bitte Name eingeben','error');return}
+  var shop=SHOPS.find(function(s){return s.id===sid});if(!shop)return;
+  shop.items.push({id:'c_'+Date.now(),name:name,ico:ico,avg:avg,custom:true});
+  closeAddShopMod();setActiveShop(sid);showToast('✅ "'+name+'" hinzugefügt!','success');
+}
+function removeShopItem(ev,shopId,itemId){
+  ev.stopPropagation();
+  var shop=SHOPS.find(function(s){return s.id===shopId});if(!shop)return;
+  shop.items=shop.items.filter(function(it){return it.id!==itemId});
+  renderShopTabs();showToast('Gelöscht','info');
+}
+function shareJar(idx,ev){
+  ev.stopPropagation();
+  var k=KIDS[ACT];if(!k||!k.jars||!k.jars[idx])return;
+  var jar=k.jars[idx];
+  var link='https://babywealth.app/jar/'+Math.random().toString(36).slice(2,7).toUpperCase();
+  var msg='Hey! Ihr könnt in '+k.name+'s Spardose "'+jar.n+'" einzahlen — Ziel: '+eu(jar.g)+'. Link: '+link;
+  if(navigator.share){navigator.share({title:k.name+'s Spardose: '+jar.n,text:msg,url:link})}
+  else if(navigator.clipboard){navigator.clipboard.writeText(link).then(function(){showToast('🔗 Link für "'+jar.n+'" kopiert!','success')})}
+  else{showToast('Link: '+link,'info')}
+  unlockBadge('family_jar');
+}
+function openMsFunding(label,cost){
+  var k=KIDS[ACT];if(!k)return;
+  var fn=qs('fundName'),fa=qs('fundAmt'),fd=qs('fundDesc');
+  if(fn)fn.value=label+' für '+k.name;
+  if(fa)fa.value=cost;
+  if(fd)fd.value='Hey! Wir sparen gemeinsam für "'+label+'". Jeder Euro hilft! 💛';
+  qs('fundingMod').style.display='flex';
+}
+// ═══ FAMILY ═══
+function openFamilyInvite(){var link='https://babywealth.app/family/'+Math.random().toString(36).slice(2,8).toUpperCase();if(qs('famLink'))qs('famLink').textContent=link;qs('famMod').style.display='flex';unlockBadge('family')}
+function closeFamMod(){qs('famMod').style.display='none'}
+function copyFamLink(){var lnk=qs('famLink');if(!lnk)return;if(navigator.clipboard)navigator.clipboard.writeText(lnk.textContent).then(function(){showToast('🔗 Kopiert!','success')});else showToast('Link: '+lnk.textContent,'info')}
+function doShare(){if(navigator.share&&KIDS[ACT])navigator.share({title:'BabyWealth — '+KIDS[ACT].name,text:'So wächst unser Sparplan!',url:'https://babywealth.app'});else showToast('📤 Teilen!','info')}
+function doReset(){if(!confirm('Alle Daten wirklich löschen?'))return;KIDS=[];ACT=0;famComments=[];fundingItems=[];localStorage.clear();showS('sLand')}
+
+
+// ═══ PAYWALL & STRIPE ═══
+var selectedPlan='monthly';
+var proUser=localStorage.getItem('bw8pro')==='true';
+var eliMsgCount=0;
+
+function checkPro(feature,callback){
+  if(proUser){callback();return}
+  // Free limits
+  var limits={eli:3,photos:5,funding:1,sparplan:true};
+  if(feature==='eli'){eliMsgCount++;if(eliMsgCount<=3){callback();return}else{openPaywall('Eli unbegrenzt nutzen');return}}
+  if(feature==='photo'){var k=KIDS[ACT];if(!k||(k.photos||[]).length<5){callback();return}else{openPaywall('Unbegrenzte Fotos speichern');return}}
+  callback();// other features free for now
+}
+function openPaywall(reason){
+  var mod=qs('paywallMod');if(!mod)return;
+  mod.style.display='flex';
+}
+function closePaywall(){var mod=qs('paywallMod');if(mod)mod.style.display='none'}
+function selectPlan(plan){
+  selectedPlan=plan;
+  var m=qs('planMonthly'),y=qs('planYearly');
+  if(m)m.style.borderColor=plan==='monthly'?'var(--brand)':'var(--border)';
+  if(m)m.style.background=plan==='monthly'?'var(--brand-s)':'white';
+  if(y)y.style.borderColor=plan==='yearly'?'var(--brand)':'var(--border)';
+  if(y)y.style.background=plan==='yearly'?'var(--brand-s)':'white';
+}
+function startCheckout(method){
+  var price=selectedPlan==='monthly'?9.99:79.99;
+  showToast('Verbinde mit '+method+'...','info');
+  // PRODUCTION: Replace with real Stripe Checkout URL
+  // window.location.href = 'https://checkout.stripe.com/pay/cs_live_...';
+  setTimeout(function(){
+    // Simulate successful payment for demo
+    proUser=true;localStorage.setItem('bw8pro','true');
+    closePaywall();spawnConfetti();
+    showGamPop('🎉 BabyWealth Pro!','Willkommen im Premium-Club! Alle Features entsperrt.','💎');
+    showToast('✅ Zahlung erfolgreich! Pro aktiviert.','success');
+  },1500);
+}
+// ═══ INIT ═══
+load();
+renderLanding();
+if(KIDS.length>0&&KIDS[ACT]){setBrand(KIDS[ACT].gender);goApp()}
+</script>
+</body>
+</html>
