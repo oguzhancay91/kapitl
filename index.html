@@ -1,0 +1,1904 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#fff5f8">
+<title>BabyWealth — Dein Investmentbanker für dein Kind</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,600;0,700;0,800;0,900;1,700&family=Fredoka+One&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════
+   DESIGN TOKENS — Soft Baby Fintech
+══════════════════════════════════════ */
+:root {
+  /* Backgrounds */
+  --sky:    #e8f4fd;
+  --cloud:  #ffffff;
+  --cream:  #fffbf5;
+  --blush:  #fff0f5;
+  --mint:   #f0fdf6;
+
+  /* Brand */
+  --blue:   #4a9ede;
+  --blue2:  #2d7fc4;
+  --pink:   #f06292;
+  --pink2:  #e91e8c;
+  --gold:   #ffb300;
+  --gold2:  #ff8f00;
+  --green:  #43c97e;
+  --green2: #2e9e5e;
+  --lav:    #a78bda;
+  --peach:  #ff8a65;
+
+  /* Text */
+  --text:   #1a2744;
+  --sub:    #4a6080;
+  --muted:  #8aa4c0;
+  --dim:    #c8dae8;
+
+  /* UI */
+  --rad:    20px;
+  --rads:   14px;
+  --shadow: 0 4px 24px rgba(74,158,222,.12);
+  --shadowp:0 6px 28px rgba(240,98,146,.16);
+  --shadowg:0 4px 20px rgba(67,201,126,.15);
+
+  /* Fonts */
+  --fd: 'Fredoka One', cursive;
+  --nu: 'Nunito', sans-serif;
+  --mo: 'DM Mono', monospace;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{
+  height:100%;overflow:hidden;
+  background:var(--sky);
+  color:var(--text);
+  font-family:var(--nu);
+  -webkit-font-smoothing:antialiased;
+  -webkit-tap-highlight-color:transparent;
+}
+
+/* ── SCREENS ── */
+.screen{display:none;flex-direction:column;height:100dvh;position:relative;z-index:1;}
+.screen.on{display:flex;}
+
+/* ── SCROLLABLE ── */
+.scr{overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;flex:1;}
+.scr::-webkit-scrollbar{width:3px;}
+.scr::-webkit-scrollbar-thumb{background:var(--dim);border-radius:2px;}
+
+/* ── KEYFRAMES ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+@keyframes pop{0%{transform:scale(.7);opacity:0}70%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes float2{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-6px) rotate(2deg)}}
+@keyframes wobble{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes heartbeat{0%,100%{transform:scale(1)}15%{transform:scale(1.2)}30%{transform:scale(1)}}
+@keyframes sparkle{0%{opacity:0;transform:scale(0) rotate(0deg)}50%{opacity:1;transform:scale(1.2) rotate(180deg)}100%{opacity:0;transform:scale(0) rotate(360deg)}}
+@keyframes slideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes fillBar{from{width:0}to{width:var(--target)}}
+@keyframes coinDrop{0%{transform:translateY(-30px) scale(.5);opacity:0}60%{transform:translateY(4px) scale(1.1);opacity:1}100%{transform:translateY(0) scale(1);opacity:1}}
+@keyframes ripple{0%{transform:scale(0);opacity:.6}100%{transform:scale(4);opacity:0}}
+@keyframes rainbow{0%{filter:hue-rotate(0deg)}100%{filter:hue-rotate(360deg)}}
+@keyframes confetti{0%{transform:translateY(-10px) rotate(0deg);opacity:1}100%{transform:translateY(60px) rotate(720deg);opacity:0}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(74,158,222,.4)}60%{box-shadow:0 0 0 14px rgba(74,158,222,0)}}
+
+/* ── CLOUDS DECORATION ── */
+.cloud-deco{position:fixed;pointer-events:none;opacity:.5;z-index:0;animation:float var(--dur,6s) var(--del,0s) ease-in-out infinite;}
+
+/* ── CARDS ── */
+.card{background:var(--cloud);border-radius:var(--rad);box-shadow:var(--shadow);}
+.card-pink{background:linear-gradient(135deg,#fff5f8,#ffe8f0);border:2px solid rgba(240,98,146,.15);border-radius:var(--rad);}
+.card-blue{background:linear-gradient(135deg,#f0f8ff,#e4f4fd);border:2px solid rgba(74,158,222,.2);border-radius:var(--rad);}
+.card-green{background:linear-gradient(135deg,#f0fdf6,#e2f9ed);border:2px solid rgba(67,201,126,.2);border-radius:var(--rad);}
+.card-gold{background:linear-gradient(135deg,#fffbf0,#fff3d4);border:2px solid rgba(255,179,0,.25);border-radius:var(--rad);}
+.card-lav{background:linear-gradient(135deg,#f8f5ff,#f0e8ff);border:2px solid rgba(167,139,218,.2);border-radius:var(--rad);}
+
+/* ── BUTTONS ── */
+.btn{padding:14px 24px;border:none;border-radius:50px;font-family:var(--nu);font-size:15px;font-weight:800;cursor:pointer;transition:all .18s;letter-spacing:.01em;position:relative;overflow:hidden;}
+.btn::after{content:'';position:absolute;inset:0;border-radius:inherit;background:rgba(255,255,255,.25);opacity:0;transition:opacity .15s;}
+.btn:active::after{opacity:1;}
+.btn:active{transform:scale(.97);}
+.btn-blue{background:linear-gradient(135deg,var(--blue),var(--blue2));color:white;box-shadow:0 6px 20px rgba(74,158,222,.4);}
+.btn-blue:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(74,158,222,.5);}
+.btn-pink{background:linear-gradient(135deg,var(--pink),var(--pink2));color:white;box-shadow:0 6px 20px rgba(240,98,146,.4);}
+.btn-pink:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(240,98,146,.5);}
+.btn-green{background:linear-gradient(135deg,var(--green),var(--green2));color:white;box-shadow:0 6px 20px rgba(67,201,126,.4);}
+.btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:white;box-shadow:0 6px 20px rgba(255,179,0,.4);}
+.btn-white{background:white;color:var(--blue);border:2px solid var(--dim);}
+.btn-white:hover{border-color:var(--blue);background:var(--sky);}
+
+/* ── BADGES ── */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:4px 11px;border-radius:50px;font-size:10px;font-weight:800;letter-spacing:.04em;}
+.bb{background:rgba(74,158,222,.12);color:var(--blue);border:1px solid rgba(74,158,222,.25);}
+.bp{background:rgba(240,98,146,.12);color:var(--pink);border:1px solid rgba(240,98,146,.25);}
+.bg{background:rgba(67,201,126,.12);color:var(--green);border:1px solid rgba(67,201,126,.25);}
+.bgold{background:rgba(255,179,0,.12);color:var(--gold2);border:1px solid rgba(255,179,0,.3);}
+.bl{background:rgba(167,139,218,.12);color:var(--lav);border:1px solid rgba(167,139,218,.25);}
+
+/* ── PROGRESS ── */
+.prog{height:10px;background:var(--dim);border-radius:6px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:6px;transition:width .8s cubic-bezier(.34,1.56,.64,1);}
+
+/* ── CHAT BUBBLES ── */
+.msg{display:flex;gap:10px;align-items:flex-start;animation:fadeUp .3s ease both;}
+.msg.user{flex-direction:row-reverse;}
+.av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;font-weight:900;}
+.av.eli{background:linear-gradient(135deg,var(--blue),var(--blue2));font-size:15px;color:white;font-family:var(--fd);box-shadow:0 3px 10px rgba(74,158,222,.3);}
+.av.usr{background:white;border:2px solid var(--dim);font-size:16px;}
+.bmeta{font-size:9px;color:var(--muted);margin-bottom:4px;font-weight:700;letter-spacing:.04em;}
+.msg.user .bmeta{text-align:right;}
+.bub{padding:12px 16px;font-size:13.5px;line-height:1.65;max-width:86%;border-radius:18px;font-weight:600;}
+.msg:not(.user) .bub{background:white;border:1.5px solid var(--dim);color:var(--sub);border-radius:18px 18px 18px 4px;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.msg.user .bub{background:linear-gradient(135deg,var(--blue),var(--blue2));color:white;border-radius:18px 18px 4px 18px;box-shadow:0 3px 12px rgba(74,158,222,.3);}
+.bub strong{color:var(--blue2);}
+.msg.user .bub strong{color:var(--sky);}
+.dot{display:inline-block;width:7px;height:7px;background:var(--muted);border-radius:50%;margin:0 2px;}
+.dot:nth-child(1){animation:blink .9s .0s infinite;}
+.dot:nth-child(2){animation:blink .9s .2s infinite;}
+.dot:nth-child(3){animation:blink .9s .4s infinite;}
+
+/* ── OPTION BUTTONS ── */
+.opt{width:100%;padding:13px 18px;background:white;border:2px solid var(--dim);border-radius:50px;cursor:pointer;text-align:left;font-family:var(--nu);font-size:14px;font-weight:700;color:var(--text);transition:all .18s;display:flex;align-items:center;gap:12px;box-shadow:0 2px 8px rgba(0,0,0,.05);}
+.opt:hover{border-color:var(--blue);background:var(--sky);color:var(--blue);transform:translateX(4px);box-shadow:0 4px 16px rgba(74,158,222,.2);}
+
+/* ── INPUT ── */
+.inp{width:100%;padding:15px 18px;background:white;border:2px solid var(--dim);border-radius:50px;font-size:20px;font-weight:800;color:var(--text);outline:none;font-family:var(--nu);transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.05);}
+.inp:focus{border-color:var(--blue);box-shadow:0 0 0 4px rgba(74,158,222,.12);}
+.inp::placeholder{color:var(--muted);font-size:15px;font-weight:600;}
+
+/* ── BOTTOM NAV ── */
+.nav{flex-shrink:0;background:white;border-top:2px solid var(--dim);display:grid;grid-template-columns:repeat(5,1fr);padding:6px 0 calc(6px + env(safe-area-inset-bottom));box-shadow:0 -4px 20px rgba(0,0,0,.07);}
+.nb{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 4px;background:none;border:none;cursor:pointer;color:var(--muted);transition:all .2s;font-family:var(--nu);}
+.nb.on{color:var(--blue);}
+.nb.on .ni-wrap{background:var(--sky);transform:scale(1.1);}
+.ni-wrap{width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.ni{font-size:20px;}
+.nl{font-size:9px;font-weight:800;letter-spacing:.03em;}
+
+/* ── SPARDOSE (Savings Jar) ── */
+.jar{position:relative;display:inline-flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;transition:transform .2s;}
+.jar:hover{transform:scale(1.05);}
+.jar:active{transform:scale(.97);}
+.jar-body{width:70px;height:80px;border-radius:20px 20px 16px 16px;border:3px solid rgba(0,0,0,.08);position:relative;overflow:hidden;display:flex;align-items:flex-end;box-shadow:0 4px 16px rgba(0,0,0,.1);}
+.jar-fill{width:100%;border-radius:0 0 13px 13px;transition:height 1s cubic-bezier(.34,1.56,.64,1);}
+.jar-lid{width:64px;height:14px;border-radius:50%;border:3px solid rgba(0,0,0,.08);margin-bottom:-2px;box-shadow:0 2px 6px rgba(0,0,0,.1);}
+.jar-emoji{font-size:22px;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2;}
+.jar-label{font-family:var(--nu);font-size:10px;font-weight:800;text-align:center;color:var(--sub);max-width:72px;line-height:1.3;}
+.jar-amount{font-family:var(--fd);font-size:12px;color:var(--text);}
+.jar-check{position:absolute;top:-6px;right:-6px;width:22px;height:22px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;box-shadow:0 2px 6px rgba(67,201,126,.4);animation:pop .3s ease both;}
+
+/* ── TAB CONTENT ── */
+#tabArea{flex:1;position:relative;overflow:hidden;min-height:0;}
+.tc{display:none;position:absolute;inset:0;flex-direction:column;}
+.tc.on{display:flex;}
+.tc.scr{overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.tc.scr::-webkit-scrollbar{width:3px;}
+
+/* ── CONFETTI ── */
+.confetti-piece{position:fixed;width:10px;height:10px;border-radius:2px;pointer-events:none;animation:confetti 1.5s ease-in both;}
+
+/* ── AUSGABEN CATEGORIES ── */
+.cat-bar{height:8px;background:var(--dim);border-radius:5px;overflow:hidden;margin-top:5px;}
+.cat-bar-fill{height:100%;border-radius:5px;transition:width 1s cubic-bezier(.34,1.56,.64,1);}
+.cat-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--dim);}
+.cat-row:last-child{border-bottom:none;}
+.cat-ico{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.avg-badge{font-size:9px;font-weight:800;padding:3px 8px;border-radius:20px;letter-spacing:.04em;}
+.avg-over{background:rgba(240,98,146,.15);color:var(--pink);}
+.avg-under{background:rgba(67,201,126,.15);color:var(--green2);}
+.avg-ok{background:rgba(74,158,222,.12);color:var(--blue);}
+
+/* ── SHOPPING ITEM CARD ── */
+.shop-item{display:flex;align-items:center;gap:12px;padding:12px;background:white;border-radius:16px;border:1.5px solid var(--dim);margin-bottom:8px;transition:all .2s;}
+.shop-item:hover{border-color:var(--blue);transform:translateX(2px);}
+.shop-img{width:44px;height:44px;border-radius:12px;background:var(--sky);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.deal-badge{background:linear-gradient(135deg,#ff6b35,#f7c59f);color:white;font-size:8px;font-weight:800;padding:3px 7px;border-radius:20px;letter-spacing:.04em;}
+
+/* ── FOERDERUNG CARD ── */
+.foerd-card{border-radius:18px;padding:16px;margin-bottom:10px;position:relative;overflow:hidden;}
+.foerd-amount{font-family:var(--fd);font-size:24px;margin-bottom:2px;}
+.foerd-tag{font-size:9px;font-weight:800;padding:4px 10px;border-radius:20px;display:inline-block;margin-bottom:10px;letter-spacing:.05em;}
+
+/* ── PROGNOSE ── */
+.prognose-bar{position:relative;height:44px;background:var(--sky);border-radius:12px;overflow:hidden;margin-bottom:6px;}
+.prognose-fill{height:100%;border-radius:12px;display:flex;align-items:center;padding:0 12px;transition:width 1.2s cubic-bezier(.34,1.56,.64,1);}
+
+/* ── PRINT STYLES ── */
+@media print{
+  .screen{display:block!important;height:auto!important;overflow:visible!important;}
+  .screen:not(#sPrint){display:none!important;}
+  #sPrint{display:block!important;}
+  .no-print{display:none!important;}
+  body{background:white;}
+}
+
+/* ── DEPOSIT MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.3);backdrop-filter:blur(4px);z-index:100;display:flex;align-items:flex-end;justify-content:center;}
+.modal-sheet{background:white;border-radius:28px 28px 0 0;padding:24px 20px 40px;width:100%;max-width:500px;animation:slideUp .3s cubic-bezier(.34,1.2,.64,1) both;}
+
+/* ── ELI CHAT MODAL ── */
+.eli-fab{position:fixed;bottom:calc(80px + env(safe-area-inset-bottom));right:20px;z-index:50;width:58px;height:58px;background:linear-gradient(135deg,var(--blue),var(--blue2));border-radius:50%;border:none;cursor:pointer;box-shadow:0 6px 24px rgba(74,158,222,.5);display:flex;align-items:center;justify-content:center;font-size:24px;animation:pulse 3s ease-in-out infinite;transition:transform .2s;}
+.eli-fab:hover{transform:scale(1.08);}
+.eli-fab.open{animation:none;background:linear-gradient(135deg,#f44336,#d32f2f);}
+</style>
+</head>
+<body>
+
+<!-- CLOUD DECORATIONS -->
+<div class="cloud-deco" style="top:2%;left:5%;font-size:40px;--dur:7s;--del:0s">☁️</div>
+<div class="cloud-deco" style="top:5%;right:8%;font-size:28px;--dur:9s;--del:1.5s">☁️</div>
+<div class="cloud-deco" style="top:12%;left:40%;font-size:22px;--dur:8s;--del:3s;opacity:.3">☁️</div>
+
+<!-- ═══════════════════════════
+     SCREEN: LANDING
+═══════════════════════════ -->
+<div class="screen on" id="sLanding" style="background:linear-gradient(160deg,#e8f4fd 0%,#fff5f8 50%,#f0fdf6 100%);overflow-y:auto;">
+
+  <div style="max-width:440px;margin:0 auto;width:100%;padding:44px 22px 60px;">
+
+    <!-- Logo -->
+    <div style="text-align:center;margin-bottom:32px;animation:fadeUp .5s ease both">
+      <div style="position:relative;display:inline-block;margin-bottom:16px">
+        <div style="width:80px;height:80px;background:linear-gradient(135deg,#4a9ede,#f06292);border-radius:28px;display:flex;align-items:center;justify-content:center;font-size:42px;box-shadow:0 8px 32px rgba(240,98,146,.3);animation:heartbeat 3s ease-in-out infinite;margin:0 auto">🍼</div>
+        <div style="position:absolute;top:-4px;right:-4px;width:24px;height:24px;background:var(--gold);border-radius:50%;border:2px solid white;display:flex;align-items:center;justify-content:center;font-size:12px;animation:wobble 2s ease-in-out infinite">⭐</div>
+      </div>
+      <div style="font-family:var(--fd);font-size:32px;color:var(--blue);letter-spacing:-.01em;line-height:1">Baby<span style="color:var(--pink)">Wealth</span></div>
+      <div style="font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-top:5px">Der Investmentbanker für dein Baby</div>
+    </div>
+
+    <!-- Headline -->
+    <div style="text-align:center;margin-bottom:28px;animation:fadeUp .5s .08s ease both">
+      <h1 style="font-family:var(--fd);font-size:clamp(26px,6vw,40px);line-height:1.15;color:var(--text);margin-bottom:12px">
+        Das schönste<br>Geschenk für dein<br><span style="color:var(--pink)">kleines Wunder</span> 🌟
+      </h1>
+      <p style="font-size:14px;color:var(--sub);line-height:1.75;max-width:290px;margin:0 auto">
+        Goldman Sachs verlangt €500.000 für persönliche Beratung. Wir geben deinem Kind dasselbe — <strong style="color:var(--blue)">kostenlos.</strong>
+      </p>
+    </div>
+
+    <!-- Stats -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:26px;animation:fadeUp .5s .14s ease both">
+      <div class="card" style="padding:14px;text-align:center">
+        <div style="font-family:var(--fd);font-size:22px;color:var(--blue)">€38K</div>
+        <div style="font-size:9px;color:var(--muted);font-weight:700;margin-top:3px;line-height:1.4">Mit 18<br>ab €127/Mo</div>
+      </div>
+      <div class="card" style="padding:14px;text-align:center">
+        <div style="font-family:var(--fd);font-size:22px;color:var(--green)">7%</div>
+        <div style="font-size:9px;color:var(--muted);font-weight:700;margin-top:3px;line-height:1.4">ETF<br>Rendite Ø</div>
+      </div>
+      <div class="card" style="padding:14px;text-align:center">
+        <div style="font-family:var(--fd);font-size:22px;color:var(--pink)">€4,23</div>
+        <div style="font-size:9px;color:var(--muted);font-weight:700;margin-top:3px;line-height:1.4">Pro Tag<br>reicht aus</div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div style="animation:fadeUp .5s .2s ease both;margin-bottom:24px">
+      <button onclick="goOnboarding()" class="btn btn-pink" style="width:100%;padding:18px;font-size:17px;border-radius:50px;animation:pulse 2.5s ease-in-out infinite">
+        🍼 Plan für mein Kind erstellen
+      </button>
+      <div style="text-align:center;font-size:11px;color:var(--muted);margin-top:8px;font-weight:600">Kostenlos · 3 Minuten · Kein Account nötig</div>
+    </div>
+
+    <!-- Feature cards -->
+    <div style="display:flex;flex-direction:column;gap:10px;animation:fadeUp .5s .26s ease both">
+      <div class="card-blue" style="padding:14px 16px;display:flex;align-items:center;gap:14px">
+        <div style="font-size:28px;animation:float 4s ease-in-out infinite">🎓</div>
+        <div><div style="font-weight:800;font-size:13px">Studium ohne Schulden</div><div style="font-size:11px;color:var(--muted);margin-top:1px">Kein BAföG. Kein Kredit. Nur Chancen.</div></div>
+        <div class="badge bg" style="margin-left:auto;flex-shrink:0">✓</div>
+      </div>
+      <div class="card-pink" style="padding:14px 16px;display:flex;align-items:center;gap:14px">
+        <div style="font-size:28px;animation:float 4s .5s ease-in-out infinite">🚗</div>
+        <div><div style="font-weight:800;font-size:13px">Führerschein mit 17</div><div style="font-size:11px;color:var(--muted);margin-top:1px">€3.500 bereit wenn der Tag kommt.</div></div>
+        <div class="badge bg" style="margin-left:auto;flex-shrink:0">✓</div>
+      </div>
+      <div class="card-green" style="padding:14px 16px;display:flex;align-items:center;gap:14px">
+        <div style="font-size:28px;animation:float 4s 1s ease-in-out infinite">💌</div>
+        <div><div style="font-weight:800;font-size:13px">Der Brief zum 18. Geburtstag</div><div style="font-size:11px;color:var(--muted);margin-top:1px">180 Monate Liebe — in Zahlen.</div></div>
+        <div class="badge bgold" style="margin-left:auto;flex-shrink:0">✨</div>
+      </div>
+      <div class="card-gold" style="padding:14px 16px;display:flex;align-items:center;gap:14px">
+        <div style="font-size:28px;animation:float2 5s ease-in-out infinite">🤖</div>
+        <div><div style="font-weight:800;font-size:13px">KI-Investmentbanker Eli</div><div style="font-size:11px;color:var(--muted);margin-top:1px">24/7 verfügbar · Globale Marktanalyse</div></div>
+        <div class="badge bb" style="margin-left:auto;flex-shrink:0">Live</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════
+     SCREEN: INTERVIEW
+═══════════════════════════ -->
+<div class="screen" id="sInterview" style="background:linear-gradient(160deg,#e8f4fd,#fff5f8)">
+  <div style="flex-shrink:0;padding:14px 18px 10px;background:white;border-bottom:2px solid var(--dim);box-shadow:0 2px 12px rgba(0,0,0,.06)">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:38px;height:38px;background:linear-gradient(135deg,var(--blue),var(--blue2));border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:14px;color:white;box-shadow:0 3px 10px rgba(74,158,222,.4);animation:heartbeat 3s ease-in-out infinite">Eli</div>
+        <div>
+          <div style="font-family:var(--fd);font-size:15px;color:var(--blue)">Eli · BabyWealth</div>
+          <div style="display:flex;align-items:center;gap:5px;margin-top:1px">
+            <div style="width:6px;height:6px;background:var(--green);border-radius:50%;animation:blink 2s infinite"></div>
+            <span style="font-size:9px;color:var(--muted);font-weight:700">Dein Investmentbanker · Online</span>
+          </div>
+        </div>
+      </div>
+      <div id="ivPct" style="font-family:var(--fd);font-size:20px;color:var(--pink)">0%</div>
+    </div>
+    <div class="prog"><div id="ivBar" class="prog-fill" style="width:0%;background:linear-gradient(90deg,var(--blue),var(--pink))"></div></div>
+  </div>
+  <div id="ivChat" class="scr" style="padding:16px;display:flex;flex-direction:column;gap:14px;background:linear-gradient(to bottom,#f8fbff,#fff8fb)"></div>
+  <div id="ivAns" style="padding:12px 16px 28px;flex-shrink:0;background:linear-gradient(to top,white 75%,transparent);"></div>
+</div>
+
+<!-- ═══════════════════════════
+     SCREEN: WOW
+═══════════════════════════ -->
+<div class="screen" id="sWow" style="background:linear-gradient(160deg,#e8f4fd,#fff5f8,#f0fdf6);align-items:center;justify-content:center;text-align:center;padding:40px 24px;">
+  <div id="ww" style="width:100%;max-width:360px">
+    <div id="we" style="font-size:64px;margin-bottom:18px;opacity:0;transition:opacity .7s;animation:float 4s ease-in-out infinite">🎉</div>
+    <div id="wl" style="font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px;opacity:0;transition:opacity .6s .5s">Elis Plan für</div>
+    <div id="wn" style="font-family:var(--fd);font-size:36px;color:var(--blue);margin-bottom:6px;opacity:0;transition:opacity .6s .8s">–</div>
+    <div id="ws" style="font-size:13px;color:var(--muted);margin-bottom:28px;font-weight:600;opacity:0;transition:opacity .6s 1.1s">ist fertig berechnet! 🌟</div>
+    <div id="wa" style="opacity:0;transition:opacity .8s 1.4s;margin-bottom:10px">
+      <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">Mit 18 Jahren hat</div>
+      <div id="wn2" style="font-family:var(--fd);font-size:20px;color:var(--pink)"></div>
+      <div style="font-size:13px;color:var(--muted);margin:6px 0;font-weight:600">insgesamt</div>
+      <div id="wamt" style="font-family:var(--fd);font-size:clamp(52px,13vw,76px);color:var(--blue);line-height:1;animation:pop .6s 1.6s ease both">–</div>
+    </div>
+    <div id="wd" style="font-size:13px;color:var(--sub);margin-bottom:28px;line-height:1.7;font-weight:600;opacity:0;transition:opacity .6s 2s"></div>
+    <div id="wemj" style="font-size:40px;margin-bottom:22px;opacity:0;transition:opacity .6s 2.3s;animation:bounce 2s 2.3s ease-in-out infinite">🥂</div>
+    <button id="wbtn" onclick="goApp()" class="btn btn-blue" style="width:100%;padding:17px;font-size:16px;opacity:0;transition:opacity .6s 2.6s;border-radius:50px">Meinen Plan ansehen 🚀</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════
+     PRINT SCREEN (hidden)
+═══════════════════════════ -->
+<div id="sPrint" style="display:none;padding:40px;background:white;min-height:100vh;">
+  <div id="printContent"></div>
+</div>
+
+<!-- ═══════════════════════════
+     MAIN APP
+═══════════════════════════ -->
+<div class="screen" id="sApp" style="background:linear-gradient(160deg,#e8f4fd 0%,#fff5f8 60%,#f0fdf6 100%)">
+
+  <div id="tabArea">
+
+    <!-- ─── TAB: HOME ─── -->
+    <div class="tc on scr" id="tHome">
+
+      <div style="padding:16px 16px 8px;flex-shrink:0">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div>
+            <div id="hGreet" style="font-family:var(--fd);font-size:22px;color:var(--text)">Guten Tag! 👋</div>
+            <div id="hSub" style="font-size:12px;color:var(--muted);font-weight:600;margin-top:2px"></div>
+          </div>
+          <!-- Avatar (clickable to change) -->
+          <div style="position:relative;cursor:pointer" onclick="changeAvatar()">
+            <div id="hAvatar" style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--pink));display:flex;align-items:center;justify-content:center;font-size:28px;border:3px solid white;box-shadow:0 3px 12px rgba(0,0,0,.1);overflow:hidden;animation:heartbeat 4s ease-in-out infinite">
+              <span id="hAvatarEmoji">👶</span>
+              <img id="hAvatarImg" style="display:none;width:100%;height:100%;object-fit:cover;position:absolute;inset:0" src="">
+            </div>
+            <div style="position:absolute;bottom:-1px;right:-1px;width:18px;height:18px;background:var(--blue);border-radius:50%;border:2px solid white;display:flex;align-items:center;justify-content:center;font-size:9px">📷</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Kid Selector (multi-child) -->
+      <div id="kidSelWrap" style="padding:0 16px 8px;display:none;flex-shrink:0">
+        <div id="kidSel" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:2px"></div>
+      </div>
+
+      <!-- Main Wealth Card -->
+      <div style="margin:0 14px 12px;flex-shrink:0">
+        <div class="card" style="padding:20px;position:relative;overflow:hidden;background:linear-gradient(135deg,#4a9ede,#2d7fc4)">
+          <div style="position:absolute;top:-20px;right:-20px;width:120px;height:120px;background:rgba(255,255,255,.08);border-radius:50%"></div>
+          <div style="position:absolute;bottom:-30px;left:-10px;width:100px;height:100px;background:rgba(255,255,255,.06);border-radius:50%"></div>
+
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px">
+            <div>
+              <div style="font-size:10px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">Angespartes Vermögen</div>
+              <div id="hTotal" style="font-family:var(--fd);font-size:36px;color:white;line-height:1">€0</div>
+              <div id="hKidLine" style="font-size:11px;color:rgba(255,255,255,.7);margin-top:4px;font-weight:700">für –</div>
+            </div>
+            <div id="hBigEmoji" style="font-size:48px;animation:float 5s ease-in-out infinite">👶</div>
+          </div>
+
+          <div style="margin-bottom:10px">
+            <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+              <span style="font-size:10px;color:rgba(255,255,255,.7);font-weight:700">Zum Ziel mit 18</span>
+              <span id="hPct" style="font-size:11px;font-weight:800;color:var(--gold)">0%</span>
+            </div>
+            <div style="height:8px;background:rgba(255,255,255,.2);border-radius:5px;overflow:hidden">
+              <div id="hBar" style="height:100%;background:linear-gradient(90deg,var(--gold),#fff);border-radius:5px;width:0%;transition:width .8s cubic-bezier(.34,1.56,.64,1)"></div>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+            <div style="background:rgba(255,255,255,.12);border-radius:12px;padding:9px;text-align:center">
+              <div style="font-size:8px;color:rgba(255,255,255,.6);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px">Mit 18</div>
+              <div id="hAt18" style="font-family:var(--fd);font-size:13px;color:white">–</div>
+            </div>
+            <div style="background:rgba(255,255,255,.12);border-radius:12px;padding:9px;text-align:center">
+              <div style="font-size:8px;color:rgba(255,255,255,.6);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px">Pro Tag</div>
+              <div id="hDay" style="font-family:var(--fd);font-size:13px;color:white">–</div>
+            </div>
+            <div style="background:rgba(255,255,255,.12);border-radius:12px;padding:9px;text-align:center">
+              <div style="font-size:8px;color:rgba(255,255,255,.6);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px">Jahre</div>
+              <div id="hYrs" style="font-family:var(--fd);font-size:13px;color:white">–</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MONATLICHE AUSGABEN MINI CARD (Home) -->
+      <div style="margin:0 14px 12px;flex-shrink:0">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div class="card" style="padding:13px;cursor:pointer" onclick="goTab('ausgaben',1)">
+            <div style="font-size:9px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px">💸 Ausgaben / Monat</div>
+            <div id="homeAusgTotal" style="font-family:var(--fd);font-size:20px;color:var(--peach)">€0</div>
+            <div id="homeAusgVgl" style="font-size:10px;color:var(--muted);font-weight:600;margin-top:2px">– vs. DE-Ø</div>
+          </div>
+          <div class="card" style="padding:13px;cursor:pointer" onclick="goTab('foerder',3)">
+            <div style="font-size:9px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px">🎁 Förderung / Monat</div>
+            <div id="homeFoerdTotal" style="font-family:var(--fd);font-size:20px;color:var(--green)">€0</div>
+            <div style="font-size:10px;color:var(--muted);font-weight:600;margin-top:2px">Staatlich · Anspruch</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SPARDOSEN SECTION -->
+      <div class="card" style="margin:0 14px 12px;padding:16px;flex-shrink:0">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+          <div style="font-family:var(--fd);font-size:16px;color:var(--text)">🏺 Meine Spardosen</div>
+          <button onclick="openAddJar()" style="font-size:10px;font-weight:800;color:var(--blue);background:var(--sky);border:none;padding:6px 12px;border-radius:50px;cursor:pointer;border:1.5px solid rgba(74,158,222,.2)">+ Neu</button>
+        </div>
+        <div id="jarRow" style="display:flex;gap:14px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch"></div>
+      </div>
+
+      <!-- Quick actions -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 14px 12px;flex-shrink:0">
+        <button onclick="openDeposit()" class="card" style="padding:14px;border:none;cursor:pointer;text-align:left;transition:all .2s;background:linear-gradient(135deg,#f0fdf6,#e2f9ed);border:2px solid rgba(67,201,126,.2)" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+          <div style="font-size:24px;margin-bottom:7px">💰</div>
+          <div style="font-size:12px;font-weight:800;color:var(--green)">Einzahlung</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:2px;font-weight:600">Einmalzahlung</div>
+        </button>
+        <button onclick="goTab('brief',2)" class="card" style="padding:14px;border:none;cursor:pointer;text-align:left;transition:all .2s;background:linear-gradient(135deg,#fff5f8,#ffe8f0);border:2px solid rgba(240,98,146,.2)" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+          <div style="font-size:24px;margin-bottom:7px">💌</div>
+          <div style="font-size:12px;font-weight:800;color:var(--pink)">Der Brief</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:2px;font-weight:600">Zum 18. Geburtstag</div>
+        </button>
+        <button onclick="goTab('plan',1)" class="card" style="padding:14px;border:none;cursor:pointer;text-align:left;transition:all .2s;background:linear-gradient(135deg,#f0f8ff,#e4f4fd);border:2px solid rgba(74,158,222,.2)" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+          <div style="font-size:24px;margin-bottom:7px">📊</div>
+          <div style="font-size:12px;font-weight:800;color:var(--blue)">Sparplan</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:2px;font-weight:600">Meilensteine</div>
+        </button>
+        <button onclick="addKid()" class="card" style="padding:14px;border:none;cursor:pointer;text-align:left;transition:all .2s;background:linear-gradient(135deg,#fffbf0,#fff3d4);border:2px solid rgba(255,179,0,.2)" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+          <div style="font-size:24px;margin-bottom:7px">➕</div>
+          <div style="font-size:12px;font-weight:800;color:var(--gold2)">Kind hinzufügen</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:2px;font-weight:600">Geschwister</div>
+        </button>
+      </div>
+
+      <!-- Eli Tipp -->
+      <div class="card-blue" style="margin:0 14px 12px;padding:16px;flex-shrink:0">
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:10px">
+          <div style="width:30px;height:30px;background:linear-gradient(135deg,var(--blue),var(--blue2));border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:12px;color:white;flex-shrink:0;animation:heartbeat 4s ease-in-out infinite">Eli</div>
+          <div>
+            <div style="font-size:10px;font-weight:800;color:var(--blue);letter-spacing:.06em;text-transform:uppercase">💡 Elis Tipp heute</div>
+            <div id="tipDate" style="font-size:9px;color:var(--muted);margin-top:1px;font-weight:600"></div>
+          </div>
+        </div>
+        <div id="tipText" style="font-size:13px;color:var(--sub);line-height:1.7;font-weight:600;margin-bottom:10px"></div>
+        <button onclick="openEliChat()" class="btn btn-blue" style="width:100%;padding:11px;font-size:12px;border-radius:50px">Eli fragen → Markt · ETF · Steuern</button>
+      </div>
+
+      <!-- Fotos Section -->
+      <div class="card" style="margin:0 14px 24px;padding:16px;flex-shrink:0">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <div style="font-family:var(--fd);font-size:16px;color:var(--text)">📸 Erinnerungen</div>
+          <button onclick="addPhoto()" style="font-size:10px;font-weight:800;color:var(--pink);background:var(--blush);border:1.5px solid rgba(240,98,146,.2);padding:6px 12px;border-radius:50px;cursor:pointer">+ Foto</button>
+        </div>
+        <div id="photoRow" style="display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch">
+          <div style="width:72px;height:72px;background:var(--sky);border-radius:16px;border:2px dashed var(--dim);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;font-size:24px" onclick="addPhoto()">📷</div>
+        </div>
+      </div>
+
+    </div><!-- /tHome -->
+
+    <!-- ─── TAB: AUSGABEN ─── -->
+    <div class="tc scr" id="tAusgaben">
+      <div style="padding:18px 16px 10px;flex-shrink:0">
+        <div style="font-family:var(--fd);font-size:22px;color:var(--text);margin-bottom:3px">💸 Ausgaben & Shopping</div>
+        <div style="font-size:12px;color:var(--muted);font-weight:600">Monatliche Kosten · Vergleich · Smart Shopping</div>
+      </div>
+
+      <!-- Monats-Übersicht Karte -->
+      <div style="margin:0 14px 12px;flex-shrink:0">
+        <div class="card" style="padding:18px;background:linear-gradient(135deg,#ff8a65,#f06292);position:relative;overflow:hidden">
+          <div style="position:absolute;top:-20px;right:-20px;width:100px;height:100px;background:rgba(255,255,255,.1);border-radius:50%"></div>
+          <div style="font-size:9px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">Monatliche Baby-Ausgaben</div>
+          <div id="ausgTotal" style="font-family:var(--fd);font-size:36px;color:white;line-height:1">€0</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.7);margin-top:4px;font-weight:700">geschätzt für diesen Monat</div>
+          <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div style="background:rgba(255,255,255,.15);border-radius:12px;padding:9px;text-align:center">
+              <div style="font-size:8px;color:rgba(255,255,255,.6);font-weight:700;text-transform:uppercase;margin-bottom:3px">DE-Ø</div>
+              <div id="ausgAvgDE" style="font-family:var(--fd);font-size:14px;color:white">€770</div>
+            </div>
+            <div style="background:rgba(255,255,255,.15);border-radius:12px;padding:9px;text-align:center">
+              <div style="font-size:8px;color:rgba(255,255,255,.6);font-weight:700;text-transform:uppercase;margin-bottom:3px">Dein Status</div>
+              <div id="ausgStatus" style="font-family:var(--fd);font-size:13px;color:white">–</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- KI-Spartipp -->
+      <div id="ausgTipBox" class="card-pink" style="margin:0 14px 12px;padding:14px;flex-shrink:0;display:none">
+        <div style="display:flex;align-items:flex-start;gap:10px">
+          <div style="font-size:22px;flex-shrink:0">🤖</div>
+          <div>
+            <div style="font-size:11px;font-weight:800;color:var(--pink);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em">Eli's Spartipp</div>
+            <div id="ausgTipText" style="font-size:12.5px;color:var(--sub);line-height:1.7;font-weight:600"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ausgaben Kategorien -->
+      <div class="card" style="margin:0 14px 12px;padding:16px;flex-shrink:0">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+          <div style="font-family:var(--fd);font-size:16px;color:var(--text)">📋 Kategorien</div>
+          <div style="font-size:10px;font-weight:700;color:var(--muted)">vs. DE-Durchschnitt</div>
+        </div>
+        <div id="catList"></div>
+        <div style="margin-top:12px;padding-top:12px;border-top:2px solid var(--sky)">
+          <div style="font-size:10px;font-weight:800;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em">Ausgabe erfassen</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px" id="quickCatBtns"></div>
+        </div>
+      </div>
+
+      <!-- KI Prognose nächster Monat -->
+      <div class="card-blue" style="margin:0 14px 12px;padding:16px;flex-shrink:0">
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:12px">
+          <div style="font-size:22px">🔮</div>
+          <div>
+            <div style="font-weight:800;font-size:14px">KI-Prognose nächster Monat</div>
+            <div style="font-size:11px;color:var(--muted);font-weight:600">Basierend auf Alter & Entwicklung</div>
+          </div>
+        </div>
+        <div id="prognoseList"></div>
+        <button onclick="eliChip('Erstelle eine detaillierte Ausgaben-Prognose für nächsten Monat basierend auf dem Alter meines Kindes')" class="btn btn-blue" style="width:100%;padding:11px;font-size:12px;margin-top:12px">🤖 Detaillierte Prognose von Eli →</button>
+      </div>
+
+      <!-- Baby Starter Kit -->
+      <div class="card" style="margin:0 14px 12px;padding:16px;flex-shrink:0">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <div style="font-family:var(--fd);font-size:16px;color:var(--text)">🛒 Baby Starter Kit</div>
+          <div class="badge bgold">Ø €3.200</div>
+        </div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.6;font-weight:600;margin-bottom:12px">Was du wirklich brauchst — was es kostet — wo es günstig ist. Eli vergleicht täglich die besten Deals.</div>
+        <div id="starterKitList"></div>
+        <button onclick="openShoppingModal()" class="btn btn-gold" style="width:100%;padding:12px;font-size:12px;margin-top:10px">🛍️ Smart Shopping starten →</button>
+      </div>
+
+    </div><!-- /tAusgaben -->
+
+    <!-- ─── TAB: FÖRDERUNGEN ─── -->
+    <div class="tc scr" id="tFoerder">
+      <div style="padding:18px 16px 10px;flex-shrink:0">
+        <div style="font-family:var(--fd);font-size:22px;color:var(--text);margin-bottom:3px">🎁 Förderungen & Beihilfen</div>
+        <div style="font-size:12px;color:var(--muted);font-weight:600">Was dir der Staat zahlt — und wie du es maximierst</div>
+      </div>
+
+      <!-- Total Förderung Card -->
+      <div style="margin:0 14px 12px;flex-shrink:0">
+        <div class="card" style="padding:18px;background:linear-gradient(135deg,#43c97e,#2e9e5e);position:relative;overflow:hidden">
+          <div style="position:absolute;top:-20px;right:-20px;width:100px;height:100px;background:rgba(255,255,255,.1);border-radius:50%"></div>
+          <div style="font-size:9px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">Du hast Anspruch auf</div>
+          <div id="foerdTotal" style="font-family:var(--fd);font-size:36px;color:white;line-height:1">€0</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.7);margin-top:4px;font-weight:700">staatliche Förderungen pro Jahr</div>
+          <div style="margin-top:12px;font-size:12px;color:rgba(255,255,255,.85);font-weight:700;background:rgba(255,255,255,.15);border-radius:12px;padding:10px">
+            💡 Viele Eltern lassen tausende Euro liegen — weil sie nicht wissen was ihnen zusteht.
+          </div>
+        </div>
+      </div>
+
+      <!-- Eli Förderungs-Tipp -->
+      <div class="card-green" style="margin:0 14px 12px;padding:14px;flex-shrink:0">
+        <div style="display:flex;align-items:flex-start;gap:10px">
+          <div style="font-size:22px;flex-shrink:0">🤖</div>
+          <div style="flex:1">
+            <div style="font-size:11px;font-weight:800;color:var(--green2);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em">Eli's Förderungs-Analyse</div>
+            <div id="foerdTipText" style="font-size:12.5px;color:var(--sub);line-height:1.7;font-weight:600">Basierend auf dem Alter deines Kindes berechne ich die optimale Förderstrategie…</div>
+          </div>
+        </div>
+        <button onclick="eliChip('Analysiere alle staatlichen Förderungen die mir für mein Kind zustehen und erkläre wie ich sie maximieren kann')" class="btn btn-green" style="width:100%;padding:11px;font-size:12px;margin-top:10px">🤖 Vollständige Analyse →</button>
+      </div>
+
+      <!-- Kindergeld -->
+      <div class="foerd-card" style="margin:0 14px 10px;background:linear-gradient(135deg,#e8f4fd,#d4ecff);border:2px solid rgba(74,158,222,.2);flex-shrink:0">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="font-size:28px">👶</div>
+            <div>
+              <div style="font-weight:800;font-size:15px">Kindergeld</div>
+              <div style="font-size:11px;color:var(--muted);font-weight:600">Ab Geburt bis 25. Lebensjahr</div>
+            </div>
+          </div>
+          <div>
+            <div class="foerd-amount" style="color:var(--blue)">€250</div>
+            <div style="font-size:10px;color:var(--muted);font-weight:700">/ Monat</div>
+          </div>
+        </div>
+        <div class="foerd-tag" style="background:rgba(74,158,222,.15);color:var(--blue2)">Automatisch · Kein Antrag nötig nach Registrierung</div>
+        <div style="font-size:12px;color:var(--sub);line-height:1.7;font-weight:600;margin-bottom:12px">€250/Monat für das 1. und 2. Kind, €250 für jedes weitere Kind. Bis 25 Jahre wenn in Ausbildung. <strong>Über 18 Jahre = €54.000!</strong> Sofort bei der Familienkasse beantragen.</div>
+        <div style="background:white;border-radius:12px;padding:10px;margin-bottom:10px">
+          <div style="font-size:10px;font-weight:800;color:var(--blue);margin-bottom:4px">💡 Elis Investment-Tipp</div>
+          <div style="font-size:11px;color:var(--sub);line-height:1.65;font-weight:600">Leg das Kindergeld direkt in den ETF-Sparplan! €250/Monat über 18 Jahre bei 7% Rendite = <strong style="color:var(--blue)">€113.000</strong>. Das Kindergeld alleine finanziert die Zukunft deines Kindes.</div>
+        </div>
+        <button onclick="eliChip('Wie beantrage ich Kindergeld optimal und was sind alle Tricks um es zu maximieren?')" class="btn btn-white" style="width:100%;font-size:11px;padding:10px">🤖 Eli: Kindergeld-Tricks →</button>
+      </div>
+
+      <!-- Elterngeld -->
+      <div class="foerd-card" style="margin:0 14px 10px;background:linear-gradient(135deg,#fff5f8,#ffe8f0);border:2px solid rgba(240,98,146,.2);flex-shrink:0">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="font-size:28px">👩‍👦</div>
+            <div>
+              <div style="font-weight:800;font-size:15px">Elterngeld</div>
+              <div style="font-size:11px;color:var(--muted);font-weight:600">Basiselterngeld + ElterngeldPlus</div>
+            </div>
+          </div>
+          <div>
+            <div class="foerd-amount" style="color:var(--pink)">€300–€1.800</div>
+            <div style="font-size:10px;color:var(--muted);font-weight:700">/ Monat</div>
+          </div>
+        </div>
+        <div class="foerd-tag" style="background:rgba(240,98,146,.15);color:var(--pink)">12–14 Monate · 65-67% des Nettoeinkommens</div>
+        <div style="font-size:12px;color:var(--sub);line-height:1.7;font-weight:600;margin-bottom:12px">65–67% deines Nettoeinkommens, mindestens €300, maximal €1.800/Monat. Mit ElterngeldPlus verdoppelst du die Bezugsdauer auf 24 Monate (halber Betrag). Partnerschaftsbonus: 4 extra Monate.</div>
+        <div style="background:white;border-radius:12px;padding:10px;margin-bottom:10px">
+          <div style="font-size:10px;font-weight:800;color:var(--pink);margin-bottom:4px">💡 Strategie-Tipp</div>
+          <div style="font-size:11px;color:var(--sub);line-height:1.65;font-weight:600">ElterngeldPlus + Partnerschaftsbonus = 28 Monate Förderung statt 14. Beide Partner nehmen je 4 Monate gleichzeitig Teilzeit → +4 Bonus-Monate = maximale Förderung.</div>
+        </div>
+        <button onclick="eliChip('Erkläre mir die optimale Elterngeld-Strategie: Basiselterngeld vs ElterngeldPlus, Partnerschaftsbonus, und wie ich den maximalen Betrag erhalte')" class="btn btn-white" style="width:100%;font-size:11px;padding:10px">🤖 Eli: Elterngeld optimieren →</button>
+      </div>
+
+      <!-- Kita-Kosten & Förderung -->
+      <div class="foerd-card" style="margin:0 14px 10px;background:linear-gradient(135deg,#f8f5ff,#f0e8ff);border:2px solid rgba(167,139,218,.2);flex-shrink:0">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="font-size:28px">🏫</div>
+            <div>
+              <div style="font-weight:800;font-size:15px">Kita-Kosten & Zuschüsse</div>
+              <div style="font-size:11px;color:var(--muted);font-weight:600">Bundesland-abhängig · Steuerlich absetzbar</div>
+            </div>
+          </div>
+          <div>
+            <div class="foerd-amount" style="color:var(--lav)">Bis €0</div>
+            <div style="font-size:10px;color:var(--muted);font-weight:700">Kostenlos möglich</div>
+          </div>
+        </div>
+        <div class="foerd-tag" style="background:rgba(167,139,218,.15);color:var(--lav)">Je nach Bundesland · Einkommensabhängig</div>
+        <div style="font-size:12px;color:var(--sub);line-height:1.7;font-weight:600;margin-bottom:10px">Kita-Beitrag variiert stark: Berlin fast kostenlos, Bayern bis €600/Monat. 2/3 der Kosten steuerlich absetzbar (max. €4.000/Jahr). Geschwisterkinder oft beitragsfrei.</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px">
+          <div style="background:white;border-radius:10px;padding:8px;text-align:center">
+            <div style="font-size:8px;font-weight:700;color:var(--muted);margin-bottom:2px">Berlin</div>
+            <div style="font-size:12px;font-weight:800;color:var(--green)">€0–50</div>
+          </div>
+          <div style="background:white;border-radius:10px;padding:8px;text-align:center">
+            <div style="font-size:8px;font-weight:700;color:var(--muted);margin-bottom:2px">Bayern</div>
+            <div style="font-size:12px;font-weight:800;color:var(--pink)">€200–600</div>
+          </div>
+          <div style="background:white;border-radius:10px;padding:8px;text-align:center">
+            <div style="font-size:8px;font-weight:700;color:var(--muted);margin-bottom:2px">NRW</div>
+            <div style="font-size:12px;font-weight:800;color:var(--gold2)">€100–350</div>
+          </div>
+        </div>
+        <button onclick="eliChip('Was sind alle Kita-Fördermöglichkeiten und wie kann ich die Kosten steuerlich optimal absetzen?')" class="btn btn-white" style="width:100%;font-size:11px;padding:10px">🤖 Eli: Kita-Kosten optimieren →</button>
+      </div>
+
+      <!-- Weitere Förderungen -->
+      <div class="card" style="margin:0 14px 10px;padding:16px;flex-shrink:0">
+        <div style="font-family:var(--fd);font-size:16px;color:var(--text);margin-bottom:12px">➕ Weitere Förderungen</div>
+        <div id="weitereFordering" style="display:flex;flex-direction:column;gap:8px"></div>
+      </div>
+
+      <!-- Schwangerschaft Förderung -->
+      <div class="foerd-card" style="margin:0 14px 24px;background:linear-gradient(135deg,#fff8f0,#fff3d4);border:2px solid rgba(255,179,0,.25);flex-shrink:0">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+          <div style="font-size:28px">🤰</div>
+          <div>
+            <div style="font-weight:800;font-size:15px">Schwangerschaft & Geburt</div>
+            <div style="font-size:11px;color:var(--muted);font-weight:600">Mutterschaftsgeld · Babygeld · Beihilfen</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:10px">
+          <div style="background:white;border-radius:12px;padding:10px;display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:12px;font-weight:700;color:var(--sub)">🏥 Mutterschaftsgeld (GKV)</span>
+            <span style="font-size:12px;font-weight:800;color:var(--gold2)">bis €13/Tag</span>
+          </div>
+          <div style="background:white;border-radius:12px;padding:10px;display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:12px;font-weight:700;color:var(--sub)">👔 Arbeitgeberzuschuss</span>
+            <span style="font-size:12px;font-weight:800;color:var(--gold2)">Differenz bis Netto</span>
+          </div>
+          <div style="background:white;border-radius:12px;padding:10px;display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:12px;font-weight:700;color:var(--sub)">🍼 Babygeld (Einmalzahlung)</span>
+            <span style="font-size:12px;font-weight:800;color:var(--gold2)">je nach Bundesland</span>
+          </div>
+          <div style="background:white;border-radius:12px;padding:10px;display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:12px;font-weight:700;color:var(--sub)">💊 Krankenkassen-Extras</span>
+            <span style="font-size:12px;font-weight:800;color:var(--gold2)">bis €500 Bonus</span>
+          </div>
+        </div>
+        <button onclick="eliChip('Was sind alle Leistungen und Förderungen rund um Schwangerschaft und Geburt in Deutschland? Mutterschaftsgeld, Babygeld, alle Beihilfen erkläre alles')" class="btn btn-gold" style="width:100%;font-size:11px;padding:10px">🤖 Eli: Schwangerschafts-Förderung →</button>
+      </div>
+
+    </div><!-- /tFoerder -->
+
+    <!-- ─── TAB: SPARPLAN (was plan) ─── -->
+    <div class="tc scr" id="tPlan">
+
+      <div style="padding:18px 16px 10px;flex-shrink:0">
+        <div style="font-family:var(--fd);font-size:22px;color:var(--text);margin-bottom:3px">📊 Sparplan</div>
+        <div id="planSub" style="font-size:12px;color:var(--muted);font-weight:600">–</div>
+      </div>
+
+      <!-- Slider -->
+      <div class="card-blue" style="margin:0 14px 12px;padding:18px;flex-shrink:0">
+        <div style="font-size:10px;font-weight:800;color:var(--blue);letter-spacing:.09em;text-transform:uppercase;margin-bottom:11px">💡 Sparrate anpassen</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <span style="font-size:13px;color:var(--sub);font-weight:600">Monatlicher Betrag</span>
+          <span id="slVal" style="font-family:var(--fd);font-size:26px;color:var(--blue)">€127</span>
+        </div>
+        <input type="range" id="slider" min="25" max="600" step="25" value="127" style="width:100%;accent-color:var(--blue);margin-bottom:14px;cursor:pointer" oninput="onSlider(this.value)">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+          <div style="background:white;border-radius:13px;padding:10px;text-align:center;box-shadow:0 2px 8px rgba(74,158,222,.1)">
+            <div style="font-size:8px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Mit 10</div>
+            <div id="p10" style="font-family:var(--fd);font-size:13px;color:var(--sub)">–</div>
+          </div>
+          <div style="background:white;border-radius:13px;padding:10px;text-align:center;box-shadow:0 2px 8px rgba(74,158,222,.1)">
+            <div style="font-size:8px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Mit 18</div>
+            <div id="p18" style="font-family:var(--fd);font-size:13px;color:var(--blue)">–</div>
+          </div>
+          <div style="background:white;border-radius:13px;padding:10px;text-align:center;box-shadow:0 2px 8px rgba(74,158,222,.1)">
+            <div style="font-size:8px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Mit 25</div>
+            <div id="p25" style="font-family:var(--fd);font-size:13px;color:var(--green)">–</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Investment Options -->
+      <div class="card" style="margin:0 14px 12px;padding:16px;flex-shrink:0">
+        <div style="font-family:var(--fd);font-size:16px;color:var(--text);margin-bottom:12px">📈 Investmentoptionen</div>
+        <div id="invOptions" style="display:flex;flex-direction:column;gap:8px"></div>
+      </div>
+
+      <!-- Milestones -->
+      <div class="card" style="margin:0 14px 12px;padding:16px;flex-shrink:0">
+        <div style="font-family:var(--fd);font-size:16px;color:var(--text);margin-bottom:14px">🗓 Meilensteine für <span id="msName">dein Kind</span></div>
+        <div id="msList"></div>
+      </div>
+
+      <!-- ETF Empfehlung -->
+      <div class="card-green" style="margin:0 14px 24px;padding:16px;flex-shrink:0">
+        <div style="display:flex;align-items:center;gap:11px;margin-bottom:12px">
+          <div style="font-size:24px">🌍</div>
+          <div><div style="font-weight:800;font-size:14px">Elis Top-Empfehlung</div><div style="font-size:11px;color:var(--muted);font-weight:600">Für Sparpläne bis 18+</div></div>
+          <div class="badge bg" style="margin-left:auto">Top Pick ⭐</div>
+        </div>
+        <div style="background:white;border-radius:13px;padding:13px;margin-bottom:10px;box-shadow:0 2px 8px rgba(67,201,126,.1)">
+          <div style="font-weight:800;font-size:14px;margin-bottom:4px;color:var(--green2)">iShares Core MSCI World ETF</div>
+          <div style="font-size:11px;color:var(--muted);line-height:1.65;font-weight:600">1.600+ Unternehmen · 23 Länder · Ø 8,5% p.a. · 0,2% Kosten/Jahr</div>
+        </div>
+        <div style="font-size:12px;color:var(--sub);line-height:1.7;font-weight:600">Diversifikation über die ganze Welt. Über 18+ Jahre gleichen sich alle Schwankungen aus — der Klassiker für Kinder-Sparpläne.</div>
+      </div>
+    </div><!-- /tPlan -->
+
+    <!-- ─── TAB: BRIEF ─── -->
+    <div class="tc scr" id="tBrief">
+      <div style="padding:18px 16px 12px;flex-shrink:0">
+        <div style="font-family:var(--fd);font-size:22px;color:var(--text);margin-bottom:3px">💌 Der Brief</div>
+        <div style="font-size:12px;color:var(--muted);font-weight:600">Automatisch für den 18. Geburtstag</div>
+      </div>
+
+      <!-- Letter Preview -->
+      <div style="margin:0 14px 12px;background:linear-gradient(135deg,#fffbf5,#fff8f0);border:2px solid rgba(255,179,0,.25);border-radius:22px;padding:24px;position:relative;overflow:hidden;flex-shrink:0">
+        <div style="position:absolute;top:14px;right:16px;font-size:32px;opacity:.15;animation:float2 7s ease-in-out infinite">💌</div>
+        <div id="briefPhoto" style="text-align:center;margin-bottom:16px;display:none">
+          <div style="display:flex;justify-content:center;gap:8px;overflow-x:auto"></div>
+        </div>
+        <div style="font-size:9px;font-weight:700;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px;font-family:var(--nu)">Persönlicher Brief · Für den 18. Geburtstag</div>
+        <div id="letterText" style="font-family:var(--nu);font-size:14px;color:var(--sub);line-height:2.1;white-space:pre-line;font-weight:600"></div>
+      </div>
+
+      <!-- Photo for letter -->
+      <div class="card" style="margin:0 14px 12px;padding:14px;flex-shrink:0">
+        <div style="font-size:12px;font-weight:800;color:var(--sub);margin-bottom:10px">📸 Foto zum Brief hinzufügen</div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <div id="letterPhotoPreview" style="width:60px;height:60px;background:var(--sky);border-radius:14px;border:2px dashed var(--dim);display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer;flex-shrink:0" onclick="addLetterPhoto()">📷</div>
+          <div style="font-size:11px;color:var(--muted);line-height:1.6;font-weight:600">Füge ein Lieblingsfoto hinzu — es wird beim Ausdrucken des Briefes gezeigt. 🥰</div>
+        </div>
+      </div>
+
+      <div style="padding:0 14px 12px;display:flex;flex-direction:column;gap:8px;flex-shrink:0">
+        <button onclick="printLetter()" class="btn btn-gold" style="width:100%;padding:15px">🖨️ Brief ausdrucken</button>
+        <button onclick="doShare()" class="btn btn-pink" style="width:100%;padding:13px">📤 Brief teilen</button>
+      </div>
+
+      <!-- Milestone letters -->
+      <div class="card" style="margin:0 14px 24px;padding:16px;flex-shrink:0">
+        <div style="font-family:var(--fd);font-size:16px;color:var(--text);margin-bottom:12px">🏆 Meilenstein-Briefe</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.7;font-weight:600;margin-bottom:12px">Für jeden erreichten Meilenstein erstellt Eli automatisch einen besonderen Brief — druckbar, mit Foto, für immer.</div>
+        <div id="msBriefList" style="display:flex;flex-direction:column;gap:8px"></div>
+      </div>
+    </div><!-- /tBrief -->
+
+    <!-- ─── TAB: WISSEN ─── -->
+    <div class="tc scr" id="tWissen">
+      <div style="padding:18px 16px 12px;flex-shrink:0">
+        <div style="font-family:var(--fd);font-size:22px;color:var(--text);margin-bottom:3px">🧠 Insider-Wissen</div>
+        <div style="font-size:12px;color:var(--muted);font-weight:600">Was kein Banker dir freiwillig sagt</div>
+      </div>
+      <div id="wissenList" style="padding:0 14px 24px;flex-shrink:0"></div>
+    </div>
+
+    <!-- ─── TAB: PROFIL ─── -->
+    <div class="tc scr" id="tProfil">
+      <div style="padding:18px 16px 12px;flex-shrink:0">
+        <div style="font-family:var(--fd);font-size:22px;color:var(--text);margin-bottom:3px">👤 Profil</div>
+        <div style="font-size:12px;color:var(--muted);font-weight:600">Deine Kinder & Einstellungen</div>
+      </div>
+      <div id="profilList" style="padding:0 14px;display:flex;flex-direction:column;gap:10px;flex-shrink:0"></div>
+      <div style="padding:12px 14px 12px;flex-shrink:0">
+        <button onclick="addKid()" class="btn btn-blue" style="width:100%;padding:15px">➕ Weiteres Kind hinzufügen</button>
+      </div>
+      <div style="padding:0 14px 24px;flex-shrink:0">
+        <div class="card" style="padding:16px">
+          <div style="font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px">App-Einstellungen</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <button onclick="alert('Kommt bald! 🔔')" class="btn btn-white" style="text-align:left;width:100%;font-size:12px">🔔 Monatliche Erinnerungen</button>
+            <button onclick="doReset()" class="btn btn-white" style="text-align:left;width:100%;font-size:12px;color:var(--pink)">🗑️ Alle Daten zurücksetzen</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- tabArea -->
+
+  <!-- BOTTOM NAV -->
+  <nav class="nav" style="grid-template-columns:repeat(6,1fr)">
+    <button class="nb on" id="nb0" onclick="goTab('home',0)">
+      <div class="ni-wrap"><div class="ni">🏠</div></div><div class="nl">Home</div>
+    </button>
+    <button class="nb" id="nb1" onclick="goTab('ausgaben',1)">
+      <div class="ni-wrap"><div class="ni">💸</div></div><div class="nl">Ausgaben</div>
+    </button>
+    <button class="nb" id="nb2" onclick="goTab('plan',2)">
+      <div class="ni-wrap"><div class="ni">📊</div></div><div class="nl">Sparplan</div>
+    </button>
+    <button class="nb" id="nb3" onclick="goTab('foerder',3)">
+      <div class="ni-wrap"><div class="ni">🎁</div></div><div class="nl">Förderung</div>
+    </button>
+    <button class="nb" id="nb4" onclick="goTab('wissen',4)">
+      <div class="ni-wrap"><div class="ni">🧠</div></div><div class="nl">Wissen</div>
+    </button>
+    <button class="nb" id="nb5" onclick="goTab('profil',5)">
+      <div class="ni-wrap"><div class="ni">👤</div></div><div class="nl">Profil</div>
+    </button>
+  </nav>
+</div><!-- /sApp -->
+
+<!-- ELI FAB Button -->
+<button id="eliFab" class="eli-fab no-print" onclick="toggleEliChat()" style="display:none">🤖</button>
+
+<!-- SMART SHOPPING MODAL -->
+<div id="shoppingModal" class="modal-overlay" style="display:none" onclick="if(event.target===this)closeShoppingModal()">
+  <div class="modal-sheet" style="max-height:85vh;overflow-y:auto">
+    <div style="width:40px;height:4px;background:var(--dim);border-radius:2px;margin:0 auto 16px"></div>
+    <div style="font-family:var(--fd);font-size:20px;color:var(--text);margin-bottom:4px;text-align:center">🛍️ Smart Shopping</div>
+    <div style="font-size:12px;color:var(--muted);font-weight:600;text-align:center;margin-bottom:16px">KI-Deals · Preisvergleich · Beste Angebote heute</div>
+    <div id="shoppingList" style="display:flex;flex-direction:column;gap:10px"></div>
+    <button onclick="eliChip('Finde mir die besten aktuellen Deals für Baby-Produkte. Vergleiche Preise und zeige wo ich am meisten spare.')" class="btn btn-blue" style="width:100%;padding:13px;margin-top:12px">🤖 Eli: Deals live suchen →</button>
+    <button onclick="closeShoppingModal()" class="btn btn-white" style="width:100%;padding:11px;margin-top:8px">Schließen</button>
+  </div>
+</div>
+
+<!-- ADD EXPENSE MODAL -->
+<div id="expenseModal" class="modal-overlay" style="display:none" onclick="if(event.target===this)closeExpenseModal()">
+  <div class="modal-sheet">
+    <div style="width:40px;height:4px;background:var(--dim);border-radius:2px;margin:0 auto 16px"></div>
+    <div style="font-family:var(--fd);font-size:20px;color:var(--text);margin-bottom:4px;text-align:center">📝 Ausgabe erfassen</div>
+    <div id="expCatName" style="font-size:13px;color:var(--muted);font-weight:700;text-align:center;margin-bottom:14px"></div>
+    <div style="position:relative;margin-bottom:14px">
+      <span style="position:absolute;left:18px;top:50%;transform:translateY(-50%);font-family:var(--fd);font-size:22px;color:var(--muted)">€</span>
+      <input id="expenseAmt" type="number" placeholder="0" class="inp" style="padding-left:42px;font-size:24px">
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">
+      <button onclick="setExp(10)" class="btn btn-white" style="padding:9px;font-size:12px;font-weight:800">€10</button>
+      <button onclick="setExp(25)" class="btn btn-white" style="padding:9px;font-size:12px;font-weight:800">€25</button>
+      <button onclick="setExp(50)" class="btn btn-white" style="padding:9px;font-size:12px;font-weight:800">€50</button>
+      <button onclick="setExp(100)" class="btn btn-white" style="padding:9px;font-size:12px;font-weight:800">€100</button>
+    </div>
+    <button onclick="confirmExpense()" class="btn btn-pink" style="width:100%;padding:14px;font-size:14px">✓ Ausgabe speichern</button>
+  </div>
+</div>
+
+<!-- DEPOSIT MODAL -->
+<div id="depositModal" class="modal-overlay" style="display:none" onclick="if(event.target===this)closeDeposit()">
+  <div class="modal-sheet">
+    <div style="text-align:center;margin-bottom:6px">
+      <div style="width:40px;height:4px;background:var(--dim);border-radius:2px;margin:0 auto 16px"></div>
+      <div style="font-family:var(--fd);font-size:20px;color:var(--text);margin-bottom:4px">💰 Einzahlung</div>
+      <div style="font-size:12px;color:var(--muted);font-weight:600">Einmalzahlung zum Sparplan hinzufügen</div>
+    </div>
+    <div style="margin:16px 0">
+      <div style="position:relative">
+        <span style="position:absolute;left:18px;top:50%;transform:translateY(-50%);font-family:var(--fd);font-size:24px;color:var(--muted)">€</span>
+        <input id="depositAmt" type="number" placeholder="100" class="inp" style="padding-left:44px;font-size:26px">
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px">
+      <button onclick="setDeposit(50)" class="btn btn-white" style="padding:10px;font-size:13px;font-weight:800;border-radius:50px">€50</button>
+      <button onclick="setDeposit(100)" class="btn btn-white" style="padding:10px;font-size:13px;font-weight:800;border-radius:50px">€100</button>
+      <button onclick="setDeposit(250)" class="btn btn-white" style="padding:10px;font-size:13px;font-weight:800;border-radius:50px">€250</button>
+      <button onclick="setDeposit(500)" class="btn btn-white" style="padding:10px;font-size:13px;font-weight:800;border-radius:50px">€500</button>
+    </div>
+    <!-- Which jar? -->
+    <div id="depositJarChoice" style="margin-bottom:14px">
+      <div style="font-size:11px;font-weight:800;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em">In welche Spardose?</div>
+      <div id="jarChoiceList" style="display:flex;gap:8px;overflow-x:auto"></div>
+    </div>
+    <button onclick="confirmDeposit()" class="btn btn-green" style="width:100%;padding:15px;font-size:15px;border-radius:50px">💰 Einzahlung bestätigen</button>
+  </div>
+</div>
+
+<!-- ADD JAR MODAL -->
+<div id="addJarModal" class="modal-overlay" style="display:none" onclick="if(event.target===this)closeAddJar()">
+  <div class="modal-sheet">
+    <div style="width:40px;height:4px;background:var(--dim);border-radius:2px;margin:0 auto 16px"></div>
+    <div style="font-family:var(--fd);font-size:20px;color:var(--text);margin-bottom:14px;text-align:center">🏺 Neue Spardose</div>
+    <div style="margin-bottom:12px">
+      <div style="font-size:11px;font-weight:800;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em">Ziel auswählen</div>
+      <div id="jarPresets" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px"></div>
+    </div>
+    <div style="margin-bottom:12px">
+      <div style="font-size:11px;font-weight:800;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em">Eigener Name</div>
+      <input id="jarName" type="text" placeholder="z.B. Urlaub 🌴" class="inp" style="font-size:16px">
+    </div>
+    <div style="margin-bottom:14px">
+      <div style="font-size:11px;font-weight:800;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em">Sparziel (optional)</div>
+      <div style="position:relative">
+        <span style="position:absolute;left:18px;top:50%;transform:translateY(-50%);font-family:var(--fd);font-size:18px;color:var(--muted)">€</span>
+        <input id="jarGoal" type="number" placeholder="3500" class="inp" style="padding-left:40px;font-size:18px">
+      </div>
+    </div>
+    <button onclick="confirmAddJar()" class="btn btn-blue" style="width:100%;padding:15px;border-radius:50px">Spardose erstellen 🎉</button>
+  </div>
+</div>
+
+<!-- ELI CHAT MODAL -->
+<div id="eliChatModal" style="display:none;position:fixed;inset:0;z-index:90;display:none;flex-direction:column;background:linear-gradient(160deg,#e8f4fd,#fff5f8)">
+  <div style="padding:14px 18px 10px;background:white;border-bottom:2px solid var(--dim);box-shadow:0 2px 12px rgba(0,0,0,.06);flex-shrink:0">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:38px;height:38px;background:linear-gradient(135deg,var(--blue),var(--blue2));border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:14px;color:white;animation:heartbeat 3s ease-in-out infinite">Eli</div>
+        <div>
+          <div style="font-family:var(--fd);font-size:15px;color:var(--blue)">Eli · Investmentbanker</div>
+          <div style="display:flex;align-items:center;gap:5px;margin-top:1px">
+            <div style="width:6px;height:6px;background:var(--green);border-radius:50%;animation:blink 2s infinite"></div>
+            <span style="font-size:9px;color:var(--muted);font-weight:700">24/7 verfügbar · KI-gestützt</span>
+          </div>
+        </div>
+      </div>
+      <button onclick="closeEliChat()" style="width:32px;height:32px;background:var(--sky);border:none;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center">✕</button>
+    </div>
+  </div>
+  <!-- Quick chips -->
+  <div style="padding:10px 14px;background:white;border-bottom:1px solid var(--dim);flex-shrink:0;overflow-x:auto;white-space:nowrap">
+    <span style="font-size:10px;font-weight:700;color:var(--muted);margin-right:8px">Schnellfragen:</span>
+    <button onclick="eliChip('Wie laufen die Märkte heute?')" class="btn btn-white" style="font-size:10px;padding:6px 12px;display:inline-block;margin-right:6px;border-radius:50px">📈 Märkte heute</button>
+    <button onclick="eliChip('Welcher ETF ist der beste für mein Kind?')" class="btn btn-white" style="font-size:10px;padding:6px 12px;display:inline-block;margin-right:6px;border-radius:50px">🌍 Bester ETF</button>
+    <button onclick="eliChip('Wie spare ich Steuern auf mein Kinderdepot?')" class="btn btn-white" style="font-size:10px;padding:6px 12px;display:inline-block;margin-right:6px;border-radius:50px">💰 Steuertipps</button>
+    <button onclick="eliChip('Was sind alle staatlichen Förderungen die mir zustehen? Kindergeld, Elterngeld, Kita, alles!')" class="btn btn-white" style="font-size:10px;padding:6px 12px;display:inline-block;margin-right:6px;border-radius:50px">🎁 Förderungen</button>
+    <button onclick="eliChip('Wo kann ich bei Baby-Ausgaben sparen? Windeln, Kleidung, Essen — beste Deals und Tipps')" class="btn btn-white" style="font-size:10px;padding:6px 12px;display:inline-block;margin-right:6px;border-radius:50px">🛒 Sparen Tipps</button>
+    <button onclick="eliChip('Was passiert wenn die Börse crasht?')" class="btn btn-white" style="font-size:10px;padding:6px 12px;display:inline-block;border-radius:50px">📉 Bei Crash</button>
+  </div>
+  <div id="eliMessages" style="flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:14px;-webkit-overflow-scrolling:touch"></div>
+  <div style="padding:12px 14px 24px;background:linear-gradient(to top,white 70%,transparent);flex-shrink:0">
+    <div style="display:flex;gap:8px">
+      <input id="eliInput" type="text" placeholder="Frag Eli alles über ETFs, Märkte, Steuern..." class="inp" style="flex:1;font-size:13px;padding:12px 16px;border-radius:50px" onkeydown="if(event.key==='Enter')eliSend()">
+      <button onclick="eliSend()" class="btn btn-blue" style="padding:12px 18px;border-radius:50px;flex-shrink:0">→</button>
+    </div>
+  </div>
+</div>
+
+<!-- HIDDEN FILE INPUTS -->
+<input id="fileAvatar" type="file" accept="image/*" style="display:none" onchange="handleAvatarFile(this)">
+<input id="filePhoto" type="file" accept="image/*" style="display:none" onchange="handlePhotoFile(this)">
+<input id="fileBriefPhoto" type="file" accept="image/*" style="display:none" onchange="handleBriefPhotoFile(this)">
+<script>
+'use strict';
+
+// ══════════════════════════════════════
+// STATE
+// ══════════════════════════════════════
+var KIDS = [], ACT = 0;
+var JARS_DEFAULT = [
+  {id:'j1', name:'Führerschein', emoji:'🚗', color:'#4a9ede', goal:3500, saved:0},
+  {id:'j2', name:'Studium', emoji:'🎓', color:'#43c97e', goal:20000, saved:0},
+  {id:'j3', name:'Erste Wohnung', emoji:'🏠', color:'#f06292', goal:8000, saved:0}
+];
+var JAR_PRESETS = [
+  {name:'Führerschein', emoji:'🚗', color:'#4a9ede', goal:3500},
+  {name:'Studium', emoji:'🎓', color:'#43c97e', goal:20000},
+  {name:'Erste Wohnung', emoji:'🏠', color:'#f06292', goal:8000},
+  {name:'Smartphone', emoji:'📱', color:'#a78bda', goal:500},
+  {name:'Urlaub', emoji:'✈️', color:'#ffb300', goal:2000},
+  {name:'Business', emoji:'🚀', color:'#ff8a65', goal:10000},
+  {name:'Hochzeit', emoji:'💍', color:'#f06292', goal:15000},
+  {name:'Hobby', emoji:'🎸', color:'#43c97e', goal:2000}
+];
+var WISSEN_DATA = [
+  {ico:'🔑', title:'Der Zinseszins-Trick', badge:'Geheimtipp', bc:'bb', body:'€100/Monat über 18 Jahre bei 7% = €40.620. Du hast nur €21.600 eingezahlt. Die restlichen €19.020 erschuf der Zinseszins alleine — ohne dass du einen Finger krumm gemacht hast. Das ist das 8. Weltwunder.'},
+  {ico:'📉', title:'Das Sparbuch-Verbrechen', badge:'Achtung!', bc:'bp', body:'0,5% Sparbuch vs. 7% ETF bei €127/Mo über 18 Jahre: Sparbuch = €29.100 vs. ETF = €58.400. Das Sparbuch stiehlt deinem Kind €29.300 — das ist ein halbes Studium.'},
+  {ico:'🏛️', title:'Steuerfreibetrag für Kinder', badge:'Legal & Gratis', bc:'bg', body:'Kinder haben €1.000/Jahr Steuerfreibetrag auf Kapitalerträge. ETF-Erträge bleiben bis dahin komplett steuerfrei. Freistellungsauftrag beim Broker stellen — einmal, für immer.'},
+  {ico:'⏰', title:'1 Jahr früher = €4.800 mehr', badge:'Krass', bc:'bl', body:'Jeder Monat den du früher startest multipliziert sich. Ein Jahr früher bei €127/Mo = ca. €4.800 mehr am Ende. Heute ist besser als morgen.'},
+  {ico:'🎁', title:'Oma & Opa: Das Mega-Geschenk', badge:'Smart', bc:'bg', body:'Großeltern können bis zu €400.000 steuerfrei an Enkel schenken (Freibetrag alle 10 Jahre). Ein ETF-Schenkdepot ist das beste Geburtstagsgeschenk das existiert.'},
+  {ico:'📊', title:'Die 3-Topf-Strategie', badge:"Eli's Favorit", bc:'bgold', body:'Topf 1: ETF-Sparplan (Hauptvermögen) · Topf 2: Tagesgeld (kurzfristige Ziele) · Topf 3: Bausparvertrag (Wohnung). Drei Töpfe, drei Zeithorizonte, maximale Rendite.'},
+  {ico:'🌍', title:'Globale Märkte & dein Kind', badge:'Insider', bc:'bb', body:'Wenn die Börse 30% fällt, ist das für Kinder-Sparpläne eine Kaufgelegenheit — nicht der Moment zum Aufhören. In jedem Crash der Geschichte hat wer durchhielt, gewonnen. Eli informiert dich täglich.'},
+  {ico:'🏗️', title:'Wohnungsbauprämie', badge:'Bonus', bc:'bgold', body:'Bausparvertrag für Kinder: bis zu €70/Jahr staatliche Prämie (10% auf €700 Einzahlung). Über 18 Jahre = €1.260 geschenktes Geld vom Staat. Einfach beantragen.'}
+];
+var INV_OPTIONS = [
+  {ico:'🌍', name:'MSCI World ETF', risk:'Niedrig', ret:'7-9%', color:'#43c97e', desc:'1.600 Unternehmen, 23 Länder — der Klassiker'},
+  {ico:'🔥', name:'S&P 500 ETF', risk:'Mittel', ret:'8-10%', color:'#4a9ede', desc:'Top 500 US-Unternehmen, hohe Rendite'},
+  {ico:'📈', name:'NASDAQ 100 ETF', risk:'Höher', ret:'10-12%', color:'#a78bda', desc:'Tech-fokussiert: Apple, Google, Amazon'},
+  {ico:'🌱', name:'Nachhaltiger ETF', risk:'Niedrig', ret:'6-8%', color:'#43c97e', desc:'ESG-gefiltert, gutes Gewissen inklusive'},
+  {ico:'🏦', name:'Tagesgeld', risk:'Kein', ret:'2-4%', color:'#ffb300', desc:'Kurzfristige Sparziele, sicher & flexibel'},
+  {ico:'🏗️', name:'Bausparvertrag', risk:'Kein', ret:'1-3%', color:'#f06292', desc:'+ Staatsprämie, für Wohnziele'}
+];
+
+// ══════════════════════════════════════
+// INTERVIEW
+// ══════════════════════════════════════
+var QS = [
+  {key:'pName', q:'Hallo! Ich bin Eli — dein persönlicher Investmentbanker für dein Kind. 🍼\n\nWie heißt du?', type:'text', ph:'Dein Vorname'},
+  {key:'phase', qf:function(a){return 'Herzlich Willkommen, '+a.pName+'! 🌟\n\nIn welcher Phase bist du gerade?';}, type:'opts', opts:[{v:'geboren',l:'🍼 Kind bereits geboren'},{v:'schwanger',l:'🤰 Noch schwanger'},{v:'geplant',l:'👶 Wir planen es'}]},
+  {key:'cName', qf:function(a){return a.phase==='schwanger'?'Schön! Hast du schon einen Namen oder einen Spitznamen für dein Wunschkind? 💛':'Wie heißt dein Kind?';}, type:'text', ph:'Name / Spitzname'},
+  {key:'cBirth', qf:function(a){return a.phase==='schwanger'?a.cName+' kommt bald! 💛\n\nWann ist der errechnete Geburtstermin?':a.phase==='geplant'?'Wann planst du den Geburtstermin?':a.cName+' — was für ein schöner Name! 💛\n\nWann wurde '+a.cName+' geboren?';}, type:'date'},
+  {key:'cGender', qf:function(a){return a.phase==='schwanger'?'Wisst ihr schon das Geschlecht?':'Ist '+a.cName+' ein Mädchen, Junge, oder lieber nicht angeben?';}, type:'opts', opts:[{v:'f',l:'👧 Mädchen'},{v:'m',l:'👦 Junge'},{v:'n',l:'🧒 Noch nicht bekannt'}]},
+  {key:'dream', qf:function(a){return 'Was ist dein größter Wunsch für '+(a.cName||'dein Kind')+'?';}, type:'opts', opts:[{v:'studium',l:'🎓 Studium ohne Schulden'},{v:'freiheit',l:'🌍 Finanzielle Freiheit früh'},{v:'wohnung',l:'🏠 Eigene Wohnung mit 25'},{v:'business',l:'🚀 Eigenes Business gründen'}]},
+  {key:'monthly', qf:function(a){var b=a.cBirth?new Date(a.cBirth):new Date();var y=Math.max(1,18-Math.max(0,new Date().getFullYear()-b.getFullYear()));return 'Was kannst du monatlich für '+(a.cName||'dein Kind')+' sparen?\n\nBei 7% ETF-Rendite über '+y+' Jahre macht jeder Euro einen riesigen Unterschied.';}, type:'amount', ph:'127', pre:'€'}
+];
+var ivAns = {};
+
+function cAge(b){if(!b)return 0;var d=new Date(b),n=new Date(),a=n.getFullYear()-d.getFullYear();if(n.getMonth()<d.getMonth()||(n.getMonth()===d.getMonth()&&n.getDate()<d.getDate()))a--;return Math.max(0,a);}
+function fv(mo,yrs){if(yrs<=0)return 0;var r=.07/12,n=yrs*12;return Math.round(mo*((Math.pow(1+r,n)-1)/r));}
+function eu(n){return '€'+Math.round(n).toLocaleString('de-DE');}
+function emj(g){return g==='f'?'👧':g==='m'?'👦':'🧒';}
+function showS(id){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('on');});var s=document.getElementById(id);if(s)s.classList.add('on');}
+function save(){localStorage.setItem('bw3-k',JSON.stringify(KIDS));localStorage.setItem('bw3-a',String(ACT));}
+function load(){var k=localStorage.getItem('bw3-k'),a=localStorage.getItem('bw3-a');if(k){try{KIDS=JSON.parse(k);}catch(e){KIDS=[];}}if(a!==null)ACT=parseInt(a)||0;}
+
+function goOnboarding(){ivAns={};document.getElementById('ivChat').innerHTML='';showS('sInterview');setTimeout(function(){askQ(0);},400);}
+function addKid(){ivAns={};document.getElementById('ivChat').innerHTML='';showS('sInterview');setTimeout(function(){askQ(0);},400);}
+
+function addEli(txt,delay,col){
+  delay=delay||0;
+  var chat=document.getElementById('ivChat');
+  setTimeout(function(){
+    var w=document.createElement('div');w.className='msg';
+    w.innerHTML='<div class="av eli">Eli</div><div><div class="bmeta">Eli · BabyWealth</div><div class="bub"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div></div>';
+    chat.appendChild(w);chat.scrollTop=chat.scrollHeight;
+    setTimeout(function(){
+      var b=w.querySelector('.bub');
+      b.innerHTML=txt.replace(/\n/g,'<br>');
+      chat.scrollTop=chat.scrollHeight;
+    },700);
+  },delay);
+}
+function addUser(txt){
+  var chat=document.getElementById('ivChat');
+  var el=document.createElement('div');el.className='msg user';
+  el.innerHTML='<div class="av usr">👤</div><div><div class="bmeta">Du</div><div class="bub">'+txt+'</div></div>';
+  chat.appendChild(el);chat.scrollTop=chat.scrollHeight;
+}
+function askQ(i){
+  var q=QS[i];if(!q){finishIV();return;}
+  var pct=Math.round(i/QS.length*100);
+  var bar=document.getElementById('ivBar'),pctEl=document.getElementById('ivPct');
+  if(bar)bar.style.width=pct+'%';if(pctEl)pctEl.textContent=pct+'%';
+  var txt=q.qf?q.qf(ivAns):q.q;
+  addEli(txt,200);
+  setTimeout(function(){renderAns(i);},1100);
+}
+function renderAns(i){
+  var q=QS[i],area=document.getElementById('ivAns');if(!area)return;
+  if(q.type==='opts'){
+    var html='<div style="display:flex;flex-direction:column;gap:8px">';
+    q.opts.forEach(function(o,idx){html+='<button id="qo'+idx+'" class="opt" style="animation:slideUp .28s '+(idx*.07)+'s ease both">'+o.l+'</button>';});
+    html+='</div>';area.innerHTML=html;
+    q.opts.forEach(function(o,idx){var b=document.getElementById('qo'+idx);if(b)b.addEventListener('click',function(){pickOpt(i,q.key,o.v,o.l);});});
+  } else if(q.type==='date'){
+    var today=new Date().toISOString().split('T')[0];
+    area.innerHTML='<div style="display:flex;flex-direction:column;gap:10px;animation:slideUp .28s ease both"><input id="dI" type="date" max="'+today+'" class="inp" style="font-size:17px;font-family:var(--nu);font-weight:700"><button id="dB" class="btn btn-blue" style="padding:15px;width:100%;border-radius:50px">Weiter →</button></div>';
+    var b=document.getElementById('dB'),inp=document.getElementById('dI');
+    if(inp){inp.addEventListener('focus',function(){this.style.borderColor='var(--blue)'});inp.addEventListener('blur',function(){this.style.borderColor='var(--dim)'});}
+    if(b)b.addEventListener('click',function(){pickDate(i,q.key);});
+  } else {
+    var isA=q.type==='amount';
+    area.innerHTML='<div style="display:flex;flex-direction:column;gap:10px;animation:slideUp .28s ease both"><div style="position:relative">'+(q.pre?'<span style="position:absolute;left:18px;top:50%;transform:translateY(-50%);font-family:var(--fd);font-size:24px;color:var(--muted);pointer-events:none">'+q.pre+'</span>':'')+'<input id="tI" type="'+(isA?'number':'text')+'" placeholder="'+(q.ph||'')+'" class="inp" style="font-size:'+(isA?'28px':'22px')+';font-weight:800;padding-left:'+(q.pre?'44px':'18px')+'">'+'</div><button id="tB" class="btn btn-blue" style="padding:15px;width:100%;border-radius:50px">Weiter →</button></div>';
+    var inp2=document.getElementById('tI'),b2=document.getElementById('tB');
+    if(inp2){inp2.focus();inp2.addEventListener('focus',function(){this.style.borderColor='var(--blue)'});inp2.addEventListener('blur',function(){this.style.borderColor='var(--dim)'});inp2.addEventListener('keydown',function(e){if(e.key==='Enter')pickText(i,q.key);});}
+    if(b2)b2.addEventListener('click',function(){pickText(i,q.key);});
+  }
+}
+function pickOpt(i,key,val,lbl){
+  ivAns[key]=val;addUser(lbl);document.getElementById('ivAns').innerHTML='';
+  var r={f:'👧 Ein Mädchen! So wunderschön.',m:'👦 Ein Junge! Was für ein Glück.',n:'🧒 Natürlich!',studium:'<strong>Studium ohne Schulden</strong> — das verändert ein ganzes Leben. 🎓',freiheit:'<strong>Finanzielle Freiheit früh</strong> — das größte Geschenk. 🌍',wohnung:'<strong>Eigene Wohnung mit 25</strong> — Selbstständigkeit von Anfang an. 🏠',business:'<strong>Eigenes Business</strong> — der Unternehmergeist beginnt jetzt. 🚀'};
+  if(r[val])addEli(r[val],300);
+  setTimeout(function(){askQ(i+1);},r[val]?1700:600);
+}
+function pickDate(i,key){
+  var inp=document.getElementById('dI');if(!inp||!inp.value){if(inp)inp.style.borderColor='var(--pink)';return;}
+  ivAns[key]=inp.value;var age=cAge(inp.value);
+  addUser(new Date(inp.value).toLocaleDateString('de-DE',{day:'numeric',month:'long',year:'numeric'}));
+  document.getElementById('ivAns').innerHTML='';
+  var name=ivAns.cName||'dein Kind';
+  addEli(age===0?'Ein Baby! 🍼 '+name+' ist noch keine 1 Jahr alt. Perfekt — je früher du startest desto mehr wächst das Vermögen.':name+' ist '+age+' Jahre alt. Noch <strong>'+Math.max(0,18-age)+' Jahre</strong> bis zum 18. Geburtstag — jeder Monat zählt! 💪',300);
+  setTimeout(function(){askQ(i+1);},1800);
+}
+function pickText(i,key){
+  var inp=document.getElementById('tI');if(!inp||!inp.value.trim()){if(inp)inp.style.borderColor='var(--pink)';return;}
+  var val=inp.value.trim();ivAns[key]=key==='monthly'?parseFloat(val)||127:val;
+  addUser((QS[i].pre||'')+val);document.getElementById('ivAns').innerHTML='';
+  if(key==='pName')addEli('Schön dich kennenzulernen, <strong>'+val+'</strong>! 🌟 Lass uns gemeinsam die Zukunft deines Kindes planen.',300);
+  else if(key==='cName')addEli('<strong>'+val+'</strong> — was für ein wunderschöner Name. 💛',300);
+  else if(key==='monthly'){var age=cAge(ivAns.cBirth),yrs=Math.max(1,18-age),fvA=fv(parseFloat(val),yrs);addEli('Mit <strong>'+eu(parseFloat(val))+'/Monat</strong> hat '+(ivAns.cName||'dein Kind')+' mit 18 Jahren ungefähr <strong>'+eu(fvA)+'</strong>.\n\nDas sind nur <strong>'+(parseFloat(val)/30).toFixed(2)+' Euro pro Tag</strong> — weniger als ein Kaffee! ☕',400);}
+  setTimeout(function(){askQ(i+1);},key==='monthly'?2400:1600);
+}
+function finishIV(){
+  var bar=document.getElementById('ivBar'),pctEl=document.getElementById('ivPct');
+  if(bar)bar.style.width='100%';if(pctEl)pctEl.textContent='100%';
+  document.getElementById('ivAns').innerHTML='';
+  addEli('Perfekt! 🎉 Ich habe alles was ich brauche.\n\nIch berechne jetzt den optimalen Plan für <strong>'+(ivAns.cName||'dein Kind')+'</strong>…',200);
+  var kid={pName:ivAns.pName||'',name:ivAns.cName||'Mein Kind',birth:ivAns.cBirth||'',gender:ivAns.cGender||'n',phase:ivAns.phase||'geboren',dream:ivAns.dream||'freiheit',monthly:ivAns.monthly||127,started:new Date().toISOString(),extra:0,expenses:{},jars:JSON.parse(JSON.stringify(JARS_DEFAULT)),photos:[],avatarImg:'',letterPhoto:''};
+  KIDS.push(kid);ACT=KIDS.length-1;save();
+  setTimeout(function(){showWow(kid);},2200);
+}
+
+// ══════════════════════════════════════
+// WOW SCREEN
+// ══════════════════════════════════════
+function showWow(k){
+  showS('sWow');
+  var age=cAge(k.birth),yrs=Math.max(1,18-age),fvA=fv(k.monthly,yrs),daily=(k.monthly/30).toFixed(2);
+  var dm={studium:'Studium vollständig finanziert. Kein BAföG. Keine Schulden.',freiheit:'Finanzielle Freiheit mit 25 — der Kopfstart ins Leben.',wohnung:'Erste Wohnung. Erster Monat. Eigenes Leben.',business:'Startkapital für sein/ihr eigenes Business.'};
+  function sh(id,delay,fn){setTimeout(function(){var el=document.getElementById(id);if(!el)return;if(fn)fn(el);el.style.opacity='1';},delay);}
+  sh('we',100);sh('wl',500);
+  sh('wn',800,function(el){el.textContent=k.name;});
+  sh('ws',1100);
+  sh('wa',1400,function(){
+    var n2=document.getElementById('wn2'),am=document.getElementById('wamt');
+    if(n2)n2.textContent=k.name;if(am)am.textContent=eu(fvA);
+  });
+  sh('wd',2000,function(el){el.innerHTML='Das sind nur <strong style="color:var(--blue)">€'+daily+' pro Tag</strong> ☕<br><span style="color:var(--green)">'+(dm[k.dream]||'Ein Lebensstart ohne Schulden.')+'</span>';});
+  sh('wemj',2300);sh('wbtn',2600);
+  spawnConfetti();
+}
+function spawnConfetti(){
+  var colors=['#4a9ede','#f06292','#43c97e','#ffb300','#a78bda'];
+  for(var i=0;i<20;i++){
+    (function(idx){
+      setTimeout(function(){
+        var el=document.createElement('div');el.className='confetti-piece';
+        el.style.cssText='left:'+Math.random()*100+'vw;top:-10px;background:'+colors[Math.floor(Math.random()*colors.length)]+';animation-delay:'+Math.random()+'.3s;transform:rotate('+Math.random()*360+'deg);';
+        document.body.appendChild(el);
+        setTimeout(function(){el.remove();},2000);
+      },idx*80);
+    })(i);
+  }
+}
+function goApp(){showS('sApp');var fab=document.getElementById('eliFab');if(fab)fab.style.display='flex';renderAll();}
+
+// ══════════════════════════════════════
+// APP TABS
+// ══════════════════════════════════════
+var TABS=['home','ausgaben','plan','foerder','wissen','profil'];
+function goTab(name,idx){
+  TABS.forEach(function(t,i){
+    var key=t.charAt(0).toUpperCase()+t.slice(1);
+    var tc=document.getElementById('t'+key);
+    var nb=document.getElementById('nb'+i);
+    if(tc){tc.classList.remove('on');tc.style.display='none';}
+    if(nb)nb.classList.remove('on');
+  });
+  var key=name.charAt(0).toUpperCase()+name.slice(1);
+  var tc=document.getElementById('t'+key);
+  if(tc){tc.classList.add('on');tc.style.display='flex';}
+  if(idx!==undefined){var nb=document.getElementById('nb'+idx);if(nb)nb.classList.add('on');}
+  if(name==='home')renderHome();
+  if(name==='ausgaben')renderAusgaben();
+  if(name==='plan')renderPlan();
+  if(name==='foerder')renderFoerder();
+  if(name==='brief')renderBrief();
+  if(name==='wissen')renderWissen();
+  if(name==='profil')renderProfil();
+}
+function renderAll(){renderHome();renderAusgaben();renderPlan();renderFoerder();renderBrief();renderWissen();renderProfil();}
+
+function renderAll(){renderHome();renderAusgaben();renderPlan();renderFoerder();renderBrief();renderWissen();renderProfil();}
+
+// ══════════════════════════════════════
+// AUSGABEN DATA & FUNCTIONS
+// ══════════════════════════════════════
+var CAT_DATA = [
+  {id:'windeln',   ico:'🧷', name:'Windeln & Hygiene',     color:'#4a9ede', avg:[55,60,65,60,55,50,45,35,25,15,0,0,0,0,0,0,0,0]},
+  {id:'nahrung',   ico:'🍼', name:'Nahrung & Beikost',     color:'#43c97e', avg:[40,50,60,70,80,85,80,75,70,65,60,55,50,45,40,35,30,25]},
+  {id:'kleidung',  ico:'👕', name:'Kleidung & Schuhe',     color:'#f06292', avg:[30,40,50,55,60,65,70,75,80,90,100,110,120,130,140,150,160,170]},
+  {id:'arzt',      ico:'🏥', name:'Arzt & Gesundheit',     color:'#ff8a65', avg:[25,25,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20]},
+  {id:'spielzeug', ico:'🧸', name:'Spielzeug & Bücher',    color:'#a78bda', avg:[10,15,20,25,30,35,40,45,50,55,50,45,40,35,30,25,20,15]},
+  {id:'ausstattung',ico:'🛏️',name:'Ausstattung & Möbel',  color:'#ffb300', avg:[80,20,10,10,5,5,5,5,5,10,15,10,10,10,10,10,10,10]},
+  {id:'hobbys',    ico:'⚽', name:'Hobbys & Aktivitäten', color:'#2e9e5e', avg:[0,0,0,0,5,10,20,30,40,50,60,70,80,90,100,110,120,130]},
+  {id:'betreuung', ico:'🏫', name:'Betreuung & Kita',      color:'#e91e8c', avg:[0,0,0,200,250,280,300,0,0,0,0,0,0,0,0,0,0,0]}
+];
+
+function getAgeIdx(birth){if(!birth)return 0;return Math.min(cAge(birth),17);}
+
+function calcMonthlyExpenses(k){
+  if(!k)return 0;
+  var exp=k.expenses||{},total=0,ai=getAgeIdx(k.birth);
+  CAT_DATA.forEach(function(c){total+=exp[c.id]!==undefined?exp[c.id]:c.avg[ai];});
+  return total;
+}
+
+function calcAvgDE(k){
+  if(!k)return 770;
+  var ai=getAgeIdx(k.birth),total=0;
+  CAT_DATA.forEach(function(c){total+=c.avg[ai];});
+  return total;
+}
+
+function renderAusgaben(){
+  var k=KIDS[ACT];if(!k)return;
+  var ai=getAgeIdx(k.birth),exp=k.expenses||{};
+  var total=calcMonthlyExpenses(k),avgDE=calcAvgDE(k),diff=total-avgDE;
+  var g=function(id){return document.getElementById(id);};
+  if(g('ausgTotal'))g('ausgTotal').textContent=eu(total);
+  if(g('ausgAvgDE'))g('ausgAvgDE').textContent=eu(avgDE);
+  var statusTxt=diff>50?'📈 Über Ø':diff<-50?'📉 Unter Ø':'✅ Im Ø';
+  if(g('ausgStatus'))g('ausgStatus').textContent=statusTxt;
+  // Spartipp
+  var tipBox=g('ausgTipBox'),tipText=g('ausgTipText');
+  if(tipBox&&tipText){
+    if(diff>80){
+      tipBox.style.display='block';
+      var overCat=CAT_DATA.filter(function(c){var v=exp[c.id]!==undefined?exp[c.id]:c.avg[ai];return v>c.avg[ai]*1.3&&c.avg[ai]>0;});
+      var tipMsg='Du gibst <strong>'+eu(diff)+' mehr</strong> aus als der DE-Durchschnitt.';
+      if(overCat.length)tipMsg+=' Besonders: <strong>'+overCat.map(function(c){return c.ico+' '+c.name;}).join(' & ')+'</strong>.';
+      tipMsg+=' 💡 Windeln im Abo bis 30% günstiger. Kleidung bei Vinted/Kleinanzeigen.';
+      tipText.innerHTML=tipMsg;
+    }else{tipBox.style.display='none';}
+  }
+  // Category list
+  var cl=g('catList');
+  if(cl){cl.innerHTML=CAT_DATA.map(function(c){
+    var val=exp[c.id]!==undefined?exp[c.id]:c.avg[ai];
+    var avgV=c.avg[ai],pct=avgV>0?Math.min(200,Math.round(val/avgV*100)):val>0?100:0;
+    var dv=val-avgV,cls=dv>20?'avg-over':dv<-20?'avg-under':'avg-ok';
+    var dlbl=dv>0?'+'+eu(dv):dv<0?eu(dv):'= Ø';
+    return '<div class="cat-row">'
+      +'<div class="cat-ico" style="background:'+c.color+'18">'+c.ico+'</div>'
+      +'<div style="flex:1">'
+        +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">'
+          +'<span style="font-size:12px;font-weight:800">'+c.name+'</span>'
+          +'<div style="display:flex;align-items:center;gap:6px">'
+            +'<span class="avg-badge '+cls+'">'+dlbl+'</span>'
+            +'<button onclick="openExpenseModal(\''+c.id+'\',\''+c.name+'\')" style="font-family:var(--fd);font-size:14px;font-weight:800;background:none;border:none;cursor:pointer;color:var(--text)">'+eu(val)+'</button>'
+          +'</div>'
+        +'</div>'
+        +'<div style="display:flex;align-items:center;gap:6px">'
+          +'<div class="cat-bar" style="flex:1"><div class="cat-bar-fill" style="width:'+Math.min(100,pct)+'%;background:'+c.color+'"></div></div>'
+          +'<span style="font-size:9px;color:var(--muted);font-weight:700;flex-shrink:0;min-width:40px;text-align:right">Ø '+eu(avgV)+'</span>'
+        +'</div>'
+      +'</div>'
+    +'</div>';
+  }).join('');}
+  // Quick buttons
+  var qb=g('quickCatBtns');
+  if(qb){qb.innerHTML=CAT_DATA.slice(0,6).map(function(c){
+    return '<button onclick="openExpenseModal(\''+c.id+'\',\''+c.name+'\')" style="padding:8px;background:'+c.color+'15;border:1.5px solid '+c.color+'30;border-radius:11px;cursor:pointer;font-size:11px;font-weight:800;color:var(--text)">'+c.ico+' '+c.name.split(' ')[0]+'</button>';
+  }).join('');}
+  // Prognose
+  var nextAi=Math.min(ai+1,17),pl=g('prognoseList');
+  if(pl){
+    var changes=CAT_DATA.filter(function(c){return Math.abs(c.avg[nextAi]-c.avg[ai])>8;});
+    pl.innerHTML=changes.length===0
+      ?'<div style="font-size:12px;color:var(--muted);font-weight:600;padding:8px">✅ Keine großen Änderungen nächsten Monat erwartet.</div>'
+      :changes.map(function(c){
+          var d2=c.avg[nextAi]-c.avg[ai],up=d2>0;
+          return '<div style="display:flex;align-items:center;gap:10px;padding:8px;background:'+(up?'rgba(240,98,146,.08)':'rgba(67,201,126,.08)')+';border-radius:12px;margin-bottom:6px">'
+            +'<span style="font-size:18px">'+c.ico+'</span>'
+            +'<div style="flex:1"><div style="font-size:12px;font-weight:800">'+c.name+'</div><div style="font-size:10px;color:var(--muted);font-weight:600">Nächster Monat</div></div>'
+            +'<div style="font-family:var(--fd);font-size:15px;color:'+(up?'var(--pink)':'var(--green2)')+';">'+(up?'+':'')+eu(d2)+'</div>'
+          +'</div>';
+        }).join('');
+  }
+  renderStarterKit();
+  // Home mini
+  if(g('homeAusgTotal'))g('homeAusgTotal').textContent=eu(total);
+  var vgl=diff>50?'📈 +'+eu(diff)+' vs. Ø':diff<-50?'📉 '+eu(diff)+' vs. Ø':'✅ Im DE-Ø';
+  if(g('homeAusgVgl'))g('homeAusgVgl').textContent=vgl;
+}
+
+var STARTER_KIT=[
+  {ico:'🛒',name:'Kinderwagen',        avg:600,  range:'€200–1.500',tip:'Joie/Chicco Top-Qualität ab €250. Gebraucht kaufen spart 50%.'},
+  {ico:'🛏️',name:'Babybett & Matratze',avg:250,  range:'€120–500', tip:'Ikea Sniglar + Kokosmatratze = perfekte Kombi für €80'},
+  {ico:'🧷',name:'Windeln Erstausstattung',avg:80,range:'€50–120', tip:'Pampers/Lillydoo im Abo bis 30% günstiger als im Laden'},
+  {ico:'🍼',name:'Flaschen & Milchpumpe',avg:120, range:'€60–250', tip:'Medela Swing Maxi – top gebraucht auf Kleinanzeigen'},
+  {ico:'🚗',name:'Babyschale',          avg:200,  range:'€80–450', tip:'Maxi-Cosi Pebble 360 Pro — jahrelang nutzbar (Gr. 0-1)'},
+  {ico:'👕',name:'Erstlingskleidung',   avg:150,  range:'€80–300', tip:'H&M/Primark Basics + 1-2 besondere Teile. Größen wechseln schnell!'},
+  {ico:'🛁',name:'Badewanne & Pflege',  avg:60,   range:'€30–120', tip:'Tummy Tub faltbar — spart Platz & Geld'},
+  {ico:'📱',name:'Babyphone',           avg:80,   range:'€30–200', tip:'Philips Avent DECT — beste Preis/Leistung im Test'},
+  {ico:'🧸',name:'Spielzeug Basis',     avg:60,   range:'€30–120', tip:'Greiflings-Set + Schmusetier = alles was es braucht'},
+  {ico:'🏥',name:'Apotheke Erste-Hilfe',avg:50,   range:'€30–80',  tip:'Fieberthermometer + Nasensauger die 2 wichtigsten Tools'}
+];
+
+function renderStarterKit(){
+  var c=document.getElementById('starterKitList');if(!c)return;
+  var tot=STARTER_KIT.reduce(function(s,i){return s+i.avg;},0);
+  c.innerHTML='<div style="background:var(--sky);border-radius:12px;padding:10px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center">'
+    +'<span style="font-size:12px;font-weight:800;color:var(--sub)">💰 Gesamtkosten Erstausstattung</span>'
+    +'<span style="font-family:var(--fd);font-size:18px;color:var(--peach)">Ø '+eu(tot)+'</span>'
+  +'</div>'
+  +STARTER_KIT.slice(0,4).map(function(item){
+    return '<div class="shop-item">'
+      +'<div class="shop-img">'+item.ico+'</div>'
+      +'<div style="flex:1">'
+        +'<div style="font-size:12px;font-weight:800;color:var(--text)">'+item.name+'</div>'
+        +'<div style="font-size:10px;color:var(--muted);font-weight:600;margin:1px 0">'+item.range+'</div>'
+        +'<div style="font-size:10px;color:var(--blue);font-weight:700">💡 '+item.tip+'</div>'
+      +'</div>'
+      +'<div style="font-family:var(--fd);font-size:13px;color:var(--text);flex-shrink:0">Ø '+eu(item.avg)+'</div>'
+    +'</div>';
+  }).join('');
+}
+
+function openShoppingModal(){
+  var c=document.getElementById('shoppingList');
+  if(c){c.innerHTML=STARTER_KIT.map(function(item){
+    return '<div class="shop-item">'
+      +'<div class="shop-img">'+item.ico+'</div>'
+      +'<div style="flex:1">'
+        +'<div style="display:flex;align-items:center;gap:6px;margin-bottom:2px">'
+          +'<span style="font-size:12px;font-weight:800">'+item.name+'</span>'
+          +'<span class="deal-badge">Ø Preis</span>'
+        +'</div>'
+        +'<div style="font-size:10px;color:var(--muted);font-weight:600">'+item.range+'</div>'
+        +'<div style="font-size:10px;color:var(--blue);font-weight:700;margin-top:3px">💡 '+item.tip+'</div>'
+      +'</div>'
+      +'<div style="font-family:var(--fd);font-size:14px;color:var(--green2);flex-shrink:0">Ø '+eu(item.avg)+'</div>'
+    +'</div>';
+  }).join('');}
+  document.getElementById('shoppingModal').style.display='flex';
+}
+function closeShoppingModal(){document.getElementById('shoppingModal').style.display='none';}
+
+var currentExpCat='';
+function openExpenseModal(catId,catName){
+  currentExpCat=catId;
+  var k=KIDS[ACT],exp=k&&k.expenses||{};
+  var ai=getAgeIdx(k?k.birth:'');
+  var cat=CAT_DATA.find(function(c){return c.id===catId;});
+  var current=exp[catId]!==undefined?exp[catId]:(cat?cat.avg[ai]:0);
+  var d=document.getElementById('expCatName');if(d)d.textContent=(cat?cat.ico+' ':'')+catName;
+  var inp=document.getElementById('expenseAmt');if(inp)inp.value=current||'';
+  document.getElementById('expenseModal').style.display='flex';
+}
+function closeExpenseModal(){document.getElementById('expenseModal').style.display='none';}
+function setExp(val){var inp=document.getElementById('expenseAmt');if(inp)inp.value=val;}
+function confirmExpense(){
+  var inp=document.getElementById('expenseAmt');
+  var val=parseFloat(inp?inp.value:0)||0;
+  var k=KIDS[ACT];if(!k)return;
+  if(!k.expenses)k.expenses={};
+  k.expenses[currentExpCat]=val;
+  save();closeExpenseModal();renderAusgaben();renderHome();
+  spawnConfetti();
+}
+
+// ══════════════════════════════════════
+// FÖRDERUNGEN RENDER
+// ══════════════════════════════════════
+function renderFoerder(){
+  var k=KIDS[ACT];if(!k)return;
+  var age=cAge(k.birth);
+  var kg=250,eg=age<2?1200:0;
+  var totalPerMonth=kg+(age<2?eg:0),totalPerYear=totalPerMonth*12;
+  var g=function(id){return document.getElementById(id);};
+  if(g('foerdTotal'))g('foerdTotal').textContent=eu(totalPerYear);
+  if(g('homeFoerdTotal'))g('homeFoerdTotal').textContent=eu(totalPerMonth);
+  var tipMsg='';
+  if(age===0)tipMsg='🎉 Jetzt sofort Elterngeld beantragen (rückwirkend 3 Monate möglich). Kindergeld ab Geburt bei der Familienkasse. Allein Kindergeld über 18 Jahre = <strong>€54.000</strong>. Leg es direkt in den ETF-Sparplan!';
+  else if(age<2)tipMsg='💡 Elterngeld läuft noch. ElterngeldPlus prüfen für mehr Flexibilität. Freistellungsauftrag für Kinderdepot stellen!';
+  else if(age<6)tipMsg='🏫 Kita-Zuschuss beim Jugendamt beantragen. 2/3 der Kita-Kosten steuerlich absetzbar (max. €4.000/Jahr). Kindergeld weiter — idealerweise direkt in ETF.';
+  else if(age<12)tipMsg='📚 Kinderfreibetrag beim Finanzamt prüfen. ETF-Erträge bis €1.000/Jahr steuerfrei (Freistellungsauftrag).';
+  else tipMsg='🎓 Kindergeld bis 25 bei Ausbildung/Studium. BAföG-Anspruch jetzt prüfen. Ausbildungsfreibetrag €1.200/Jahr bei auswärtiger Unterkunft.';
+  if(g('foerdTipText'))g('foerdTipText').innerHTML=tipMsg;
+  var wf=g('weitereFordering');
+  if(wf){
+    var items=[
+      {ico:'🏗️',name:'Wohnungsbauprämie',    desc:'10% auf €700 Bausparvertrag = €70/Jahr geschenkt vom Staat'},
+      {ico:'📚',name:'Bildungsgutschein',     desc:'Bundesagentur: bis €5.000 für Eltern-Weiterbildung'},
+      {ico:'🏥',name:'Kinderkrankengeld',     desc:'30 Tage/Elternteil/Jahr (60 alleinerziehend) = 70% Netto'},
+      {ico:'🎁',name:'Kinderzuschlag',        desc:'Bis €250/Monat zusätzlich zum Kindergeld bei niedrigem Einkommen'},
+      {ico:'🚌',name:'ÖPNV Kindermitnahme',  desc:'Kinder bis 6 Jahre fahren in vielen Bundesländern kostenlos'},
+      {ico:'💊',name:'GKV Bonus-Programme',  desc:'AOK, TK, Barmer: bis €500/Jahr Bonus für Gesundheitskurse'}
+    ];
+    wf.innerHTML=items.map(function(item){
+      return '<div style="background:white;border:1.5px solid var(--dim);border-radius:14px;padding:12px;display:flex;align-items:flex-start;gap:10px">'
+        +'<div style="font-size:22px;flex-shrink:0">'+item.ico+'</div>'
+        +'<div style="flex:1"><div style="font-size:12px;font-weight:800;color:var(--text);margin-bottom:2px">'+item.name+'</div>'
+        +'<div style="font-size:11px;color:var(--muted);line-height:1.55;font-weight:600">'+item.desc+'</div></div>'
+        +'<button onclick="eliChip(\'Erkläre mir '+item.name+' im Detail und alle Tricks\')" style="flex-shrink:0;padding:6px 10px;background:var(--sky);border:1.5px solid var(--dim);border-radius:20px;font-size:10px;font-weight:800;cursor:pointer;color:var(--blue)">🤖</button>'
+      +'</div>';
+    }).join('');
+  }
+}
+
+// ── HOME ──
+function renderHome(){
+  var k=KIDS[ACT];if(!k)return;
+  var age=cAge(k.birth),yrs=Math.max(1,18-age),fv18=fv(k.monthly,yrs);
+  var elapsed=Math.max(0,(Date.now()-new Date(k.started).getTime())/(1000*60*60*24*30.44));
+  var saved=k.extra+elapsed*k.monthly,pct=Math.min(100,Math.round(saved/fv18*100));
+  var hr=new Date().getHours(),greet=hr<12?'Guten Morgen':hr<18?'Guten Tag':'Guten Abend';
+  var g=function(id){return document.getElementById(id);};
+  if(g('hGreet'))g('hGreet').textContent=greet+', '+(k.pName||'')+' 👋';
+  var subTxt=k.phase==='schwanger'?'🤰 '+k.name+' kommt bald! Plan läuft bereits.':k.phase==='geplant'?'💭 Plan für '+k.name+' — bereit wenn es soweit ist.':'Dein Plan für '+k.name+' läuft. 🌟';
+  if(g('hSub'))g('hSub').textContent=subTxt;
+  if(g('hBigEmoji'))g('hBigEmoji').textContent=k.avatarImg?'':emj(k.gender);
+  if(g('hAvatarEmoji'))g('hAvatarEmoji').textContent=emj(k.gender);
+  if(k.avatarImg){var img=g('hAvatarImg');if(img){img.src=k.avatarImg;img.style.display='block';if(g('hAvatarEmoji'))g('hAvatarEmoji').style.display='none';}}
+  if(g('hTotal'))g('hTotal').textContent=eu(saved);
+  if(g('hKidLine'))g('hKidLine').textContent='für '+k.name+' · '+age+' Jahre alt';
+  if(g('hPct'))g('hPct').textContent=pct+'%';
+  if(g('hBar'))g('hBar').style.width=pct+'%';
+  if(g('hAt18'))g('hAt18').textContent=eu(fv18);
+  if(g('hDay'))g('hDay').textContent='€'+(k.monthly/30).toFixed(2);
+  if(g('hYrs'))g('hYrs').textContent=yrs+'J';
+  renderJars();renderPhotos();renderTip();
+  // Mini expense + foerder cards
+  var k2=KIDS[ACT];
+  if(k2){
+    var tot2=calcMonthlyExpenses(k2),avg2=calcAvgDE(k2),diff2=tot2-avg2;
+    var g2=function(id){return document.getElementById(id);};
+    if(g2('homeAusgTotal'))g2('homeAusgTotal').textContent=eu(tot2);
+    var vgl2=diff2>50?'📈 +'+eu(diff2)+' vs. Ø':diff2<-50?'📉 '+eu(diff2)+' vs. Ø':'✅ Im DE-Ø';
+    if(g2('homeAusgVgl'))g2('homeAusgVgl').textContent=vgl2;
+    var age2=cAge(k2.birth),kg2=250,eg2=age2<2?1200:0;
+    if(g2('homeFoerdTotal'))g2('homeFoerdTotal').textContent=eu(kg2+(age2<2?eg2:0));
+  }
+  // Multi-kid
+  if(KIDS.length>1){var w=g('kidSelWrap');if(w)w.style.display='block';var sel=g('kidSel');if(sel)sel.innerHTML=KIDS.map(function(ki,i){return '<button onclick="switchKid('+i+')" style="display:flex;align-items:center;gap:6px;padding:7px 14px;background:'+(i===ACT?'linear-gradient(135deg,var(--blue),var(--blue2))':'white')+';border:2px solid '+(i===ACT?'var(--blue)':'var(--dim)')+';border-radius:50px;cursor:pointer;font-size:12px;font-weight:800;color:'+(i===ACT?'white':'var(--muted)')+';white-space:nowrap">'+emj(ki.gender)+' '+ki.name+'</button>';}).join('');}
+}
+
+function renderTip(){
+  var k=KIDS[ACT],g=function(id){return document.getElementById(id);};
+  var tips=['Der MSCI World ETF hat in den letzten 30 Jahren Ø 8,5% p.a. geliefert. Selbst nach den schlimmsten Krisen — wer durchhielt, gewann.',(k?k.name:'Dein Kind')+' hat noch '+Math.max(1,18-cAge(k?k.birth:''))+'  Jahre. '+(Math.max(1,18-cAge(k?k.birth:''))*12)+' Monate Zinseszins arbeiten für euch. Jeder Monat zählt!','Tipp: Erhöhe den Sparplan bei jeder Gehaltserhöhung um die Hälfte der Erhöhung. Du merkst es kaum — dein Kind schon.','Freistellungsauftrag nicht vergessen! €1.000/Jahr Kapitalerträge bleiben steuerfrei. Einmal stellen, ewig profitieren.','Die 3-Topf-Strategie: ETF (Hauptvermögen) + Tagesgeld (kurzfristig) + Bausparvertrag (Wohnung). Drei Töpfe, maximale Rendite.','Wusstest du? Großeltern können bis zu €400.000 steuerfrei an Enkel schenken. Ein ETF-Depot als Geburtstagsgeschenk ist genial.'];
+  var ti=new Date().getDate()%tips.length;
+  if(g('tipText'))g('tipText').textContent=tips[ti];
+  if(g('tipDate'))g('tipDate').textContent=new Date().toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'});
+}
+
+// ── JARS ──
+function renderJars(){
+  var k=KIDS[ACT],row=document.getElementById('jarRow');if(!row||!k)return;
+  row.innerHTML=(k.jars||[]).map(function(j,idx){
+    var pct=j.goal>0?Math.min(100,Math.round(j.saved/j.goal*100)):0;
+    var done=pct>=100;
+    return '<div class="jar" onclick="openDepositForJar('+idx+')" style="animation:fadeUp .3s '+(idx*.08)+'s ease both">'
+      +'<div class="jar-lid" style="background:'+j.color+'40;border-color:'+j.color+'60"></div>'
+      +'<div class="jar-body" style="background:white;border-color:'+j.color+'40">'
+        +'<div class="jar-fill" style="height:'+(pct*0.75)+'%;background:'+j.color+'50"></div>'
+        +'<div class="jar-emoji">'+j.emoji+'</div>'
+      +'</div>'
+      +(done?'<div class="jar-check">✓</div>':'')
+      +'<div class="jar-label">'+j.name+'</div>'
+      +'<div class="jar-amount">'+eu(j.saved)+'</div>'
+      +'</div>';
+  }).join('');
+}
+
+// ── PHOTOS ──
+function renderPhotos(){
+  var k=KIDS[ACT],row=document.getElementById('photoRow');if(!row||!k)return;
+  var html='<div style="width:72px;height:72px;background:var(--sky);border-radius:16px;border:2px dashed var(--dim);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;font-size:24px" onclick="addPhoto()">📷</div>';
+  (k.photos||[]).forEach(function(p,i){
+    html+='<div style="width:72px;height:72px;border-radius:16px;overflow:hidden;flex-shrink:0;position:relative">'
+      +'<img src="'+p+'" style="width:100%;height:100%;object-fit:cover">'
+      +'<button onclick="event.stopPropagation();removePhoto('+i+')" style="position:absolute;top:2px;right:2px;width:18px;height:18px;background:rgba(0,0,0,.5);border:none;border-radius:50%;color:white;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center">✕</button>'
+      +'</div>';
+  });
+  row.innerHTML=html;
+}
+
+// ── PLAN ──
+function renderPlan(){
+  var k=KIDS[ACT];if(!k)return;
+  var age=cAge(k.birth),mo=k.monthly||127;
+  var g=function(id){return document.getElementById(id);};
+  if(g('planSub'))g('planSub').textContent='Plan für '+k.name+' · '+age+' Jahre alt';
+  if(g('msName'))g('msName').textContent=k.name;
+  if(g('slVal'))g('slVal').textContent=eu(mo);
+  if(g('slider'))g('slider').value=mo;
+  updateProj(mo,age);renderMs(k,mo);renderInvOptions();
+}
+function updateProj(mo,age){
+  var g=function(id){return document.getElementById(id);};
+  if(g('p10'))g('p10').textContent=fv(mo,Math.max(0,10-age))>0?eu(fv(mo,Math.max(0,10-age))):'–';
+  if(g('p18'))g('p18').textContent=eu(fv(mo,Math.max(1,18-age)));
+  if(g('p25'))g('p25').textContent=eu(fv(mo,Math.max(1,25-age)));
+}
+function onSlider(val){
+  val=parseFloat(val)||127;
+  var el=document.getElementById('slVal');if(el)el.textContent=eu(val);
+  var k=KIDS[ACT];if(!k)return;
+  k.monthly=val;save();
+  updateProj(val,cAge(k.birth));renderMs(k,val);
+  var hm=document.getElementById('hMonthly');// update home if needed
+}
+function renderMs(k,mo){
+  var c=document.getElementById('msList');if(!c)return;
+  var age=cAge(k.birth),yr=new Date().getFullYear();
+  var ALL=[
+    {age:6,ico:'📚',lbl:'Einschulung',cost:600,col:'#4a9ede',desc:'Ranzen, Material, erster Schultag'},
+    {age:10,ico:'📱',lbl:'Erstes Smartphone',cost:500,col:'#a78bda',desc:'Der große Wunsch'},
+    {age:13,ico:'🎸',lbl:'Hobby & Kurse',cost:2000,col:'#43c97e',desc:'Musik, Sport, Talente fördern'},
+    {age:16,ico:'👟',lbl:'Mode & Style',cost:800,col:'#f06292',desc:'Selbstausdruck kostet'},
+    {age:17,ico:'🚗',lbl:'Führerschein',cost:3500,col:'#ffb300',desc:'Freiheit auf vier Rädern'},
+    {age:18,ico:'🎓',lbl:'Abitur & Aufbruch',cost:2500,col:'#4a9ede',desc:'Der große Start'},
+    {age:19,ico:'🏠',lbl:'Erste Wohnung',cost:5000,col:'#43c97e',desc:'Kaution + Einrichtung'},
+    {age:20,ico:'📖',lbl:'Studium/Ausbildung',cost:20000,col:'#a78bda',desc:'3–5 Jahre Finanzierung'},
+    {age:25,ico:'🚀',lbl:'Business/Leben',cost:10000,col:'#f06292',desc:'Startkapital für alles'}
+  ].filter(function(m){return m.age>age;});
+  c.innerHTML=ALL.map(function(m){
+    var yrs=m.age-age,sv=yrs>0?fv(mo,yrs):0,cov=sv>=m.cost,pct=Math.min(100,Math.round(sv/m.cost*100));
+    return '<div style="display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--dim)">'
+      +'<div style="width:42px;height:42px;border-radius:14px;background:'+m.col+'18;border:2px solid '+m.col+'35;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">'+m.ico+'</div>'
+      +'<div style="flex:1;min-width:0">'
+        +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px">'
+          +'<div style="font-weight:800;font-size:13px">'+m.lbl+'</div>'
+          +'<div style="font-size:10px;color:var(--muted);font-weight:600">'+(yr+yrs)+' · '+m.age+'J</div>'
+        +'</div>'
+        +'<div style="font-size:10px;color:var(--muted);margin-bottom:6px;font-weight:600">'+m.desc+' · <strong style="color:var(--text)">'+eu(m.cost)+'</strong></div>'
+        +'<div style="height:7px;background:var(--dim);border-radius:4px;overflow:hidden;margin-bottom:4px"><div style="height:100%;width:'+pct+'%;background:'+m.col+';border-radius:4px;transition:width .8s ease"></div></div>'
+        +'<div style="display:flex;justify-content:space-between;align-items:center">'
+          +'<span style="font-size:9px;color:var(--muted);font-weight:700">Geplant: <span style="color:'+m.col+';font-weight:800">'+eu(sv)+'</span></span>'
+          +'<span class="badge '+(cov?'bg':'bgold')+'" style="font-size:8px">'+(cov?'✓ Gedeckt':pct+'% gedeckt')+'</span>'
+        +'</div>'
+        +(cov?'<button onclick="printMilestoneLetter(\''+m.lbl+'\')" style="margin-top:6px;font-size:9px;font-weight:800;color:var(--pink);background:var(--blush);border:1.5px solid rgba(240,98,146,.2);padding:4px 10px;border-radius:50px;cursor:pointer">💌 Meilenstein-Brief drucken</button>':'')
+      +'</div>'
+      +'</div>';
+  }).join('');
+}
+function renderInvOptions(){
+  var c=document.getElementById('invOptions');if(!c)return;
+  c.innerHTML=INV_OPTIONS.map(function(o,i){
+    return '<div style="display:flex;align-items:center;gap:12px;padding:12px;background:linear-gradient(135deg,'+o.color+'10,'+o.color+'06);border:1.5px solid '+o.color+'30;border-radius:16px;margin-bottom:6px">'
+      +'<div style="font-size:26px;flex-shrink:0">'+o.ico+'</div>'
+      +'<div style="flex:1">'
+        +'<div style="font-weight:800;font-size:13px;margin-bottom:2px">'+o.name+'</div>'
+        +'<div style="font-size:10px;color:var(--muted);font-weight:600">'+o.desc+'</div>'
+      +'</div>'
+      +'<div style="text-align:right;flex-shrink:0">'
+        +'<div style="font-family:var(--fd);font-size:13px;color:'+o.color+'">'+o.ret+'</div>'
+        +'<div style="font-size:9px;color:var(--muted);font-weight:700;margin-top:1px">Risiko: '+o.risk+'</div>'
+      +'</div>'
+    +'</div>';
+  }).join('');
+}
+
+// ── BRIEF ──
+function renderBrief(){
+  var k=KIDS[ACT];if(!k)return;
+  var age=cAge(k.birth),yrs=Math.max(1,18-age),fvA=fv(k.monthly,yrs),months=yrs*12;
+  var startYear=new Date(k.started).getFullYear(),sal=k.gender==='m'?'Lieber':'Liebe';
+  var pName=k.pName||'dein Elternteil';
+  var lines=[sal+' '+k.name+',','','im Jahr '+startYear+' hat '+pName+' zum ersten','Mal für dich gespart. Du warst '+age+' Jahre alt.','','In den nächsten '+yrs+' Jahren hat '+pName,''+months+' Entscheidungen getroffen.','','Jeden Monat hat er/sie €'+k.monthly+' für dich','gewählt — statt für sich selbst.','','Das ergibt heute:','','    €'+Math.round(fvA).toLocaleString('de-DE')+' die dir gehören.','','Das ist kein Geld.','Das sind '+months+' Monate Liebe — in Zahlen.','','Was du damit anfängst —','das ist jetzt deine Geschichte.','','Mach etwas Großes daraus.','','\u2014 Eli, im Namen von '+pName];
+  var el=document.getElementById('letterText');if(el)el.textContent=lines.join('\n');
+  // Letter photo
+  if(k.letterPhoto){var lp=document.getElementById('letterPhotoPreview');if(lp){lp.innerHTML='<img src="'+k.letterPhoto+'" style="width:100%;height:100%;object-fit:cover;border-radius:12px">';}}
+  // Milestone brief list
+  renderMsBriefList(k);
+}
+function renderMsBriefList(k){
+  var c=document.getElementById('msBriefList');if(!c)return;
+  var age=cAge(k.birth);
+  var done=[{lbl:'Einschulung',ico:'📚',age:6},{lbl:'Führerschein',ico:'🚗',age:17},{lbl:'Abitur',ico:'🎓',age:18}].filter(function(m){return age>=m.age;});
+  if(!done.length){c.innerHTML='<div style="font-size:12px;color:var(--muted);text-align:center;padding:10px">Noch keine Meilensteine erreicht — Briefe erscheinen wenn Meilensteine erlangt werden 🌟</div>';return;}
+  c.innerHTML=done.map(function(m){
+    return '<div style="display:flex;align-items:center;gap:12px;padding:10px;background:linear-gradient(135deg,#fff5f8,#ffe8f0);border:1.5px solid rgba(240,98,146,.2);border-radius:16px">'
+      +'<div style="font-size:24px">'+m.ico+'</div>'
+      +'<div style="flex:1"><div style="font-weight:800;font-size:12px">'+m.lbl+' 🎉</div><div style="font-size:10px;color:var(--muted);font-weight:600">Meilenstein erreicht</div></div>'
+      +'<button onclick="printMilestoneLetter(\''+m.lbl+'\')" class="btn btn-pink" style="padding:7px 14px;font-size:10px;border-radius:50px">🖨️ Drucken</button>'
+      +'</div>';
+  }).join('');
+}
+
+// ── WISSEN ──
+function renderWissen(){
+  var c=document.getElementById('wissenList');if(!c)return;
+  c.innerHTML=WISSEN_DATA.map(function(w,i){
+    return '<div class="card" style="padding:18px;margin-bottom:10px;animation:fadeUp .3s '+(i*.07)+'s ease both">'
+      +'<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">'
+        +'<div style="font-size:24px">'+w.ico+'</div>'
+        +'<div style="flex:1;font-weight:800;font-size:14px">'+w.title+'</div>'
+        +'<div class="badge '+w.bc+'">'+w.badge+'</div>'
+      +'</div>'
+      +'<div style="font-size:12.5px;color:var(--sub);line-height:1.75;font-weight:600">'+w.body+'</div>'
+      +'<button onclick="eliChip(\'Erkläre mir: '+w.title+'\')" class="btn btn-white" style="margin-top:10px;width:100%;font-size:11px;padding:9px">🤖 Eli fragen →</button>'
+    +'</div>';
+  }).join('');
+}
+
+// ── PROFIL ──
+function renderProfil(){
+  var c=document.getElementById('profilList');if(!c)return;
+  c.innerHTML=KIDS.map(function(k,i){
+    var age=cAge(k.birth),fv18=fv(k.monthly,Math.max(1,18-age));
+    return '<div class="'+(i===ACT?'card-blue':'card')+'" style="padding:16px;cursor:pointer" onclick="switchKid('+i+')">'
+      +'<div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">'
+        +'<div style="font-size:34px">'+(k.avatarImg?'<img src="'+k.avatarImg+'" style="width:40px;height:40px;border-radius:50%;object-fit:cover">':emj(k.gender))+'</div>'
+        +'<div style="flex:1"><div style="font-family:var(--fd);font-size:18px;color:'+(i===ACT?'var(--blue)':'var(--text)')+'">'+k.name+'</div><div style="font-size:11px;color:var(--muted);font-weight:600;margin-top:2px">'+age+' Jahre · seit '+new Date(k.started).toLocaleDateString('de-DE',{month:'long',year:'numeric'})+'</div></div>'
+        +(i===ACT?'<div class="badge bb">Aktiv</div>':'')
+      +'</div>'
+      +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'
+        +'<div style="background:rgba(255,255,255,.6);border-radius:11px;padding:9px;text-align:center"><div style="font-size:8px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px">Monatlich</div><div style="font-family:var(--fd);font-size:15px;color:var(--blue)">'+eu(k.monthly)+'</div></div>'
+        +'<div style="background:rgba(255,255,255,.6);border-radius:11px;padding:9px;text-align:center"><div style="font-size:8px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px">Mit 18</div><div style="font-family:var(--fd);font-size:15px;color:var(--green)">'+eu(fv18)+'</div></div>'
+      +'</div>'
+    +'</div>';
+  }).join('');
+}
+
+// ══════════════════════════════════════
+// DEPOSIT
+// ══════════════════════════════════════
+var selectedJarIdx = 0;
+function openDeposit(){
+  var k=KIDS[ACT];if(!k)return;
+  selectedJarIdx=0;
+  var list=document.getElementById('jarChoiceList');
+  if(list)list.innerHTML=(k.jars||[]).map(function(j,i){
+    return '<button id="jc'+i+'" onclick="selectJar('+i+')" style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 12px;background:'+(i===0?'var(--sky)':'white')+';border:2px solid '+(i===0?'var(--blue)':'var(--dim)')+';border-radius:16px;cursor:pointer;font-size:11px;font-weight:800;white-space:nowrap;transition:all .15s">'
+      +'<span style="font-size:20px">'+j.emoji+'</span>'+j.name+'</button>';
+  }).join('');
+  document.getElementById('depositModal').style.display='flex';
+}
+function openDepositForJar(idx){
+  openDeposit();selectedJarIdx=idx;selectJar(idx);
+}
+function selectJar(i){
+  selectedJarIdx=i;
+  var k=KIDS[ACT];if(!k)return;
+  (k.jars||[]).forEach(function(_,idx){
+    var b=document.getElementById('jc'+idx);
+    if(b){b.style.background=idx===i?'var(--sky)':'white';b.style.borderColor=idx===i?'var(--blue)':'var(--dim)';}
+  });
+}
+function setDeposit(val){var inp=document.getElementById('depositAmt');if(inp)inp.value=val;}
+function confirmDeposit(){
+  var inp=document.getElementById('depositAmt');
+  var val=parseFloat(inp?inp.value:0)||0;if(val<=0)return;
+  var k=KIDS[ACT];if(!k)return;
+  k.extra=(k.extra||0)+val;
+  if(k.jars&&k.jars[selectedJarIdx])k.jars[selectedJarIdx].saved+=val;
+  save();closeDeposit();renderHome();renderPlan();
+  // Celebrate
+  spawnConfetti();
+  setTimeout(function(){alert('🎉 '+eu(val)+' wurden erfolgreich für '+k.name+' eingezahlt! Das Vermögen wächst! 💛');},300);
+}
+function closeDeposit(){document.getElementById('depositModal').style.display='none';}
+
+// ══════════════════════════════════════
+// ADD JAR
+// ══════════════════════════════════════
+var selectedPreset = null;
+function openAddJar(){
+  selectedPreset=null;
+  var c=document.getElementById('jarPresets');
+  if(c)c.innerHTML=JAR_PRESETS.map(function(p,i){
+    return '<button id="jp'+i+'" onclick="pickPreset('+i+')" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 4px;background:white;border:2px solid var(--dim);border-radius:14px;cursor:pointer;font-size:11px;font-weight:800;transition:all .15s">'
+      +'<span style="font-size:22px">'+p.emoji+'</span>'
+      +'<span style="font-size:9px;color:var(--muted)">'+p.name+'</span>'
+    +'</button>';
+  }).join('');
+  document.getElementById('addJarModal').style.display='flex';
+}
+function pickPreset(i){
+  selectedPreset=i;var p=JAR_PRESETS[i];
+  var jn=document.getElementById('jarName'),jg=document.getElementById('jarGoal');
+  if(jn)jn.value=p.name+' '+p.emoji;if(jg)jg.value=p.goal;
+  document.querySelectorAll('[id^="jp"]').forEach(function(b){b.style.borderColor='var(--dim)';b.style.background='white';});
+  var b=document.getElementById('jp'+i);if(b){b.style.borderColor='var(--blue)';b.style.background='var(--sky)';}
+}
+function confirmAddJar(){
+  var jn=document.getElementById('jarName'),jg=document.getElementById('jarGoal');
+  var name=(jn?jn.value.trim():'Neues Ziel')||'Neues Ziel';
+  var goal=parseFloat(jg?jg.value:0)||0;
+  var preset=selectedPreset!==null?JAR_PRESETS[selectedPreset]:null;
+  var k=KIDS[ACT];if(!k)return;
+  if(!k.jars)k.jars=[];
+  k.jars.push({id:'j'+Date.now(),name:name,emoji:preset?preset.emoji:'🏺',color:preset?preset.color:'#4a9ede',goal:goal,saved:0});
+  save();closeAddJar();renderHome();
+}
+function closeAddJar(){document.getElementById('addJarModal').style.display='none';}
+
+// ══════════════════════════════════════
+// ELI CHAT (Claude API)
+// ══════════════════════════════════════
+var eliHistory=[];
+function toggleEliChat(){
+  var m=document.getElementById('eliChatModal'),fab=document.getElementById('eliFab');
+  if(m.style.display==='none'||!m.style.display){openEliChat();}
+  else{closeEliChat();}
+}
+function openEliChat(){
+  var m=document.getElementById('eliChatModal'),fab=document.getElementById('eliFab');
+  m.style.display='flex';if(fab)fab.classList.add('open');fab.textContent='✕';
+  if(!eliHistory.length){
+    var k=KIDS[ACT];
+    addEliChatMsg('Hallo! 👋 Ich bin Eli, dein persönlicher KI-Investmentbanker. Ich kenne deinen Plan für '+(k?k.name:'dein Kind')+' und kann dir bei allem helfen — ETFs, globale Märkte, Steuertipps, Sparstrategien. Was möchtest du wissen?',false);
+  }
+}
+function closeEliChat(){
+  var m=document.getElementById('eliChatModal'),fab=document.getElementById('eliFab');
+  m.style.display='none';if(fab){fab.classList.remove('open');fab.textContent='🤖';}
+}
+function addEliChatMsg(txt,isUser){
+  var chat=document.getElementById('eliMessages');if(!chat)return;
+  var el=document.createElement('div');el.className='msg'+(isUser?' user':'');
+  el.innerHTML='<div class="av '+(isUser?'usr':'eli')+'">'+(isUser?'👤':'Eli')+'</div><div><div class="bmeta">'+(isUser?'Du':'Eli · Investmentbanker')+'</div><div class="bub">'+txt.replace(/\n/g,'<br>')+'</div></div>';
+  chat.appendChild(el);chat.scrollTop=chat.scrollHeight;
+}
+function eliChip(txt){
+  openEliChat();
+  var inp=document.getElementById('eliInput');if(inp)inp.value=txt;
+  eliSend();
+}
+async function eliSend(){
+  var inp=document.getElementById('eliInput');
+  var txt=inp?inp.value.trim():'';if(!txt)return;
+  if(inp)inp.value='';
+  addEliChatMsg(txt,true);
+  eliHistory.push({role:'user',content:txt});
+  // Typing indicator
+  var chat=document.getElementById('eliMessages');
+  var typing=document.createElement('div');typing.className='msg';typing.id='eliTyping';
+  typing.innerHTML='<div class="av eli">Eli</div><div><div class="bmeta">Eli · Investmentbanker</div><div class="bub"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div></div>';
+  chat.appendChild(typing);chat.scrollTop=chat.scrollHeight;
+  var k=KIDS[ACT]||{};
+  var ausgaben=calcMonthlyExpenses(k),avgDE=calcAvgDE(k);
+  var sys='Du bist Eli, ein freundlicher und kompetenter KI-Investmentbanker der Eltern hilft für ihre Kinder zu sparen und Ausgaben zu optimieren. Aktuelle Situation: Kind: '+(k.name||'unbekannt')+', Alter: '+cAge(k.birth||'')+' Jahre, Monatliche Sparrate: €'+(k.monthly||127)+', Sparziel mit 18: '+eu(fv(k.monthly||127,Math.max(1,18-cAge(k.birth||''))))+', Monatliche Baby-Ausgaben: '+eu(ausgaben)+' (DE-Durchschnitt: '+eu(avgDE)+'). Du kennst globale Märkte, ETFs, Steuerrecht in Deutschland, staatliche Förderungen (Kindergeld, Elterngeld, Kita-Zuschüsse), Smart Shopping für Babyprodukte und Ausgabenoptimierung. Antworte immer auf Deutsch, freundlich, klar und für Eltern verständlich. Nutze Emojis. Sei präzise und praktisch.';
+  try{
+    var resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,system:sys,messages:eliHistory})});
+    var data=await resp.json();
+    typing.remove();
+    var reply=(data.content&&data.content[0]&&data.content[0].text)||'Ich konnte leider nicht antworten. Bitte versuche es erneut.';
+    eliHistory.push({role:'assistant',content:reply});
+    addEliChatMsg(reply,false);
+  }catch(e){
+    typing.remove();
+    addEliChatMsg('Verbindungsfehler. Bitte überprüfe deine Internetverbindung und versuche es erneut. 🔌',false);
+  }
+}
+
+// ══════════════════════════════════════
+// PHOTOS & AVATAR
+// ══════════════════════════════════════
+function changeAvatar(){document.getElementById('fileAvatar').click();}
+function handleAvatarFile(inp){
+  var file=inp.files[0];if(!file)return;
+  var r=new FileReader();
+  r.onload=function(e){
+    var k=KIDS[ACT];if(!k)return;
+    k.avatarImg=e.target.result;save();
+    var img=document.getElementById('hAvatarImg'),emoji=document.getElementById('hAvatarEmoji');
+    if(img){img.src=e.target.result;img.style.display='block';}
+    if(emoji)emoji.style.display='none';
+  };
+  r.readAsDataURL(file);
+}
+function addPhoto(){document.getElementById('filePhoto').click();}
+function handlePhotoFile(inp){
+  var file=inp.files[0];if(!file)return;
+  var r=new FileReader();
+  r.onload=function(e){
+    var k=KIDS[ACT];if(!k)return;
+    if(!k.photos)k.photos=[];
+    k.photos.push(e.target.result);save();renderPhotos();
+  };
+  r.readAsDataURL(file);
+}
+function removePhoto(i){var k=KIDS[ACT];if(!k||!k.photos)return;k.photos.splice(i,1);save();renderPhotos();}
+function addLetterPhoto(){document.getElementById('fileBriefPhoto').click();}
+function handleBriefPhotoFile(inp){
+  var file=inp.files[0];if(!file)return;
+  var r=new FileReader();
+  r.onload=function(e){
+    var k=KIDS[ACT];if(!k)return;
+    k.letterPhoto=e.target.result;save();
+    var lp=document.getElementById('letterPhotoPreview');
+    if(lp)lp.innerHTML='<img src="'+e.target.result+'" style="width:100%;height:100%;object-fit:cover;border-radius:12px">';
+  };
+  r.readAsDataURL(file);
+}
+
+// ══════════════════════════════════════
+// PRINT
+// ══════════════════════════════════════
+function printLetter(){
+  var k=KIDS[ACT];if(!k)return;
+  var age=cAge(k.birth),yrs=Math.max(1,18-age),fvA=fv(k.monthly,yrs),months=yrs*12;
+  var pName=k.pName||'dein Elternteil',sal=k.gender==='m'?'Lieber':'Liebe';
+  var photoHtml=k.letterPhoto?'<img src="'+k.letterPhoto+'" style="max-width:200px;max-height:200px;border-radius:16px;object-fit:cover;margin-bottom:24px">':'';
+  var html='<div style="max-width:500px;margin:0 auto;font-family:Georgia,serif;padding:40px">'
+    +'<div style="text-align:center;margin-bottom:32px">'
+      +'<div style="font-size:48px;margin-bottom:8px">💛</div>'
+      +'<div style="font-size:26px;font-weight:900;color:#2d7fc4;margin-bottom:4px">BabyWealth</div>'
+      +'<div style="font-size:12px;color:#8aa4c0;font-weight:700;letter-spacing:.08em;text-transform:uppercase">Dein persönlicher Brief</div>'
+    +'</div>'
+    +(photoHtml?'<div style="text-align:center">'+photoHtml+'</div>':'')
+    +'<div style="font-size:15px;color:#4a6080;line-height:2.2;white-space:pre-line">'+document.getElementById('letterText').textContent+'</div>'
+    +'<div style="margin-top:40px;padding-top:24px;border-top:2px solid #e8f4fd;text-align:center;font-size:11px;color:#8aa4c0">Erstellt mit BabyWealth · babywealth.de · Liebe in Zahlen seit '+new Date().getFullYear()+'</div>'
+    +'</div>';
+  var w=window.open('','_blank');w.document.write('<html><head><title>Brief für '+k.name+'</title></head><body>'+html+'</body></html>');w.document.close();w.print();
+}
+function printMilestoneLetter(milestone){
+  var k=KIDS[ACT];if(!k)return;
+  var html='<div style="max-width:500px;margin:0 auto;font-family:Georgia,serif;padding:40px;text-align:center">'
+    +'<div style="font-size:56px;margin-bottom:16px">🏆</div>'
+    +'<div style="font-size:26px;font-weight:900;color:#2d7fc4;margin-bottom:8px">Meilenstein erreicht!</div>'
+    +'<div style="font-size:18px;font-weight:700;color:#f06292;margin-bottom:32px">'+milestone+'</div>'
+    +'<div style="font-size:15px;color:#4a6080;line-height:2.2;text-align:left">'
+      +(k.gender==='m'?'Lieber':'Liebe')+' '+k.name+',\n\ndu hast heute deinen Meilenstein "'+milestone+'" erreicht!\n\nDeine Eltern haben dafür gesorgt dass du diesen Moment genießen kannst — ohne Stress, ohne Schulden.\n\nDas ist ihr Geschenk an dich. 💛\n\n— Eli, im Namen von '+(k.pName||'deinen Eltern')
+    +'</div>'
+    +'<div style="margin-top:40px;font-size:11px;color:#8aa4c0">Erstellt mit BabyWealth · Liebe in Zahlen</div>'
+    +'</div>';
+  var w=window.open('','_blank');w.document.write('<html><head><title>'+milestone+' — '+k.name+'</title></head><body>'+html+'</body></html>');w.document.close();w.print();
+}
+function doShare(){
+  var k=KIDS[ACT]||{};
+  var txt='Ich spare jeden Monat für '+(k.name||'mein Kind')+' — mit BabyWealth. Der Brief den '+(k.name||'mein Kind')+' mit 18 bekommt hat mich zu Tränen gerührt. 💛 #BabyWealth #FürJedesKind';
+  if(navigator.share){navigator.share({title:'BabyWealth',text:txt}).catch(function(){});}
+  else{navigator.clipboard.writeText(txt).then(function(){alert('Kopiert! Teile es auf Social Media 💛');}).catch(function(){alert(txt);});}
+}
+
+// ══════════════════════════════════════
+// MISC
+// ══════════════════════════════════════
+function switchKid(i){ACT=i;save();renderAll();goTab('home',0);}
+function doReset(){if(!confirm('Wirklich alle Daten löschen?'))return;localStorage.removeItem('bw3-k');localStorage.removeItem('bw3-a');KIDS=[];ACT=0;showS('sLanding');}
+
+// ══════════════════════════════════════
+// INIT
+// ══════════════════════════════════════
+window.addEventListener('DOMContentLoaded',function(){
+  load();
+  var home=document.getElementById('tHome');
+  if(home){home.classList.add('on');home.style.display='flex';}
+  if(KIDS.length>0){
+    showS('sApp');
+    var fab=document.getElementById('eliFab');if(fab)fab.style.display='flex';
+    renderAll();
+  }
+});
+</script>
+</body>
+</html>
